@@ -1914,6 +1914,74 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
       </ol>
     </div>
 
+    <div class="mtgs" id="mtgCard">
+      <div class="mtgs-head"><h3>לו״ז מפגשים</h3><span class="mtgs-today" id="mtgToday"></span></div>
+      <div class="mtgs-list" id="mtgList"></div>
+    </div>
+    <style>
+      .mtgs{background:#fff;border:1px solid var(--line,#DCE6EE);border-radius:16px;padding:16px 18px;margin:0 0 18px;box-shadow:var(--sh,none)}
+      .mtgs-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+      .mtgs-head h3{margin:0;font-size:18px;color:var(--navy,#0B3550)}
+      .mtgs-today{font-size:12.5px;color:var(--muted,#5B6B78)}
+      .mtgs-list{display:flex;flex-direction:column;gap:8px}
+      .mtg{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--line,#DCE6EE);background:#F7FAFC}
+      .mtg .d{font-weight:800;font-variant-numeric:tabular-nums;color:var(--navy,#0B3550)}
+      .mtg .d small{display:block;font-weight:600;font-size:11.5px;color:var(--muted,#5B6B78)}
+      .mtg .t b{display:block;font-size:14.5px;color:#13232F}
+      .mtg .t span{font-size:12.5px;color:var(--muted,#5B6B78)}
+      .mtg .st{font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap;background:#E8EEF3;color:#3F5363}
+      .mtg.past{opacity:.55}
+      .mtg.past .st{background:transparent;color:#3F5363}
+      .mtg.today{background:#E3F5EC;border-color:#2E9E6A;box-shadow:0 0 0 2px rgba(46,158,106,.18)}
+      .mtg.today .st{background:#1F8A57;color:#fff}
+      .mtg.next{border-color:#7FB3D5;background:#EEF6FC}
+      .mtg.next .st{background:#0B5C8C;color:#fff}
+      .mtg.ms .t b::before{content:"✈ ";color:#0B5C8C}
+      @media (max-width:560px){.mtg{grid-template-columns:78px 1fr}.mtg .st{grid-column:1 / -1;justify-self:start}}
+    </style>
+    <script>
+    (function(){
+      /* date as [y, m, d]; to = end of a range; ms = milestone (not a meeting) */
+      var M = [
+        { f:[2026,10,21], t:"ישיבת צוות 1", s:"חלוקת תפקידים ומשימות" },
+        { f:[2026,10,28], t:"ישיבה עם כרמל", s:"שאלות לקראת הישיבה עם סמדר" },
+        { f:[2026,11,4],  t:"ישיבה עם סמדר", s:"עוברים על המשימות והלו״ז" },
+        { f:[2026,11,5], to:[2026,11,10], t:"שבוע עבודה על המשימות", s:"ביצוע המשימות לפני הסגירה מול אורן וחן" },
+        { f:[2026,11,11], t:"אורן וחן · פגישה פיזית במשרד", s:"סגירת הלו״ז ואישורו" },
+        { f:[2026,11,24], t:"פגישת נציגים והנהלה", s:"פגישה אחרונה לפני הטיסה" },
+        { f:[2026,11,26], t:"טיסה לצרפת", s:"מתחילים את תקופת ההכנה באתר", ms:1 },
+        { f:[2026,12,2],  t:"פגישה עם חברת המעליות (סקיפסים)", s:"09:00 שעון צרפת" },
+        { f:[2026,12,5],  t:"הגעת לקוחות חנוכה", s:"שבוע חנוכה · וולטורנס בלבד", ms:1 }
+      ];
+      var DAY = ["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","ש׳"];
+      var p2 = function(n){ return (n < 10 ? "0" : "") + n; };
+      var mk = function(a){ return new Date(a[0], a[1] - 1, a[2]); };
+      var fmt = function(d){ return p2(d.getDate()) + "." + p2(d.getMonth() + 1); };
+      function render(){
+        var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var nextDone = false, h = "";
+        document.getElementById("mtgToday").textContent = "היום: יום " + DAY[today.getDay()] + " · " + fmt(today) + "." + String(today.getFullYear()).slice(2);
+        M.forEach(function(m){
+          var a = mk(m.f), b = m.to ? mk(m.to) : a, cls = "", st;
+          var days = Math.round((a - today) / 864e5);
+          if (b < today){ cls = "past"; st = "✓ עבר"; }
+          else if (a <= today){ cls = "today"; st = m.to ? "השבוע" : "היום"; nextDone = true; }
+          else {
+            st = days === 1 ? "מחר" : "בעוד " + days + " ימים";
+            if (!nextDone){ cls = "next"; st = "הבא · " + st; nextDone = true; }
+          }
+          var dt = m.to ? fmt(a) + "–" + fmt(b) : fmt(a);
+          var dn = m.to ? "" : "יום " + DAY[a.getDay()];
+          h += '<div class="mtg ' + cls + (m.ms ? ' ms' : '') + '"><div class="d" dir="ltr">' + dt + '<small dir="rtl">' + dn + '</small></div>'
+             + '<div class="t"><b>' + m.t + '</b><span>' + m.s + '</span></div><span class="st">' + st + '</span></div>';
+        });
+        document.getElementById("mtgList").innerHTML = h;
+      }
+      render();
+      setInterval(render, 60 * 60 * 1000);
+      document.addEventListener("visibilitychange", function(){ if (!document.hidden) render(); });
+    })();
+    </script>
     <div class="phases" id="phaseCards"></div>
 
     <div class="season">
