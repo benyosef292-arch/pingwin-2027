@@ -3,6 +3,7 @@
 <script>/* Standalone site: team data is shared through a Google Sheet (Apps Script web app). */
 (function () {
   var API = 'https://script.google.com/macros/s/AKfycby8EcMvILfG0N-24nlR8qb2Ry2btz0uGxnGkQIeTBXeg6ShodvP79WsCpf4tJ1TEZbz/exec';
+  window.PENGUIN_API = API;
   var KEYK = 'penguin-owner-key';
   var PHOTOS = {"1": ["1bad2ed169c6af24a7cbc77276cf382d.jpg"], "2": ["63db9c98f11af489d205fa906c702cdf.jpg"], "3": ["65b466cd1056609c3d75eafde1bd86b6.jpg"], "4": ["522feee066fe6daf07a6ce138e97dd38.webp"], "5": ["6fabc72ab9fb6218c910cad6db03e0af.jpg"]};
   try {
@@ -1433,6 +1434,188 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
 .pcard:hover{transform:translateY(-2px)}
 </style>
 
+<style>
+/* ================= website look (work board) ================= */
+html,body{overflow-x:clip}
+body:not(.deck-mode){background:#F4F7FA}
+.topbar{background:rgba(5,28,42,.86);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);box-shadow:0 1px 0 rgba(255,255,255,.06),0 10px 30px -18px rgba(0,0,0,.6)}
+.tabs{justify-content:center;gap:2px;background:rgba(255,255,255,.94);padding:0 22px;border-bottom:1px solid #E3EAF0;box-shadow:0 8px 24px -20px rgba(0,40,60,.5)}
+.tab{border-radius:0;padding:15px 14px 13px;border-bottom:3px solid transparent;font-size:14.5px;color:#5E7382}
+.tab:hover{background:transparent;color:var(--navy)}
+.tab[aria-selected="true"]{background:transparent;color:var(--navy);box-shadow:none;border-bottom-color:#00AAEB}
+.tab[aria-selected="true"] .pill{background:#E6F4FC;color:#0B5C8C}
+.wrap{max-width:1220px;padding:0 28px 0}
+.view{padding-top:34px}
+
+/* hero: full-bleed photo */
+#view-overview{padding-top:0}
+#view-overview .hero{margin:0 calc(50% - 50vw) 8px;border-radius:0;min-height:clamp(420px,64vh,660px);display:flex;align-items:flex-end;padding:0;box-shadow:none;background:#06202E}
+#view-overview .hero-photo{background-image:var(--bg5)!important;opacity:1;filter:none;background-position:center 58%}
+#view-overview .hero-veil{background:linear-gradient(0deg,rgba(3,18,28,.92) 0%,rgba(3,18,28,.55) 38%,rgba(3,18,28,.12) 70%,rgba(3,18,28,.28) 100%)}
+#view-overview .hero svg.mtn{display:none}
+#view-overview .hero-in{width:100%;max-width:1220px;margin:0 auto;padding:0 28px 54px;align-items:flex-end}
+#view-overview .hero h1{font-size:clamp(40px,6.4vw,82px);letter-spacing:-1.5px;line-height:1;text-shadow:0 8px 40px rgba(0,0,0,.35)}
+#view-overview .hero p{font-size:clamp(15px,1.4vw,18px);color:#D8EAF4;max-width:56ch;margin-top:16px}
+#view-overview .hero .eyebrow{color:#BFE8FA;font-size:13px;letter-spacing:1.4px}
+#view-overview .hero-stats{gap:12px;margin-top:26px}
+#view-overview .hstat{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:14px;padding:10px 18px}
+#view-overview .hstat b{font-size:26px}
+#view-overview .hero-badge{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.24);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);min-width:240px;max-width:320px;padding:18px 22px;border-radius:18px}
+#view-overview .hero-badge b{font-size:20px;line-height:1.25;margin-top:4px}
+#view-overview .hero-badge #heroNextK{color:#7FE0B4;font-weight:800;letter-spacing:.6px}
+
+/* section titles */
+.sec-h{margin:54px 0 18px;display:flex;flex-direction:column;gap:4px}
+.sec-h span{font-size:12.5px;font-weight:800;letter-spacing:1.6px;color:#0A8FC9}
+.sec-h h2{font-size:clamp(24px,2.8vw,34px);font-weight:900;color:#0B2A3C;letter-spacing:-.5px}
+
+/* calendar */
+.cal-wrap{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(280px,1fr);gap:20px;align-items:start}
+.cal,.cal-side{background:#fff;border:1px solid #E3EAF0;border-radius:22px;box-shadow:0 1px 2px rgba(0,40,60,.04),0 24px 50px -34px rgba(0,40,60,.45)}
+.cal{padding:20px 20px 16px}
+.cal-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.cal-nav{display:flex;align-items:center;gap:10px}
+.cal-nav h3{font-size:22px;font-weight:900;color:#0B2A3C;min-width:150px;text-align:center}
+.cal-b{width:36px;height:36px;border-radius:50%;border:1px solid #DCE6EE;background:#fff;font-size:20px;line-height:1;color:#0B2A3C;cursor:pointer}
+.cal-b:hover,.cal-today:hover{background:#F0F6FA}
+.cal-today{border:1px solid #DCE6EE;background:#fff;border-radius:999px;padding:7px 16px;font:inherit;font-weight:800;font-size:13px;color:#0B5C8C;cursor:pointer}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+.cal-dow span{text-align:center;font-size:12px;font-weight:800;color:#8AA0AE}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-c{position:relative;min-height:96px;border:1px solid #EDF2F6;border-radius:12px;background:#FBFDFE;padding:6px 5px 5px;display:flex;flex-direction:column;gap:3px;text-align:right;cursor:pointer;font:inherit;min-width:0;transition:border-color .15s,box-shadow .15s}
+.cal-c:hover{border-color:#BFD6E4}
+.cal-c .cn{font-size:13px;font-weight:800;color:#2D4656;padding:0 3px}
+.cal-c.out{background:transparent;border-color:transparent}
+.cal-c.out .cn{color:#BFCBD3}
+.cal-c.past .cn{color:#9AAAB5}
+.cal-c.today{background:#E8F7EF;border-color:#2E9E6A;box-shadow:0 0 0 2px rgba(46,158,106,.22)}
+.cal-c.today .cn{background:#1F8A57;color:#fff;border-radius:999px;align-self:flex-start;padding:0 8px}
+.cal-c.sel:not(.today){border-color:#0A8FC9;box-shadow:0 0 0 2px rgba(10,143,201,.18)}
+.chips{display:flex;flex-direction:column;gap:3px;min-width:0}
+.ce{display:block;font-size:11px;font-weight:700;line-height:1.35;padding:2px 6px;border-radius:6px;background:var(--c);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ce.rg{background:color-mix(in srgb,var(--c) 16%,#fff);color:color-mix(in srgb,var(--c) 75%,#000);border-radius:0;margin-inline:-6px;padding-inline:9px}
+.ce.rg.st{border-start-start-radius:6px;border-end-start-radius:6px;margin-inline-start:0}
+.ce.rg.en{border-start-end-radius:6px;border-end-end-radius:6px;margin-inline-end:0}
+.ce.more{background:transparent;color:#5E7382;padding:0 4px}
+.cal-c.past .ce{opacity:.55}
+.dots{display:none;gap:3px;flex-wrap:wrap;padding:0 3px}
+.dots i{width:7px;height:7px;border-radius:50%}
+.cal-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;padding-top:12px;border-top:1px solid #EDF2F6}
+.cal-legend span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#5E7382;font-weight:700}
+.cal-legend i{width:10px;height:10px;border-radius:3px}
+.cal-side{padding:18px 18px 16px;display:flex;flex-direction:column;gap:18px;position:sticky;top:130px}
+.cal-side h4,.cal-day h4{font-size:15px;font-weight:900;color:#0B2A3C;margin-bottom:10px}
+.cal-day{padding-bottom:16px;border-bottom:1px solid #EDF2F6}
+.ci{display:grid;grid-template-columns:4px 1fr auto;gap:10px;align-items:center;padding:9px 10px;border-radius:12px;margin-bottom:6px;background:#F7FAFC}
+.ci .cbar{align-self:stretch;border-radius:4px;background:var(--c)}
+.ci b{display:block;font-size:14px;color:#13232F;line-height:1.3}
+.ci small{font-size:12px;color:#6A7E8B}
+.ci em{font-style:normal;font-size:11.5px;font-weight:800;color:#3F5363;background:#E8EEF3;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.ci em.now{background:#1F8A57;color:#fff}
+.ci em.done{background:transparent;color:#8AA0AE}
+.ci.now{background:#E8F7EF;box-shadow:inset 0 0 0 1px #2E9E6A}
+.ci.past{opacity:.6}
+.cal-empty{font-size:13px;color:#8AA0AE}
+.cal-link{display:block;text-align:center;font-weight:800;font-size:13.5px;color:#0B5C8C;text-decoration:none;border:1px solid #CFE3F0;border-radius:12px;padding:10px}
+.cal-link:hover{background:#F0F6FA}
+
+/* roles */
+.roles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.rl{background:#fff;border:1px solid #E3EAF0;border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;box-shadow:0 16px 40px -34px rgba(0,40,60,.5)}
+.rl i{width:30px;height:4px;border-radius:4px}
+.rl b{font-size:18px;font-weight:900;color:#0B2A3C}
+.rl span{font-size:13px;color:#5E7382;line-height:1.55}
+
+/* phase cards with photos */
+#view-overview .phases{gap:18px;margin-bottom:0}
+#view-overview .pcard{position:relative;overflow:hidden;min-height:250px;justify-content:flex-end;color:#fff;border:0;background:#0B2A3C center/cover no-repeat;padding:22px 24px;border-radius:22px;box-shadow:0 30px 60px -40px rgba(0,30,45,.8)}
+#view-overview .pcard::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,18,28,.94) 0%,rgba(3,18,28,.6) 45%,rgba(3,18,28,.1) 100%);z-index:0}
+#view-overview .pcard > *{position:relative;z-index:1}
+#view-overview .pcard:nth-child(1){background-image:var(--bg8)}
+#view-overview .pcard:nth-child(2){background-image:var(--bg3)}
+#view-overview .pcard:nth-child(3){background-image:var(--bg4)}
+#view-overview .pcard .num{color:#8FDcFF}
+#view-overview .pcard h3{color:#fff;font-size:22px}
+#view-overview .pcard .desc{color:#D3E4EE}
+#view-overview .pcard .bar{background:rgba(255,255,255,.22)}
+#view-overview .pcard .meta,#view-overview .pcard .meta b{color:#E6F1F7}
+#view-overview .pcard:hover{transform:translateY(-4px)}
+#view-overview .pcard .num{margin-top:auto}
+#view-overview .pcard .bar{margin-top:10px}
+
+#view-overview .hwcard{margin:0!important;border-radius:20px;padding:20px 24px}
+#view-overview .open-list{border-radius:20px}
+#view-overview .callout{margin:22px 0 0}
+
+/* page heads with photos */
+.view .vhead{position:relative;overflow:hidden;color:#fff;border:0;border-radius:24px;min-height:230px;align-items:flex-end;padding:28px 30px;margin-bottom:22px;background:#0B2A3C center/cover no-repeat;box-shadow:0 30px 60px -42px rgba(0,30,45,.9)}
+.view .vhead::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,18,28,.9) 0%,rgba(3,18,28,.5) 50%,rgba(3,18,28,.15) 100%)}
+.view .vhead > *{position:relative;z-index:1}
+.view .vhead h2{color:#fff;font-size:clamp(28px,3.4vw,44px);letter-spacing:-.6px}
+.view .vhead p{color:#D3E4EE;font-size:15px}
+.view .vhead .vnum b{color:#fff}
+.view .vhead .vnum span,.view .vhead .vhead-side div{color:#CFE1EC!important}
+.view .vhead .bar{background:rgba(255,255,255,.22)}
+#view-p1 .vhead{background-image:var(--bg8)}
+#view-p2 .vhead{background-image:var(--bg3)}
+#view-p3 .vhead{background-image:var(--bg4)}
+#view-plan .vhead{background-image:var(--bg2)}
+#view-qs .vhead{background-image:var(--bg6)}
+#view-sum .vhead{background-image:var(--bg1)}
+#view-team .vhead{background-image:var(--bg5);min-height:300px}
+
+/* team page */
+.tm-names{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.tm-names span{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.26);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px;color:#fff}
+.tm-quote{text-align:center;margin:44px auto 38px;max-width:760px}
+.tm-quote span{display:block;font-size:12.5px;font-weight:800;letter-spacing:1.6px;color:#0A8FC9;margin-bottom:8px}
+.tm-quote b{font-size:clamp(28px,4vw,46px);font-weight:900;color:#0B2A3C;letter-spacing:-.8px;line-height:1.15}
+.tm-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.tm-card{background:#fff;border:1px solid #E3EAF0;border-radius:22px;padding:24px 24px 20px;box-shadow:0 24px 50px -38px rgba(0,40,60,.5);border-top:5px solid #00AAEB}
+.tm-card.red{border-top-color:#D2483C}
+.tm-n{font-size:13px;font-weight:900;color:#0A8FC9;letter-spacing:1px}
+.tm-card.red .tm-n{color:#D2483C}
+.tm-card h3{font-size:22px;font-weight:900;color:#0B2A3C;margin:6px 0 12px}
+.tm-card ul{margin:0;padding-inline-start:18px;display:flex;flex-direction:column;gap:8px;font-size:15px;color:#33495A;line-height:1.5}
+.tm-photo{margin:28px 0 0;border-radius:24px;min-height:260px;background:var(--bg7) center/cover;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.tm-photo::before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,18,28,.8),rgba(3,18,28,0) 60%)}
+.tm-photo div{position:relative;padding:24px 28px;color:#fff;display:flex;flex-direction:column}
+.tm-photo b{font-size:22px;font-weight:900}
+.tm-photo span{color:#D3E4EE}
+
+/* footer band */
+footer.src{margin:70px calc(50% - 50vw) 0;min-height:220px;display:flex;align-items:flex-end;background:linear-gradient(0deg,rgba(3,18,28,.92),rgba(3,18,28,.35)),var(--bg1) center 70%/cover;color:#fff;text-align:right}
+footer.src .src-in{width:100%;max-width:1220px;margin:0 auto;padding:0 28px 34px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+footer.src b{font-size:20px;font-weight:900}
+footer.src span{color:#CFE1EC;font-size:13.5px}
+
+@media (max-width:980px){
+  .cal-wrap{grid-template-columns:1fr}
+  .cal-side{position:static}
+  .roles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tm-grid{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .wrap{padding:0 14px}
+  .tabs{justify-content:flex-start;padding:0 8px}
+  #view-overview .hero-in{padding:0 16px 32px}
+  #view-overview .hero{min-height:480px}
+  .sec-h{margin:40px 0 14px}
+  .cal{padding:14px 10px 12px}
+  .cal-grid,.cal-dow{gap:3px}
+  .cal-c{min-height:52px;padding:4px 3px;border-radius:9px}
+  .cal-c .chips{display:none}
+  .dots{display:flex}
+  .cal-nav h3{font-size:18px;min-width:110px}
+  .roles{grid-template-columns:1fr}
+  .view .vhead{min-height:200px;padding:22px 20px;border-radius:18px}
+  footer.src .src-in{padding:0 16px 26px}
+}
+@media print{
+  .view .vhead,#view-overview .hero,footer.src,#view-overview .pcard{background:#fff!important;color:#000!important}
+}
+
+</style>
 <header class="topbar">
   <div class="brand">
     <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
@@ -1457,7 +1640,7 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
     </div>
   </div>
   <div class="top-right">
-    <div class="modes" role="group" aria-label="תצוגה"><button class="mode-btn" data-mode="deck" aria-pressed="true" type="button">מצגת</button><button class="mode-btn" data-mode="board" aria-pressed="false" type="button">לוח עבודה</button></div>
+    <div class="modes" role="group" aria-label="תצוגה"><button class="mode-btn" data-mode="board" aria-pressed="true" type="button">לוח עבודה</button><button class="mode-btn" data-mode="deck" aria-pressed="false" type="button">מצגת</button></div>
     <div class="ring-wrap" title="התקדמות כללית">
       <svg class="ring" viewBox="0 0 46 46" aria-hidden="true">
         <circle class="bg" cx="23" cy="23" r="19"/>
@@ -1481,6 +1664,7 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
   <button class="tab" role="tab" data-view="p3" aria-selected="false">ציוד מהארץ <span class="pill" id="tabP3">0/0</span></button>
   <button class="tab" role="tab" data-view="qs" aria-selected="false">שאלות פתוחות <span class="pill" id="tabQs">0</span></button>
   <button class="tab" role="tab" data-view="sum" aria-selected="false">סיכומים שבועיים</button>
+  <button class="tab" role="tab" data-view="team" aria-selected="false">הצוות שלנו</button>
 </nav>
 
 
@@ -1877,9 +2061,9 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
       </svg>
       <div class="hero-in">
         <div class="hero-main">
-          <span class="eyebrow">מדריך תפעול עונתי</span>
-          <h1>הכנת צוות אתר סקי — עונת החורף</h1>
-          <p>כל משימות ההיערכות במקום אחד: לפני היציאה, בשבוע ההכנה באתר, ובשבוע הראשון עם הלקוחות. מסמנים מה בוצע — והמצב נשמר לכל הצוות.</p>
+          <span class="eyebrow">פינגווין · עונת חורף 2027</span>
+          <h1>וולטורנס 2027</h1>
+          <p>הבית של הצוות לעונה: לוח שנה, משימות, תחומי אחריות ושאלות פתוחות. כל מה שמסמנים כאן נשמר לכל הצוות.</p>
           <div class="hero-stats">
             <div class="hstat"><b id="heroDone">0</b><span>משימות שהושלמו</span></div>
             <div class="hstat"><b id="heroTotal">0</b><span>סה״כ משימות</span></div>
@@ -1887,23 +2071,47 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
           </div>
         </div>
         <div class="hero-badge">
-          <span>מפגש הצוות הראשון · יום ד׳</span>
-          <b dir="ltr">21.10.26</b>
-          <span style="margin-top:10px">הצוות: בן · יותם · דורון · קרן</span>
+          <span id="heroNextK">המפגש הבא</span>
+          <b id="heroNextT">—</b>
+          <span id="heroNextD" style="margin-top:6px"></span>
         </div>
       </div>
     </div>
 
-    <div class="callout">
-      <div class="ic">!</div>
-      <div>
-        <b>עיקרון העבודה: לפי נושאים, לא לפי סדר</b>
-        <p>המשימות מחולקות לנושאים, ולכן עוברים על כולן בכל הנושאים במקביל — ומתחילים בכל נושא מהמשימות הראשונות. לא “מסיימים נושא אחד ועוברים הלאה”.</p>
+
+
+    <div class="sec-h"><span>מה קורה ומתי</span><h2>לוח השנה של הצוות</h2></div>
+    <div class="cal-wrap">
+      <div class="cal" id="cal">
+        <div class="cal-top">
+          <div class="cal-nav"><button type="button" class="cal-b" id="calPrev" aria-label="החודש הקודם">›</button><h3 id="calTitle"></h3><button type="button" class="cal-b" id="calNext" aria-label="החודש הבא">‹</button></div>
+          <button type="button" class="cal-today" id="calToday">היום</button>
+        </div>
+        <div class="cal-dow"><span>א׳</span><span>ב׳</span><span>ג׳</span><span>ד׳</span><span>ה׳</span><span>ו׳</span><span>ש׳</span></div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend" id="calLegend"></div>
       </div>
+      <aside class="cal-side">
+        <div class="cal-day" id="calDay"></div>
+        <div class="cal-up"><h4>הקרובים</h4><div id="calUp"></div></div>
+        <a class="cal-link" id="calLink" href="#" target="_blank" rel="noopener" hidden>פתיחה ביומן גוגל של הצוות</a>
+      </aside>
     </div>
 
+    <div class="sec-h"><span>מי מוביל מה</span><h2>תחומי אחריות</h2></div>
+    <div class="roles">
+      <div class="rl"><i data-pc="בן"></i><b>בן</b><span data-roles="בן" data-max="5"></span></div>
+      <div class="rl"><i data-pc="יותם"></i><b>יותם</b><span data-roles="יותם" data-max="5"></span></div>
+      <div class="rl"><i data-pc="דורון"></i><b>דורון</b><span data-roles="דורון" data-max="5"></span></div>
+      <div class="rl"><i data-pc="קרן"></i><b>קרן</b><span data-roles="קרן" data-max="5"></span></div>
+    </div>
+
+    <div class="sec-h"><span>שלושה שלבים עד הלקוחות</span><h2>שלבי העבודה</h2></div>
+    <div class="phases" id="phaseCards"></div>
+
+    <div class="sec-h"><span>עד הטיסה ב־26.11</span><h2>הפוקוס לקראת חנוכה</h2></div>
     <div class="hwcard" style="margin:0 0 18px">
-      <h3>הפוקוס לקראת חנוכה · עד הטיסה ב־26.11</h3>
+      
       <p>חמישה דברים שחייבים להיסגר לפני שטסים. הראשון הוא הכי חשוב.</p>
       <ol style="margin:10px 0 0;padding-inline-start:22px;font-size:14px;color:#5A3D0C;line-height:1.7">
         <li><b>מיילים לכל הספקים ותיאום פגישות</b> לשבוע שלפני הגעת לקוחות חנוכה (סקיפסים, אוטובוסים, ציוד, הדרכות)<br><span style="color:#12694A;font-weight:700">✓ חברת המעליות (סקיפסים): פגישה נקבעה ל־02.12 בשעה 09:00 שעון צרפת</span></li>
@@ -1914,107 +2122,9 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
       </ol>
     </div>
 
-    <div class="mtgs" id="mtgCard">
-      <div class="mtgs-head"><h3>לו״ז מפגשים</h3><span class="mtgs-today" id="mtgToday"></span></div>
-      <div class="mtgs-list" id="mtgList"></div>
-    </div>
-    <style>
-      .mtgs{background:#fff;border:1px solid var(--line,#DCE6EE);border-radius:16px;padding:16px 18px;margin:0 0 18px;box-shadow:var(--sh,none)}
-      .mtgs-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-      .mtgs-head h3{margin:0;font-size:18px;color:var(--navy,#0B3550)}
-      .mtgs-today{font-size:12.5px;color:var(--muted,#5B6B78)}
-      .mtgs-list{display:flex;flex-direction:column;gap:8px}
-      .mtg{display:grid;grid-template-columns:96px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid var(--line,#DCE6EE);background:#F7FAFC}
-      .mtg .d{font-weight:800;font-variant-numeric:tabular-nums;color:var(--navy,#0B3550)}
-      .mtg .d small{display:block;font-weight:600;font-size:11.5px;color:var(--muted,#5B6B78)}
-      .mtg .t b{display:block;font-size:14.5px;color:#13232F}
-      .mtg .t span{font-size:12.5px;color:var(--muted,#5B6B78)}
-      .mtg .st{font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap;background:#E8EEF3;color:#3F5363}
-      .mtg.past{opacity:.55}
-      .mtg.past .st{background:transparent;color:#3F5363}
-      .mtg.today{background:#E3F5EC;border-color:#2E9E6A;box-shadow:0 0 0 2px rgba(46,158,106,.18)}
-      .mtg.today .st{background:#1F8A57;color:#fff}
-      .mtg.next{border-color:#7FB3D5;background:#EEF6FC}
-      .mtg.next .st{background:#0B5C8C;color:#fff}
-      .mtg.ms .t b::before{content:"✈ ";color:#0B5C8C}
-      @media (max-width:560px){.mtg{grid-template-columns:78px 1fr}.mtg .st{grid-column:1 / -1;justify-self:start}}
-    </style>
-    <script>
-    (function(){
-      /* date as [y, m, d]; to = end of a range; ms = milestone (not a meeting) */
-      var M = [
-        { f:[2026,10,21], t:"ישיבת צוות 1", s:"חלוקת תפקידים ומשימות" },
-        { f:[2026,10,28], t:"ישיבה עם כרמל", s:"שאלות לקראת הישיבה עם סמדר" },
-        { f:[2026,11,4],  t:"ישיבה עם סמדר", s:"עוברים על המשימות והלו״ז" },
-        { f:[2026,11,5], to:[2026,11,10], t:"שבוע עבודה על המשימות", s:"ביצוע המשימות לפני הסגירה מול אורן וחן" },
-        { f:[2026,11,11], t:"אורן וחן · פגישה פיזית במשרד", s:"סגירת הלו״ז ואישורו" },
-        { f:[2026,11,24], t:"פגישת נציגים והנהלה", s:"פגישה אחרונה לפני הטיסה" },
-        { f:[2026,11,26], t:"טיסה לצרפת", s:"מתחילים את תקופת ההכנה באתר", ms:1 },
-        { f:[2026,12,2],  t:"פגישה עם חברת המעליות (סקיפסים)", s:"09:00 שעון צרפת" },
-        { f:[2026,12,5],  t:"הגעת לקוחות חנוכה", s:"שבוע חנוכה · וולטורנס בלבד", ms:1 }
-      ];
-      var DAY = ["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","ש׳"];
-      var p2 = function(n){ return (n < 10 ? "0" : "") + n; };
-      var mk = function(a){ return new Date(a[0], a[1] - 1, a[2]); };
-      var fmt = function(d){ return p2(d.getDate()) + "." + p2(d.getMonth() + 1); };
-      function render(){
-        var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        var nextDone = false, h = "";
-        document.getElementById("mtgToday").textContent = "היום: יום " + DAY[today.getDay()] + " · " + fmt(today) + "." + String(today.getFullYear()).slice(2);
-        M.forEach(function(m){
-          var a = mk(m.f), b = m.to ? mk(m.to) : a, cls = "", st;
-          var days = Math.round((a - today) / 864e5);
-          if (b < today){ cls = "past"; st = "✓ עבר"; }
-          else if (a <= today){ cls = "today"; st = m.to ? "השבוע" : "היום"; nextDone = true; }
-          else {
-            st = days === 1 ? "מחר" : "בעוד " + days + " ימים";
-            if (!nextDone){ cls = "next"; st = "הבא · " + st; nextDone = true; }
-          }
-          var dt = m.to ? fmt(a) + "–" + fmt(b) : fmt(a);
-          var dn = m.to ? "" : "יום " + DAY[a.getDay()];
-          h += '<div class="mtg ' + cls + (m.ms ? ' ms' : '') + '"><div class="d" dir="ltr">' + dt + '<small dir="rtl">' + dn + '</small></div>'
-             + '<div class="t"><b>' + m.t + '</b><span>' + m.s + '</span></div><span class="st">' + st + '</span></div>';
-        });
-        document.getElementById("mtgList").innerHTML = h;
-      }
-      render();
-      setInterval(render, 60 * 60 * 1000);
-      document.addEventListener("visibilitychange", function(){ if (!document.hidden) render(); });
-    })();
-    </script>
-    <div class="phases" id="phaseCards"></div>
-
-    <div class="season">
-      <div class="season-head">
-        <h3>לוז העונה · חורף 2027</h3>
-        <span class="season-note">וולטורנס שבת–שבת · לה מנואיר ראשון–ראשון</span>
-      </div>
-      <div class="season-row">
-        <div class="se ok"><span class="sl2">פגישה 1</span><b dir="ltr">21.10.26</b></div>
-        <div class="se"><span class="sl2">פגישה 2 · עם סמדר</span><b dir="ltr">04.11.26</b></div>
-        <div class="se"><span class="sl2">פגישה 3 · עם כרמל</span><b dir="ltr">28.10.26</b></div>
-        <div class="se"><span class="sl2">אורן וחן במשרד · סגירת לו״ז</span><b dir="ltr">11.11.26</b></div>
-        <div class="se read"><span class="sl2">פגישה 4 · פגישת נציגים אחרונה</span><b dir="ltr">24.11.26</b></div>
-        <div class="se amber"><span class="sl2">שבוע חנוכה · וולטורנס בלבד</span><b dir="ltr">05.12 – 12.12.26</b></div>
-        <div class="se"><span class="sl2">וולטורנס · 1–5</span><b dir="ltr">02.01 – 06.02.27</b></div>
-        <div class="se"><span class="sl2">לה מנואיר · 1–5</span><b dir="ltr">03.01 – 07.02.27</b></div>
-        <div class="se red"><span class="sl2">ואקאנס</span><b dir="ltr">06.02 – 06.03.27</b></div>
-        <div class="se"><span class="sl2">וולטורנס · 6–9</span><b dir="ltr">06.03 – 03.04.27</b></div>
-        <div class="se"><span class="sl2">לה מנואיר · 6–9</span><b dir="ltr">07.03 – 04.04.27</b></div>
-        <div class="se ok"><span class="sl2">סיום העונה · חזרה לארץ</span><b dir="ltr">04.04.27</b></div>
-      </div>
-    </div>
-
-    <div class="season">
-      <div class="season-head">
-        <h3>עד מתי כל דבר צריך להיות מוכן</h3>
-        <span class="season-note">תאריכי יעד מוצעים · נעולים מול פגישות 1, 2 ו־4</span>
-      </div>
-      <div class="dlgrid" id="dlGrid"></div>
-    </div>
+    <div class="sec-h"><span>נשאר לסגור</span><h2>מה עוד פתוח</h2></div>
 
     <div class="open-list">
-      <h3>מה עוד לא סגור</h3>
       <p class="sub">נקודות שטרם נקבעו — לסגירה בפגישה הקרובה</p>
       <ul>
           <li>לאשר שכל הצוות טס ב־26.11</li>
@@ -2023,6 +2133,13 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
                 <li>חלוקת אחריות סופית בין חברי הצוות</li>
         <li>מועדי הגשה לכל משימה</li>
       </ul>
+    </div>
+    <div class="callout">
+      <div class="ic">!</div>
+      <div>
+        <b>עיקרון העבודה: לפי נושאים, לא לפי סדר</b>
+        <p>המשימות מחולקות לנושאים, ולכן עוברים על כולן בכל הנושאים במקביל — ומתחילים בכל נושא מהמשימות הראשונות. לא “מסיימים נושא אחד ועוברים הלאה”.</p>
+      </div>
     </div>
   </section>
 
@@ -2068,9 +2185,21 @@ p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
   </section>
 
 
+
+  <!-- ===== TEAM ===== -->
+  <section class="view" id="view-team" role="tabpanel" hidden>
+    <div class="vhead"><div class="vhead-main"><h2>בית רחוק מהבית</h2><p>אמנת הצוות שלנו, מתוך התרגיל "מה זה צוות". ככה אנחנו רוצים להיות אחד עם השני העונה.</p></div>
+      <div class="vhead-side"><div class="tm-names"><span>בן</span><span>יותם</span><span>דורון</span><span>קרן</span></div></div></div>
+    <div class="tm-quote"><span>המשפט שלנו</span><b>"כל עוד זה עובד, זה שלך."</b></div>
+    <div class="tm-grid">
+      <article class="tm-card"><span class="tm-n">01</span><h3>מה מחזיק אותנו</h3><ul><li>מכילים אחד את השני ויודעים לוותר</li><li>מכירים לעומק, ושומרים על סטלבט בינינו</li><li>מחוות קטנות, ועוזרים כשקשה, גם בדברים הקטנים</li></ul></article>
+      <article class="tm-card"><span class="tm-n">02</span><h3>איך עובדים</h3><ul><li>בגרות וגמישות, לא מקובעים</li><li>הכול נבנה על כבוד ותקשורת</li><li>אי אפשר לקרוא מחשבות, מדברים</li></ul></article>
+      <article class="tm-card red"><span class="tm-n">03</span><h3>קווים אדומים</h3><ul><li>זלזול ולרדת על מישהו</li><li>פגיעה בכבוד בסיסי</li><li>שומרים על סביבה בטוחה לכולם</li></ul></article>
+    </div>
+    <div class="tm-photo"><div><b>צוות וולטורנס · חורף 2027</b><span>בן · יותם · דורון · קרן</span></div></div>
+  </section>
   <footer class="src">
-    מבוסס על קבצי ההיערכות של הצוות: משימות הכנה בארץ · משימות לשבוע הכנה ולו״ז · ציוד מהארץ.<br>
-    הסימונים נשמרים אוטומטית בדפדפן הזה בלבד.
+    <div class="src-in"><b>פינגווין · צוות וולטורנס 2027</b><span>כל סימון באתר נשמר אוטומטית לכל הצוות</span></div>
   </footer>
 </main>
 
@@ -3605,10 +3734,139 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   tick(); setInterval(tick, 30000);
 })();
 
+/* ================= team calendar (overview) ================= */
+(function(){
+  const grid = document.getElementById('calGrid'); if (!grid) return;
+  const TYPES = {
+    team:     { n: 'ישיבות צוות',  c: '#6B4FBB' },
+    supplier: { n: 'פגישות ספקים', c: '#C27400' },
+    flight:   { n: 'טיסות',        c: '#0B5C8C' },
+    work:     { n: 'עבודה והכנה',  c: '#3A78C2' },
+    clients:  { n: 'לקוחות',       c: '#D2483C' },
+    season:   { n: 'שבועות העונה', c: '#0E8A80' },
+    vac:      { n: 'ואקאנס',       c: '#8A97A3' },
+    other:    { n: 'אחר',          c: '#5B6B78' }
+  };
+  /* used until the team's Google Calendar answers; s/e are inclusive dates */
+  const SEED = [
+    { t: 'ישיבת צוות 1', s: '2026-10-21', type: 'team', d: 'חלוקת תפקידים ומשימות' },
+    { t: 'ישיבה עם כרמל', s: '2026-10-28', type: 'team', d: 'שאלות לקראת הישיבה עם סמדר' },
+    { t: 'ישיבה עם סמדר', s: '2026-11-04', type: 'team', d: 'עוברים על המשימות והלו״ז' },
+    { t: 'שבוע עבודה על המשימות', s: '2026-11-05', e: '2026-11-10', type: 'work', d: 'ביצוע המשימות לפני הסגירה מול אורן וחן' },
+    { t: 'אורן וחן · במשרד', s: '2026-11-11', type: 'team', d: 'פגישה פיזית · סגירת הלו״ז ואישורו' },
+    { t: 'פגישת נציגים והנהלה', s: '2026-11-24', type: 'team', d: 'פגישה אחרונה לפני הטיסה' },
+    { t: 'טיסה לצרפת', s: '2026-11-26', type: 'flight', d: 'כל הצוות · באתר ברצף עד 06.02' },
+    { t: 'הכנה באתר', s: '2026-11-26', e: '2026-12-04', type: 'work', d: 'כל התקופה עד הלקוחות היא הכנה' },
+    { t: 'חברת המעליות (סקיפסים)', s: '2026-12-02', tm: '09:00 צרפת', type: 'supplier', d: 'פגישת ספק · 09:00 שעון צרפת' },
+    { t: 'שבוע חנוכה · לקוחות', s: '2026-12-05', e: '2026-12-12', type: 'clients', d: 'וולטורנס בלבד' },
+    { t: 'וולטורנס · שבועות 1–5', s: '2027-01-02', e: '2027-02-06', type: 'season', d: 'שבת–שבת' },
+    { t: 'לה מנואיר · שבועות 1–5', s: '2027-01-03', e: '2027-02-07', type: 'season', d: 'ראשון–ראשון' },
+    { t: 'חזרה לארץ', s: '2027-02-06', type: 'flight', d: 'לברר: לה מנואיר מסיימת ב־07.02' },
+    { t: 'ואקאנס', s: '2027-02-06', e: '2027-03-06', type: 'vac', d: 'החודש שבו לא עובדים' },
+    { t: 'וולטורנס · שבועות 6–9', s: '2027-03-06', e: '2027-04-03', type: 'season', d: 'שבת–שבת' },
+    { t: 'לה מנואיר · שבועות 6–9', s: '2027-03-07', e: '2027-04-04', type: 'season', d: 'ראשון–ראשון' },
+    { t: 'חזרה לארץ · סיום העונה', s: '2027-04-04', type: 'flight', d: 'סוף העונה' }
+  ];
+  const MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const p2 = n => (n < 10 ? '0' : '') + n;
+  const key = d => d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
+  const parse = k => { const a = String(k).slice(0, 10).split('-').map(Number); return new Date(a[0], a[1] - 1, a[2]); };
+  const fmt = d => p2(d.getDate()) + '.' + p2(d.getMonth() + 1);
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
+  const norm = x => { const o = Object.assign({}, x); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; return o; };
+
+  let EV = SEED.map(norm), calId = '';
+  const now = new Date(); let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let view = new Date(today.getFullYear(), today.getMonth(), 1), sel = new Date(today);
+
+  const on = d => EV.filter(x => x.S <= d && d <= x.E).sort((a, b) => (a.range - b.range) || (a.S - b.S));
+  const status = x => x.E < today ? 'past' : x.S <= today ? 'now' : 'soon';
+
+  function render(){
+    document.getElementById('calTitle').textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
+    const first = new Date(view.getFullYear(), view.getMonth(), 1);
+    const start = new Date(first); start.setDate(1 - first.getDay());
+    const last = new Date(view.getFullYear(), view.getMonth() + 1, 0);
+    const weeks = Math.ceil((first.getDay() + last.getDate()) / 7);
+    let h = '';
+    for (let i = 0; i < weeks * 7; i++){
+      const d = new Date(start); d.setDate(start.getDate() + i);
+      const ev = on(d), k = key(d);
+      const cls = ['cal-c'];
+      if (d.getMonth() !== view.getMonth()) cls.push('out');
+      if (+d === +today) cls.push('today');
+      else if (d < today) cls.push('past');
+      if (+d === +sel) cls.push('sel');
+      const chips = ev.slice(0, 3).map(x => {
+        const head = !x.range || +d === +x.S || d.getDay() === 0 || d.getDate() === 1;
+        return `<span class="ce${x.range ? ' rg' : ''}${+d === +x.S ? ' st' : ''}${+d === +x.E ? ' en' : ''}" style="--c:${TYPES[x.type].c}" title="${esc(x.t)}">${head ? esc(x.t) : '&nbsp;'}</span>`;
+      }).join('') + (ev.length > 3 ? `<span class="ce more">+${ev.length - 3}</span>` : '');
+      const dots = ev.slice(0, 4).map(x => `<i style="background:${TYPES[x.type].c}"></i>`).join('');
+      h += `<button type="button" class="${cls.join(' ')}" data-k="${k}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}${ev.length ? ' · ' + ev.length + ' אירועים' : ''}"><span class="cn">${d.getDate()}</span><span class="chips">${chips}</span><span class="dots">${dots}</span></button>`;
+    }
+    grid.innerHTML = h;
+    renderDay(); renderUp();
+  }
+  function item(x, big){
+    const st = status(x);
+    const when = x.range ? fmt(x.S) + '–' + fmt(x.E) : fmt(x.S) + ' · יום ' + DAYS[x.S.getDay()];
+    let tag = '';
+    if (st === 'now') tag = `<em class="now">${x.range ? 'עכשיו' : 'היום'}</em>`;
+    else if (st === 'soon'){ const n = Math.round((x.S - today) / 864e5); tag = `<em>${n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'}</em>`; }
+    else tag = '<em class="done">✓ עבר</em>';
+    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small><bdi dir="ltr">${when}</bdi>${x.tm ? ' · ' + esc(x.tm) : ''}${big && x.d ? ' · ' + esc(x.d) : ''}</small></div>${tag}</div>`;
+  }
+  function renderDay(){
+    const ev = on(sel);
+    const isT = +sel === +today;
+    document.getElementById('calDay').innerHTML = `<h4>${isT ? 'היום · ' : ''}יום ${DAYS[sel.getDay()]} ${fmt(sel)}</h4>` +
+      (ev.length ? ev.map(x => item(x, true)).join('') : '<p class="cal-empty">אין אירועים ביום הזה</p>');
+  }
+  function renderUp(){
+    const list = EV.filter(x => x.E >= today && x.type !== 'season').sort((a, b) => a.S - b.S).slice(0, 6);
+    document.getElementById('calUp').innerHTML = list.map(x => item(x, false)).join('') || '<p class="cal-empty">אין אירועים קרובים</p>';
+    const nx = EV.filter(x => !x.range && x.S >= today && x.type !== 'season').sort((a, b) => a.S - b.S)[0];
+    const T = document.getElementById('heroNextT');
+    if (T && nx){
+      const isT = +nx.S === +today, n = Math.round((nx.S - today) / 864e5);
+      document.getElementById('heroNextK').textContent = isT ? 'היום' : 'המפגש הבא';
+      T.textContent = nx.t;
+      document.getElementById('heroNextD').textContent = fmt(nx.S) + ' · יום ' + DAYS[nx.S.getDay()] + (isT ? '' : ' · ' + (n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'));
+    }
+  }
+  document.getElementById('calLegend').innerHTML = Object.keys(TYPES).filter(t => t !== 'other').map(t => `<span><i style="background:${TYPES[t].c}"></i>${TYPES[t].n}</span>`).join('');
+  grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
+  document.getElementById('calPrev').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
+  document.getElementById('calNext').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
+  document.getElementById('calToday').addEventListener('click', () => { view = new Date(today.getFullYear(), today.getMonth(), 1); sel = new Date(today); render(); });
+  render();
+
+  /* live: the team's Google Calendar through the sheet script */
+  function load(){
+    if (!window.PENGUIN_API) return;
+    fetch(window.PENGUIN_API + '?a=cal&t=' + Date.now()).then(r => r.json()).then(j => {
+      if (!j || !j.ok || !Array.isArray(j.events) || !j.events.length) return;
+      EV = j.events.map(norm); calId = j.calId || '';
+      const a = document.getElementById('calLink');
+      if (calId){ a.href = 'https://calendar.google.com/calendar/u/0/r?cid=' + encodeURIComponent(calId); a.hidden = false; }
+      render();
+    }).catch(() => {});
+  }
+  load();
+  setInterval(() => { const n = new Date(), t = new Date(n.getFullYear(), n.getMonth(), n.getDate()); if (+t !== +today){ today = t; render(); } }, 60000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+
+  /* person colour dots on the roles card */
+  const PC = window.PERSON_COLORS || {};
+  document.querySelectorAll('.roles [data-pc]').forEach(i => { i.style.background = PC[i.dataset.pc] || '#8AA3B0'; });
+})();
+
 let startMode = 'deck';
 try {
   const seen = localStorage.getItem('penguin-film-v1');
-  startMode = localStorage.getItem('penguin-mode') || 'deck';
+  startMode = 'board';
   localStorage.setItem('penguin-film-v1', '1');
 } catch(e){}
 setMode(startMode);
