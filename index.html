@@ -4237,9 +4237,10 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
 
   function init(){
     const SNOW = '#EEF4F8';
-    addHost(document.querySelector('#view-overview .hero'), ['ski', 'board'], SNOW);
-    document.querySelectorAll('.view .vhead').forEach((v, i) => addHost(v, [i % 2 ? 'ski' : 'board'], SNOW));
-    addHost(document.querySelector('footer.src'), ['ski'], '#F7FBFD');
+    /* drawn riders were removed: Ben wants real footage instead */
+    addHost(document.querySelector('#view-overview .hero'), [], SNOW);
+    document.querySelectorAll('.view .vhead').forEach(v => addHost(v, [], SNOW));
+    addHost(document.querySelector('footer.src'), [], '#F7FBFD');
   }
   size(); addEventListener('resize', size);
   init();
