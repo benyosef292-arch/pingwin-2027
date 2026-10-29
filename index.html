@@ -3928,12 +3928,20 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   }
   document.getElementById('ctSearch').addEventListener('input', e => { q = e.target.value; render(); });
   if (!window.PENGUIN_API){ body.innerHTML = '<p class="ct-msg">אנשי הקשר זמינים רק באתר הצוות</p>'; return; }
+  let busy = false;
+  function load(){
+  if (busy || ALL.length) return; busy = true;
   fetch(window.PENGUIN_API + '?a=contacts' + (window.PENGUIN_AUTH ? window.PENGUIN_AUTH() : '') + '&t=' + Date.now()).then(r => r.json()).then(j => {
+    busy = false;
     if (!j || !j.ok){ body.innerHTML = '<p class="ct-msg">' + (j && j.error === 'team_only' ? 'אנשי הקשר פתוחים רק לצוות. פתחו את האתר דרך קישור הצוות שבן שלח.' : 'אנשי הקשר עוד לא זמינים. נסו שוב בעוד רגע.') + '</p>'; return; }
     ALL = j.contacts || [];
     document.getElementById('ctCount').textContent = ALL.length;
     chips(); render();
-  }).catch(() => { body.innerHTML = '<p class="ct-msg">אנשי הקשר עוד לא זמינים. נסו שוב בעוד רגע.</p>'; });
+  }).catch(() => { busy = false; body.innerHTML = '<p class="ct-msg">אנשי הקשר עוד לא זמינים. נסו שוב בעוד רגע.</p>'; });
+  }
+  load();
+  document.querySelectorAll('[data-view="contacts"]').forEach(b => b.addEventListener('click', load));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
 })();
 
 let startMode = 'deck';
