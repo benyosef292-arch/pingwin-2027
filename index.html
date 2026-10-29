@@ -311,7 +311,7 @@ p{margin:0}
 .switch{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-size:13.5px;user-select:none;color:var(--ink)}
 .switch input{position:absolute;opacity:0;width:1px;height:1px}
 .switch .track{width:40px;height:23px;border-radius:999px;background:#CFE0EC;position:relative;transition:background .18s;flex:0 0 auto}
-.switch .knob{position:absolute;top:3px;inset-inline-end:3px;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,62,90,.3);transition:transform .2s cubic-bezier(.25,1,.5,1)}
+.switch .knob{position:absolute;top:3px;right:3px;left:auto;width:17px;height:17px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,62,90,.3);transition:transform .2s cubic-bezier(.25,1,.5,1)}
 .switch input:checked + .track{background:var(--blue)}
 .switch input:checked + .track .knob{transform:translateX(-17px)}
 .switch input:focus-visible + .track{box-shadow:0 0 0 3px rgba(0,170,235,.3)}
@@ -2134,7 +2134,7 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
     <div class="cal-wrap">
       <div class="cal" id="cal">
         <div class="cal-top">
-          <div class="cal-nav"><button type="button" class="cal-b" id="calPrev" aria-label="החודש הקודם">›</button><h3 id="calTitle"></h3><button type="button" class="cal-b" id="calNext" aria-label="החודש הבא">‹</button></div>
+          <div class="cal-nav"><button type="button" class="cal-b" id="calPrev" aria-label="החודש הקודם">‹</button><h3 id="calTitle"></h3><button type="button" class="cal-b" id="calNext" aria-label="החודש הבא">›</button></div>
           <button type="button" class="cal-today" id="calToday">היום</button>
         </div>
         <div class="cal-dow"><span>א׳</span><span>ב׳</span><span>ג׳</span><span>ד׳</span><span>ה׳</span><span>ו׳</span><span>ש׳</span></div>
@@ -3544,7 +3544,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   /* snow burst when a task is checked */
   document.addEventListener('change', e => {
     const t = e.target;
-    if (RM || !t || t.type !== 'checkbox' || !t.checked) return;
+    if (RM || !t || t.type !== 'checkbox' || !t.checked || t.closest('.switch')) return;
     const box = (t.nextElementSibling && t.nextElementSibling.getBoundingClientRect) ? t.nextElementSibling.getBoundingClientRect() : t.getBoundingClientRect();
     const cx = box.left + box.width / 2, cy = box.top + box.height / 2;
     for (let i = 0; i < 9; i++){
