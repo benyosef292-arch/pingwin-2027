@@ -1948,6 +1948,17 @@ body.film-mode .f-rail{display:flex}
   .f-ta-card textarea{min-height:110px}
 }
 
+
+/* ================= story scenes inside the site (no separate mode) ================= */
+html,body{overflow-x:clip}
+.fx{margin-inline:calc(50% - 50vw);background:var(--f-night);color:#fff;position:relative;z-index:1}
+.fx .f-stage{top:var(--hh,0px);height:calc(100vh - var(--hh,0px));height:calc(100svh - var(--hh,0px))}
+.fx #f-s1{height:250vh}.fx #f-s2{height:190vh}.fx #f-s3{height:260vh}.fx #f-s4{height:320vh}.fx #f-s5{height:270vh}.fx #f-team{height:300vh}
+.fx .hero-badge{display:inline-block;margin-top:22px;text-align:start}
+#view-overview > .fx:first-child{margin-top:0}
+.view > .fx{margin-block:0}
+.view > .fx + .sec-h{margin-top:56px}
+#view-contacts > .fx,#view-team > .fx{margin-block:28px}
 </style>
 <style id="winter">
 /* ================= deck look for the whole site (photos, veils, glass, deck type) ================= */
@@ -2061,7 +2072,7 @@ footer.src{background-color:#060B10}
     </div>
   </div>
   <div class="top-right">
-    <div class="modes" role="group" aria-label="תצוגה"><button class="mode-btn" data-mode="film" aria-pressed="false" type="button">סיפור</button><button class="mode-btn" data-mode="board" aria-pressed="true" type="button">לוח עבודה</button><button class="mode-btn" data-mode="deck" aria-pressed="false" type="button">מצגת</button></div>
+    <div class="modes" role="group" aria-label="תצוגה"><button class="mode-btn" data-mode="board" aria-pressed="true" type="button">לוח עבודה</button><button class="mode-btn" data-mode="deck" aria-pressed="false" type="button">מצגת</button></div>
     <div class="ring-wrap" title="התקדמות כללית">
       <svg class="ring" viewBox="0 0 46 46" aria-hidden="true">
         <circle class="bg" cx="23" cy="23" r="19"/>
@@ -2088,310 +2099,6 @@ footer.src{background-color:#060B10}
   <button class="tab" role="tab" data-view="contacts" aria-selected="false">אנשי קשר</button>
   <button class="tab" role="tab" data-view="team" aria-selected="false">הצוות שלנו</button>
 </nav>
-
-<div id="view-film" aria-label="סיפור העונה">
-  <canvas id="f-snow" aria-hidden="true"></canvas>
-  <nav class="f-rail" id="f-rail" aria-label="פרקים">
-    <button type="button" data-go="f-s1">פתיחה</button>
-    <button type="button" data-go="f-s3">הצוות</button>
-    <button type="button" data-go="f-team">בניית צוות</button>
-    <button type="button" data-go="f-s4">הלו״ז</button>
-    <button type="button" data-go="f-s5">המלונות</button>
-    <button type="button" data-go="f-s6">השלבים</button>
-    <button type="button" data-go="f-s7">יציאה</button>
-  </nav>
-
-  <!-- 1 · through the goggles -->
-  <section class="f-track" id="f-s1">
-    <div class="f-stage">
-      <svg id="f-lens" aria-hidden="true">
-        <defs>
-          <clipPath id="f-lensClip" clipPathUnits="userSpaceOnUse"><path id="f-lensClipPath"/></clipPath>
-          <linearGradient id="f-rim" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3D9AE"/><stop offset=".45" stop-color="#E2B676"/><stop offset=".7" stop-color="#7FD3F7"/><stop offset="1" stop-color="#2A7FB0"/>
-          </linearGradient>
-          <linearGradient id="f-tint" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#7FD3F7" stop-opacity=".30"/><stop offset=".5" stop-color="#E2B676" stop-opacity=".06"/><stop offset="1" stop-color="#E2B676" stop-opacity=".34"/>
-          </linearGradient>
-          <linearGradient id="f-strap" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#1A2833"/><stop offset=".5" stop-color="#0E1820"/><stop offset="1" stop-color="#1A2833"/>
-          </linearGradient>
-          <linearGradient id="f-strapFade" gradientUnits="userSpaceOnUse" x1="-760" y1="0" x2="760" y2="0">
-            <stop offset="0" stop-color="#16232C" stop-opacity="0"/><stop offset=".25" stop-color="#16232C"/><stop offset=".75" stop-color="#16232C"/><stop offset="1" stop-color="#16232C" stop-opacity="0"/>
-          </linearGradient>
-          <linearGradient id="f-shine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
-          </linearGradient>
-        </defs>
-        <image id="f-lensImg" preserveAspectRatio="xMidYMid slice" clip-path="url(#f-lensClip)"/>
-        <g id="f-gog">
-          <path class="strap" d="M-760 -46 H-300 V40 H-760 Z M300 -46 H760 V40 H300 Z" fill="url(#f-strapFade)"/>
-          <path class="lensP" fill="url(#f-tint)"/>
-          <path class="lensP" fill="none" stroke="#0C151C" stroke-width="46" stroke-linejoin="round"/>
-          <path class="lensP" fill="none" stroke="#24343F" stroke-width="2" transform="scale(1.09 1.12)"/>
-          <path class="lensP" fill="none" stroke="url(#f-rim)" stroke-width="5"/>
-          <path d="M-250 -128 L-120 -128 L-230 110 L-300 110 Z" fill="url(#f-shine)" opacity=".55" id="f-sheen"/>
-        </g>
-      </svg>
-      <div class="f-hero-txt" id="f-heroTxt">
-        <span class="f-eyebrow">פינגווין · אתר וולטורנס · 2,300 מ׳</span>
-        <h1>צוות וולטורנס<br><em>חורף 2027</em></h1>
-        <p>הנציגים שיורדים לשטח, כל משימות ההיערכות ולוח העונה המלא. גללו כדי להיכנס לעונה.</p>
-        <div class="f-hero-meta">
-          <div><b>4</b><span>נציגים</span></div>
-          <div><b>130</b><span>משימות</span></div>
-          <div><b>9 + 1</b><span>שבועות לקוחות + חנוכה</span></div>
-        </div>
-      </div>
-      <div class="f-cue" id="f-cue"><span>גללו</span><i></i></div>
-    </div>
-  </section>
-
-  <!-- 2 · word reveal -->
-  <section class="f-track" id="f-s2">
-    <div class="f-stage" style="background-image:var(--bg5)">
-      <div class="f-veil"></div>
-      <div class="f-words"><p id="f-words">יש דרך אחרת לעבור עונה. ארבעה אנשים, |130 משימות| ו|תשעה שבועות| של לקוחות. תמונה אחת משותפת של הצוות שאנחנו רוצים להיות.</p></div>
-      <div class="f-side">
-        <div><b>45 · בארץ</b>משימות לפני היציאה, בשלושה נושאים שרצים במקביל.</div>
-        <div><b>65 · באתר</b>משימות שטח בשבוע ההכנה. בשבוע הזה כולם עושים הכול.</div>
-        <div><b>20 · במזוודה</b>פריטי ציוד מהארץ, לפי כמויות והערות.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3 · split title + gondola + team -->
-  <section class="f-track" id="f-s3">
-    <div class="f-stage">
-      <div class="f-s3-pano" style="background-image:var(--bg7)"></div>
-      <svg id="f-cable" aria-hidden="true"><line id="f-cableLine" stroke="#21394A" stroke-width="2.2"/><line id="f-cableLine2" stroke="#21394A" stroke-width="1.2" opacity=".5"/></svg>
-      <div class="f-split" aria-hidden="true"><span id="f-wR">מוכנים</span><span id="f-wL">לעלות.</span></div>
-      <svg id="f-gondola" viewBox="0 0 240 320" aria-hidden="true">
-        <defs>
-          <linearGradient id="gdBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0A2E44"/><stop offset=".35" stop-color="#145A80"/><stop offset=".6" stop-color="#0E4566"/><stop offset="1" stop-color="#082436"/></linearGradient>
-          <linearGradient id="gdGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D9AE"/><stop offset=".45" stop-color="#9FCBE2"/><stop offset="1" stop-color="#2E5C77"/></linearGradient>
-          <linearGradient id="gdRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9D3D9"/><stop offset="1" stop-color="#7E8E98"/></linearGradient>
-        </defs>
-        <g class="gd-fill" id="gdFill">
-          <g id="gdGrip"><rect x="98" y="8" width="44" height="18" rx="5" fill="#2B3B46"/><circle cx="120" cy="17" r="4" fill="#8A9AA4"/></g>
-          <path d="M120 28 V62 Q120 74 108 78 L70 90" fill="none" stroke="#3A4C58" stroke-width="7" stroke-linecap="round"/>
-          <path d="M44 98 Q120 74 196 98 L200 112 H40 Z" fill="url(#gdRoof)"/>
-          <rect x="30" y="108" width="180" height="196" rx="26" fill="url(#gdBody)"/>
-          <rect x="44" y="124" width="70" height="104" rx="12" fill="url(#gdGlass)"/>
-          <rect x="126" y="124" width="70" height="104" rx="12" fill="url(#gdGlass)" opacity=".92"/>
-          <path d="M52 132 L80 132 L56 216 L50 216 Z" fill="#fff" opacity=".28"/>
-          <rect x="30" y="242" width="180" height="9" fill="#00AAEB"/>
-          <rect x="30" y="256" width="180" height="3" fill="#E2B676"/>
-          <path d="M120 112 V300" stroke="#06202F" stroke-width="2" opacity=".6"/>
-          <rect x="62" y="300" width="116" height="10" rx="4" fill="#1A2A34"/>
-        </g>
-        <g id="gdLine">
-          <rect class="gd-line" x="104" y="6" width="32" height="22" rx="5"/>
-          <path class="gd-line" d="M120 28 V62 Q120 74 108 78 L70 90"/>
-          <path class="gd-line" d="M44 98 Q120 74 196 98 L200 112 H40 Z"/>
-          <rect class="gd-line" x="30" y="108" width="180" height="196" rx="26"/>
-          <rect class="gd-line" x="44" y="124" width="70" height="104" rx="12"/>
-          <rect class="gd-line" x="126" y="124" width="70" height="104" rx="12"/>
-          <path class="gd-line" d="M30 242 H210 M30 251 H210 M120 112 V300"/>
-        </g>
-      </svg>
-      <div class="f-sheet" id="f-sheet">
-        <span class="f-eyebrow">הצוות של העונה</span>
-        <h2>וולטורנס 2027</h2>
-        <span class="nb">ארבעה נציגים · אתר אחד ואתר לווין</span>
-        <div class="f-rows">
-          <div class="f-row"><b>בן</b><span data-roles="בן" data-tag="מוביל">ראש הצוות · אחראי אוטובוסים צרפת<i>מוביל</i></span></div>
-          <div class="f-row"><b>יותם</b><span data-roles="יותם">אחראי אתר לה מנואיר (Les Menuires)</span></div>
-          <div class="f-row"><b>דורון</b><span data-roles="דורון"></span></div>
-          <div class="f-row"><b>קרן</b><span data-roles="קרן"></span></div>
-        </div>
-        <p class="f-note">תחומי האחריות לפי טבלת האחריות. מעבר לתחומים, כל נציג לוקח חלק בכל משימות העונה.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 3b · team building -->
-  <section class="f-track" id="f-team">
-    <div class="f-stage">
-      <div class="f-tm-bg" style="background-image:var(--bg3)"></div>
-      <div class="f-tm-head">
-        <span class="f-eyebrow">בניית צוות · פתיחת היום · 15–20 דקות שיחה</span>
-        <h2>מה זה בשבילכם<br><em>צוות חזק?</em></h2>
-        <p>לפני שנכנסים למשימות, חמש דקות של תיאום ציפיות. כל אחד עונה, וביחד בונים תמונה אחת של הצוות שאנחנו רוצים להיות.</p>
-      </div>
-      <svg id="f-rope" viewBox="0 0 600 440" aria-hidden="true">
-        <path id="f-ropeBase" d="M530 380 Q470 372 400 290 Q330 268 260 200 Q190 180 120 104 Q96 84 70 58" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-dasharray="3 7"/>
-        <path id="f-ropeLine" d="M530 380 Q470 372 400 290 Q330 268 260 200 Q190 180 120 104 Q96 84 70 58" fill="none" stroke="#E2B676" stroke-width="3.2" stroke-linecap="round"/>
-        <g id="f-flag" opacity="0"><path d="M70 58 V8" stroke="#fff" stroke-width="2.4"/><path d="M70 8 L104 18 L70 28 Z" fill="#E2B676"/><text x="70" y="82" text-anchor="middle" fill="#F3D9AE" font-size="15" font-weight="700" font-family="Assistant, sans-serif">צוות חזק</text></g>
-        <g id="f-knots"></g>
-      </svg>
-      <div class="f-q">
-        <div class="f-q-lab"><span>שאלה</span><b id="f-qIdx" dir="ltr">01 / 06</b></div>
-        <div class="f-q-stack" id="f-qStack"></div>
-        <div class="f-hdots" id="f-qDots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="f-team-ans">
-    <div class="f-ta-in">
-      <div class="f-ta-head">
-        <div>
-          <span class="f-eyebrow">התשובות שלנו</span>
-          <h2>אין תשובה נכונה.<br><span>יש תמונה משותפת.</span></h2>
-        </div>
-        <p>כל אחד כותב כאן את התשובות שלו לשש השאלות. הכול נשמר אוטומטית לכל הצוות, ומופיע גם בשקופית בניית הצוות במצגת. בסוף היום חוזרים לזה.</p>
-      </div>
-      <ol class="f-ta-qs">
-        <li><b>מה הופך צוות לחזק?</b><span>מה חייב להיות בינינו כדי שזה יעבוד</span></li>
-        <li><b>מה אני צריך מהצוות?</b><span>גיבוי, ביטחון, מידע, סבלנות</span></li>
-        <li><b>מה אני מביא איתי?</b><span>החוזקה האישית שאני שם על השולחן</span></li>
-        <li><b>איך נראית תקשורת טובה?</b><span>מתי מעדכנים, איך מתלוננים, איך מבקשים עזרה</span></li>
-        <li><b>מה קורה כשמישהו נבלע בעומס?</b><span>מי מרים, ומתי, בלי לחכות שיבקש</span></li>
-        <li><b>מה אסור שיקרה בינינו?</b><span>הקווים האדומים של העונה</span></li>
-      </ol>
-      <div class="f-ta-grid">
-        <label class="f-ta-card" for="fv-ben"><span><b>בן</b><i data-roles="בן" data-max="3">ראש הצוות</i></span><textarea id="fv-ben" data-src="v-ben" placeholder="מה בן אומר…"></textarea></label>
-        <label class="f-ta-card" for="fv-yotam"><span><b>יותם</b><i data-roles="יותם" data-max="3">אחראי לה מנואיר</i></span><textarea id="fv-yotam" data-src="v-yotam" placeholder="מה יותם אומר…"></textarea></label>
-        <label class="f-ta-card" for="fv-doron"><span><b>דורון</b><i data-roles="דורון" data-max="3"></i></span><textarea id="fv-doron" data-src="v-doron" placeholder="מה דורון אומר…"></textarea></label>
-        <label class="f-ta-card" for="fv-keren"><span><b>קרן</b><i data-roles="קרן" data-max="3"></i></span><textarea id="fv-keren" data-src="v-keren" placeholder="מה קרן אומרת…"></textarea></label>
-      </div>
-      <div class="f-ta-foot">
-        <button type="button" class="f-ta-btn" id="f-copyVoices">העתקת התשובות</button>
-        <button type="button" class="f-ta-btn ghost" id="f-toVoices">לשקופית בניית הצוות במצגת</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 · the season as a run -->
-  <section class="f-track" id="f-s4">
-    <div class="f-stage">
-      <div class="f-big" aria-hidden="true">2027</div>
-      <div class="f-s4-head">
-        <span class="f-eyebrow">לוז העונה · שער אחרי שער</span>
-        <h2>מהפגישה הראשונה<br>ועד החזרה הביתה</h2>
-        <div class="f-now"><b id="f-nowD">21.10.26</b><span id="f-nowT">פגישה 1 · יום ד׳</span></div>
-      </div>
-      <svg id="f-piste" role="img" aria-label="ציר העונה: פגישה 1 ב-21.10.26, פגישה 4, פגישת נציגים אחרונה, ב-24.11.26, שבוע חנוכה 05–12.12.26, פתיחת העונה 02.01.27, חזרה לארץ 06.02.27, חזרה לאתר 06.03.27, סיום העונה 04.04.27">
-        <path id="f-pBase" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="16" stroke-linecap="round"/>
-        <path id="f-pVac" fill="none" stroke="rgba(160,185,200,.55)" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
-        <path id="f-pDraw" fill="none" stroke="#F4F8FB" stroke-width="3" stroke-linecap="round"/>
-        <path class="f-pSeg" data-a="45" data-b="52" fill="none" stroke="#E2B676" stroke-width="9" stroke-linecap="round"/>
-        <path class="f-pSeg" data-a="73" data-b="108" fill="none" stroke="#57C6EA" stroke-width="9" stroke-linecap="round"/>
-        <path class="f-pSeg" data-a="136" data-b="165" fill="none" stroke="#57C6EA" stroke-width="9" stroke-linecap="round"/>
-        <g id="f-marks"></g>
-        <g id="f-skier"><circle r="13" fill="rgba(226,182,118,.22)"/><circle r="6.5" fill="#F3D9AE"/></g>
-      </svg>
-      <div class="f-legend">
-        <span><i style="background:#57C6EA"></i>שבועות לקוחות</span>
-        <span><i style="background:#E2B676"></i>חנוכה · וולטורנס בלבד</span>
-        <span><i style="background:repeating-linear-gradient(90deg,#A0B9C8 0 3px,transparent 3px 8px)"></i>ואקאנס</span>
-        <span>כרמל 28.10 · סמדר 01.11 · אורן וחן 11.11 · נציגים 24.11 · טיסה 26.11</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5 · hotels -->
-  <section class="f-track" id="f-s5">
-    <div class="f-stage">
-      <canvas id="f-ridge" aria-hidden="true"></canvas>
-      <div class="f-big" aria-hidden="true">Val Thorens</div>
-      <div class="f-hcard">
-        <div class="tp"><span>PINGWIN</span><span>VAL THORENS</span></div>
-        <h3>המלונות שלנו.<br>2,300 מ׳ מעל הים.</h3>
-        <div class="bt"><span>מובילים</span><b>5</b><span>נכסים באתר</span><b>17</b></div>
-      </div>
-      <div class="f-hotel">
-        <div class="lab"><span>המלונות שאנחנו מוכרים</span><b id="f-hIdx" dir="ltr">1 / 5</b></div>
-        <div class="f-hname" id="f-hName"></div>
-        <div class="f-hloc" id="f-hLoc"></div>
-        <p class="f-hdesc" id="f-hDesc"></p>
-        <div class="f-hdots" id="f-hDots"><i></i><i></i><i></i><i></i><i></i></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6 · phases -->
-  <section id="f-s6">
-    <div class="f-s6-in">
-      <div>
-        <span class="f-eyebrow">שלוש שכבות הכנה ורשימה אחת</span>
-        <h2>כל פרט.<br><span>על השולחן.</span></h2>
-        <div class="f-acc" id="f-acc">
-          <details open>
-            <summary><b>לפני היציאה · בארץ</b><em data-fs="p1">0 / 30</em><i></i></summary>
-            <div class="bd">
-              <p>שלושה נושאים שרצים במקביל, כל אחד עם אחראי, דדליין ורשימת שאלות פתוחות לחן ולאורן.</p>
-              <div class="chips"><span>הכנת צוות</span><span>תיאום שבוע ההכנה</span><span>הכנה לעונה</span></div>
-              <div class="meter"><i data-fm="p1"></i></div>
-              <button class="go" type="button" data-board="p1">לרשימה בלוח העבודה</button>
-            </div>
-          </details>
-          <details>
-            <summary><b>שבוע ההכנה באתר</b><em data-fs="p2">0 / 49</em><i></i></summary>
-            <div class="bd">
-              <p>שש קטגוריות שטח, מהתמקמות ועד שיחת הסיכום. כלל ברזל: בשבוע הזה כולם עושים הכול.</p>
-              <div class="chips"><span>התמקמות ולוגיסטיקה</span><span>ספקים וקומישנים</span><span>היכרות אתר ועיירה</span><span>תיקוף ותפעול</span><span>ריקו</span><span>סגירה וסיכום</span></div>
-              <div class="meter"><i data-fm="p2"></i></div>
-              <button class="go" type="button" data-board="p2">לרשימה בלוח העבודה</button>
-            </div>
-          </details>
-          <details>
-            <summary><b>ציוד מהארץ</b><em data-fs="p3">0 / 20</em><i></i></summary>
-            <div class="bd">
-              <p>לקוחות, משרדי, הגעות ועזיבות. כל פריט שכמותו “תלוי” נגזר מצפי הלקוחות, ובכל מקרה לוקחים אקסטרה.</p>
-              <div class="chips"><span>באפים וגוגלס</span><span>ציוד משרדי ולפטופ</span><span>דגלי טיפה ושלטי וולקאם</span></div>
-              <div class="meter"><i data-fm="p3"></i></div>
-              <button class="go" type="button" data-board="p3">לרשימה בלוח העבודה</button>
-            </div>
-          </details>
-          <details>
-            <summary><b>העונה עצמה</b><em>9 שבועות + חנוכה</em><i></i></summary>
-            <div class="bd">
-              <p>וולטורנס שבת–שבת, לה מנואיר ראשון–ראשון. נאום אוטובוס, ברוכים הבאים, ליווי יומי ושגרת צוות עם שיחה שבועית.</p>
-              <div class="chips"><span dir="ltr">05.12.26 → 04.04.27</span><span>ואקאנס 06.02–06.03</span></div>
-              <button class="go" type="button" data-board="sum">לסיכומים השבועיים</button>
-            </div>
-          </details>
-        </div>
-      </div>
-      <div class="f-pic"><div id="f-picImg" style="background-image:var(--bg3)"></div><span>וולטורנס · ערב בעיירה</span></div>
-    </div>
-  </section>
-
-  <!-- 7 · closing -->
-  <section id="f-s7">
-    <div class="bgp" style="background-image:var(--bg7)"></div><div class="bgv"></div>
-    <div class="f-s7-in">
-      <span class="f-eyebrow">תשעה עקרונות לעונה</span>
-      <h2>מוכנים<br><em>לעלות.</em></h2>
-      <div class="f-pr">
-        <div><small>01</small><b>משאירים את האגו בארץ</b><p>אף אחד לא מעל אף אחד. מקשיבים, מקבלים ביקורת ושמים את הצוות לפני עצמנו.</p></div><div><small>02</small><b>מדברים על הכול</b><p>בעיה קטנה שעולה בזמן עדיפה על בעיה גדולה שמתפוצצת. אף אחד לא סוחב לבד.</p></div><div><small>03</small><b>בעלות על התחום</b><p>מכירים את התחום לעומק ומביאים אותו עד הסוף, בלי שירדפו אחריכם.</p></div><div><small>04</small><b>סוגרים מראש</b><p>כל מה שאפשר לבדוק ולתאם מוקדם חוסך כיבוי שריפות ברגע האחרון.</p></div><div><small>05</small><b>סטנדרט גבוה כל העונה</b><p>עמידה בזמנים, סדר, שירות ויחס מכבד לספקים ולצוות, גם כשרגוע.</p></div><div><small>06</small><b>דואגים אחד לשני</b><p>חיים ועובדים יחד חודשים. שמים לב לעומס, ויודעים להפריד בין חברות לאחריות.</p></div><div><small>07</small><b>יוזמה וראש גדול</b><p>לא מחכים לרשימה. רעיון לשיפור, לפעילות או לייעול? מעלים אותו.</p></div><div><small>08</small><b>הלקוחות במרכז</b><p>לא רק חופשה בלי תקלות, אלא חוויה שזוכרים. זמינות, סבלנות ויחס אישי.</p></div><div><small>09</small><b>קודם כול צוות</b><p>אין "זה לא התפקיד שלי". כשיש עומס או בעיה, כולם מתגייסים.</p></div>
-      </div>
-      <p class="f-pr-close">לא אחד שעובד קשה בשביל כולם, כולנו עובדים נכון ביחד.</p>
-      <div class="f-open">
-        <h3>מה עוד לא סגור</h3>
-        <ul>
-          <li>לאשר שכל הצוות טס ב־26.11</li>
-          <li>תאריך טיסת החזרה לאתר במרץ</li>
-          <li>חזרה בפברואר: הטיסה ב־06.02, אבל שבוע 5 בלה מנואיר נגמר ב־07.02</li>
-          <li>חלוקת אחריות סופית בין חברי הצוות</li>
-          <li>מועדי הגשה לכל משימה</li>
-        </ul>
-      </div>
-      <div class="f-cta">
-        <button class="pri" type="button" data-mode-go="deck">למצגת לפגישה</button>
-        <button type="button" data-mode-go="board">ללוח העבודה</button>
-        <button type="button" data-go="f-s1">חזרה להתחלה</button>
-      </div>
-    </div>
-  </section>
-</div>
-
-
-
-
-
 
 <div class="deck-wrap" id="view-deck">
   <div class="stage" id="stage">
@@ -2774,7 +2481,7 @@ footer.src{background-color:#060B10}
 
   <!-- ===== OVERVIEW ===== -->
   <section class="view" id="view-overview" role="tabpanel">
-    <div class="hero">
+    <div class="hero" hidden>
       <div class="hero-photo" style="background-image:var(--bg7)"></div>
       <div class="hero-veil"></div>
       <svg class="mtn" viewBox="0 0 1200 190" preserveAspectRatio="none" aria-hidden="true">
@@ -2792,15 +2499,76 @@ footer.src{background-color:#060B10}
             <div class="hstat"><b id="heroOpen">0</b><span>עוד פתוחות</span></div>
           </div>
         </div>
+        
+      </div>
+    </div>
+
+
+
+    <div class="fx">
+<!-- 1 · through the goggles -->
+  <section class="f-track" id="f-s1">
+    <div class="f-stage">
+      <svg id="f-lens" aria-hidden="true">
+        <defs>
+          <clipPath id="f-lensClip" clipPathUnits="userSpaceOnUse"><path id="f-lensClipPath"/></clipPath>
+          <linearGradient id="f-rim" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#F3D9AE"/><stop offset=".45" stop-color="#E2B676"/><stop offset=".7" stop-color="#7FD3F7"/><stop offset="1" stop-color="#2A7FB0"/>
+          </linearGradient>
+          <linearGradient id="f-tint" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#7FD3F7" stop-opacity=".30"/><stop offset=".5" stop-color="#E2B676" stop-opacity=".06"/><stop offset="1" stop-color="#E2B676" stop-opacity=".34"/>
+          </linearGradient>
+          <linearGradient id="f-strap" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1A2833"/><stop offset=".5" stop-color="#0E1820"/><stop offset="1" stop-color="#1A2833"/>
+          </linearGradient>
+          <linearGradient id="f-strapFade" gradientUnits="userSpaceOnUse" x1="-760" y1="0" x2="760" y2="0">
+            <stop offset="0" stop-color="#16232C" stop-opacity="0"/><stop offset=".25" stop-color="#16232C"/><stop offset=".75" stop-color="#16232C"/><stop offset="1" stop-color="#16232C" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="f-shine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <image id="f-lensImg" preserveAspectRatio="xMidYMid slice" clip-path="url(#f-lensClip)"/>
+        <g id="f-gog">
+          <path class="strap" d="M-760 -46 H-300 V40 H-760 Z M300 -46 H760 V40 H300 Z" fill="url(#f-strapFade)"/>
+          <path class="lensP" fill="url(#f-tint)"/>
+          <path class="lensP" fill="none" stroke="#0C151C" stroke-width="46" stroke-linejoin="round"/>
+          <path class="lensP" fill="none" stroke="#24343F" stroke-width="2" transform="scale(1.09 1.12)"/>
+          <path class="lensP" fill="none" stroke="url(#f-rim)" stroke-width="5"/>
+          <path d="M-250 -128 L-120 -128 L-230 110 L-300 110 Z" fill="url(#f-shine)" opacity=".55" id="f-sheen"/>
+        </g>
+      </svg>
+      <div class="f-hero-txt" id="f-heroTxt">
+        <span class="f-eyebrow">פינגווין · אתר וולטורנס · 2,300 מ׳</span>
+        <h1>צוות וולטורנס<br><em>חורף 2027</em></h1>
+        <p>הנציגים שיורדים לשטח, כל משימות ההיערכות ולוח העונה המלא. גללו כדי להיכנס לעונה.</p>
+        <div class="f-hero-meta">
+          <div><b>4</b><span>נציגים</span></div>
+          <div><b>130</b><span>משימות</span></div>
+          <div><b>9 + 1</b><span>שבועות לקוחות + חנוכה</span></div>
+        </div>
         <div class="hero-badge">
           <span id="heroNextK">המפגש הבא</span>
           <b id="heroNextT">—</b>
           <span id="heroNextD" style="margin-top:6px"></span>
         </div>
       </div>
+      <div class="f-cue" id="f-cue"><span>גללו</span><i></i></div>
     </div>
-
-
+  </section>
+<!-- 2 · word reveal -->
+  <section class="f-track" id="f-s2">
+    <div class="f-stage" style="background-image:var(--bg5)">
+      <div class="f-veil"></div>
+      <div class="f-words"><p id="f-words">יש דרך אחרת לעבור עונה. ארבעה אנשים, |130 משימות| ו|תשעה שבועות| של לקוחות. תמונה אחת משותפת של הצוות שאנחנו רוצים להיות.</p></div>
+      <div class="f-side">
+        <div><b>45 · בארץ</b>משימות לפני היציאה, בשלושה נושאים שרצים במקביל.</div>
+        <div><b>65 · באתר</b>משימות שטח בשבוע ההכנה. בשבוע הזה כולם עושים הכול.</div>
+        <div><b>20 · במזוודה</b>פריטי ציוד מהארץ, לפי כמויות והערות.</div>
+      </div>
+    </div>
+  </section>
+</div>
 
     <div class="sec-h"><span>מה קורה ומתי</span><h2>לוח השנה של הצוות</h2></div>
     <div class="cal-wrap">
@@ -2820,11 +2588,140 @@ footer.src{background-color:#060B10}
       </aside>
     </div>
 
+    <div class="fx">
+<!-- 4 · the season as a run -->
+  <section class="f-track" id="f-s4">
+    <div class="f-stage">
+      <div class="f-big" aria-hidden="true">2027</div>
+      <div class="f-s4-head">
+        <span class="f-eyebrow">לוז העונה · שער אחרי שער</span>
+        <h2>מהפגישה הראשונה<br>ועד החזרה הביתה</h2>
+        <div class="f-now"><b id="f-nowD">21.10.26</b><span id="f-nowT">פגישה 1 · יום ד׳</span></div>
+      </div>
+      <svg id="f-piste" role="img" aria-label="ציר העונה: פגישה 1 ב-21.10.26, פגישה 4, פגישת נציגים אחרונה, ב-24.11.26, שבוע חנוכה 05–12.12.26, פתיחת העונה 02.01.27, חזרה לארץ 06.02.27, חזרה לאתר 06.03.27, סיום העונה 04.04.27">
+        <path id="f-pBase" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="16" stroke-linecap="round"/>
+        <path id="f-pVac" fill="none" stroke="rgba(160,185,200,.55)" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
+        <path id="f-pDraw" fill="none" stroke="#F4F8FB" stroke-width="3" stroke-linecap="round"/>
+        <path class="f-pSeg" data-a="45" data-b="52" fill="none" stroke="#E2B676" stroke-width="9" stroke-linecap="round"/>
+        <path class="f-pSeg" data-a="73" data-b="108" fill="none" stroke="#57C6EA" stroke-width="9" stroke-linecap="round"/>
+        <path class="f-pSeg" data-a="136" data-b="165" fill="none" stroke="#57C6EA" stroke-width="9" stroke-linecap="round"/>
+        <g id="f-marks"></g>
+        <g id="f-skier"><circle r="13" fill="rgba(226,182,118,.22)"/><circle r="6.5" fill="#F3D9AE"/></g>
+      </svg>
+      <div class="f-legend">
+        <span><i style="background:#57C6EA"></i>שבועות לקוחות</span>
+        <span><i style="background:#E2B676"></i>חנוכה · וולטורנס בלבד</span>
+        <span><i style="background:repeating-linear-gradient(90deg,#A0B9C8 0 3px,transparent 3px 8px)"></i>ואקאנס</span>
+        <span>כרמל 28.10 · סמדר 01.11 · אורן וחן 11.11 · נציגים 24.11 · טיסה 26.11</span>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="fx">
+<!-- 3 · split title + gondola + team -->
+  <section class="f-track" id="f-s3">
+    <div class="f-stage">
+      <div class="f-s3-pano" style="background-image:var(--bg7)"></div>
+      <svg id="f-cable" aria-hidden="true"><line id="f-cableLine" stroke="#21394A" stroke-width="2.2"/><line id="f-cableLine2" stroke="#21394A" stroke-width="1.2" opacity=".5"/></svg>
+      <div class="f-split" aria-hidden="true"><span id="f-wR">מוכנים</span><span id="f-wL">לעלות.</span></div>
+      <svg id="f-gondola" viewBox="0 0 240 320" aria-hidden="true">
+        <defs>
+          <linearGradient id="gdBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0A2E44"/><stop offset=".35" stop-color="#145A80"/><stop offset=".6" stop-color="#0E4566"/><stop offset="1" stop-color="#082436"/></linearGradient>
+          <linearGradient id="gdGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D9AE"/><stop offset=".45" stop-color="#9FCBE2"/><stop offset="1" stop-color="#2E5C77"/></linearGradient>
+          <linearGradient id="gdRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9D3D9"/><stop offset="1" stop-color="#7E8E98"/></linearGradient>
+        </defs>
+        <g class="gd-fill" id="gdFill">
+          <g id="gdGrip"><rect x="98" y="8" width="44" height="18" rx="5" fill="#2B3B46"/><circle cx="120" cy="17" r="4" fill="#8A9AA4"/></g>
+          <path d="M120 28 V62 Q120 74 108 78 L70 90" fill="none" stroke="#3A4C58" stroke-width="7" stroke-linecap="round"/>
+          <path d="M44 98 Q120 74 196 98 L200 112 H40 Z" fill="url(#gdRoof)"/>
+          <rect x="30" y="108" width="180" height="196" rx="26" fill="url(#gdBody)"/>
+          <rect x="44" y="124" width="70" height="104" rx="12" fill="url(#gdGlass)"/>
+          <rect x="126" y="124" width="70" height="104" rx="12" fill="url(#gdGlass)" opacity=".92"/>
+          <path d="M52 132 L80 132 L56 216 L50 216 Z" fill="#fff" opacity=".28"/>
+          <rect x="30" y="242" width="180" height="9" fill="#00AAEB"/>
+          <rect x="30" y="256" width="180" height="3" fill="#E2B676"/>
+          <path d="M120 112 V300" stroke="#06202F" stroke-width="2" opacity=".6"/>
+          <rect x="62" y="300" width="116" height="10" rx="4" fill="#1A2A34"/>
+        </g>
+        <g id="gdLine">
+          <rect class="gd-line" x="104" y="6" width="32" height="22" rx="5"/>
+          <path class="gd-line" d="M120 28 V62 Q120 74 108 78 L70 90"/>
+          <path class="gd-line" d="M44 98 Q120 74 196 98 L200 112 H40 Z"/>
+          <rect class="gd-line" x="30" y="108" width="180" height="196" rx="26"/>
+          <rect class="gd-line" x="44" y="124" width="70" height="104" rx="12"/>
+          <rect class="gd-line" x="126" y="124" width="70" height="104" rx="12"/>
+          <path class="gd-line" d="M30 242 H210 M30 251 H210 M120 112 V300"/>
+        </g>
+      </svg>
+      <div class="f-sheet" id="f-sheet">
+        <span class="f-eyebrow">הצוות של העונה</span>
+        <h2>וולטורנס 2027</h2>
+        <span class="nb">ארבעה נציגים · אתר אחד ואתר לווין</span>
+        <div class="f-rows">
+          <div class="f-row"><b>בן</b><span data-roles="בן" data-tag="מוביל">ראש הצוות · אחראי אוטובוסים צרפת<i>מוביל</i></span></div>
+          <div class="f-row"><b>יותם</b><span data-roles="יותם">אחראי אתר לה מנואיר (Les Menuires)</span></div>
+          <div class="f-row"><b>דורון</b><span data-roles="דורון"></span></div>
+          <div class="f-row"><b>קרן</b><span data-roles="קרן"></span></div>
+        </div>
+        <p class="f-note">תחומי האחריות לפי טבלת האחריות. מעבר לתחומים, כל נציג לוקח חלק בכל משימות העונה.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
     <div class="sec-h"><span>מי מוביל מה</span><h2>תחומי אחריות</h2></div>
     <div class="rfull" id="rolesFull"></div>
 
-    <div class="sec-h"><span>שלושה שלבים עד הלקוחות</span><h2>שלבי העבודה</h2></div>
-    <div class="phases" id="phaseCards"></div>
+    <div class="fx">
+<!-- 6 · phases -->
+  <section id="f-s6">
+    <div class="f-s6-in">
+      <div>
+        <span class="f-eyebrow">שלוש שכבות הכנה ורשימה אחת</span>
+        <h2>כל פרט.<br><span>על השולחן.</span></h2>
+        <div class="f-acc" id="f-acc">
+          <details open>
+            <summary><b>לפני היציאה · בארץ</b><em data-fs="p1">0 / 30</em><i></i></summary>
+            <div class="bd">
+              <p>שלושה נושאים שרצים במקביל, כל אחד עם אחראי, דדליין ורשימת שאלות פתוחות לחן ולאורן.</p>
+              <div class="chips"><span>הכנת צוות</span><span>תיאום שבוע ההכנה</span><span>הכנה לעונה</span></div>
+              <div class="meter"><i data-fm="p1"></i></div>
+              <button class="go" type="button" data-board="p1">לרשימה בלוח העבודה</button>
+            </div>
+          </details>
+          <details>
+            <summary><b>שבוע ההכנה באתר</b><em data-fs="p2">0 / 49</em><i></i></summary>
+            <div class="bd">
+              <p>שש קטגוריות שטח, מהתמקמות ועד שיחת הסיכום. כלל ברזל: בשבוע הזה כולם עושים הכול.</p>
+              <div class="chips"><span>התמקמות ולוגיסטיקה</span><span>ספקים וקומישנים</span><span>היכרות אתר ועיירה</span><span>תיקוף ותפעול</span><span>ריקו</span><span>סגירה וסיכום</span></div>
+              <div class="meter"><i data-fm="p2"></i></div>
+              <button class="go" type="button" data-board="p2">לרשימה בלוח העבודה</button>
+            </div>
+          </details>
+          <details>
+            <summary><b>ציוד מהארץ</b><em data-fs="p3">0 / 20</em><i></i></summary>
+            <div class="bd">
+              <p>לקוחות, משרדי, הגעות ועזיבות. כל פריט שכמותו “תלוי” נגזר מצפי הלקוחות, ובכל מקרה לוקחים אקסטרה.</p>
+              <div class="chips"><span>באפים וגוגלס</span><span>ציוד משרדי ולפטופ</span><span>דגלי טיפה ושלטי וולקאם</span></div>
+              <div class="meter"><i data-fm="p3"></i></div>
+              <button class="go" type="button" data-board="p3">לרשימה בלוח העבודה</button>
+            </div>
+          </details>
+          <details>
+            <summary><b>העונה עצמה</b><em>9 שבועות + חנוכה</em><i></i></summary>
+            <div class="bd">
+              <p>וולטורנס שבת–שבת, לה מנואיר ראשון–ראשון. נאום אוטובוס, ברוכים הבאים, ליווי יומי ושגרת צוות עם שיחה שבועית.</p>
+              <div class="chips"><span dir="ltr">05.12.26 → 04.04.27</span><span>ואקאנס 06.02–06.03</span></div>
+              <button class="go" type="button" data-board="sum">לסיכומים השבועיים</button>
+            </div>
+          </details>
+        </div>
+      </div>
+      <div class="f-pic"><div id="f-picImg" style="background-image:var(--bg3)"></div><span>וולטורנס · ערב בעיירה</span></div>
+    </div>
+  </section>
+</div>
+    <div class="phases" id="phaseCards" hidden></div>
 
     <div class="sec-h"><span>עד הטיסה ב־26.11</span><h2>הפוקוס לקראת חנוכה</h2></div>
     <div class="hwcard" style="margin:0 0 18px">
@@ -2907,6 +2804,27 @@ footer.src{background-color:#060B10}
   <section class="view" id="view-contacts" role="tabpanel" hidden>
     <div class="vhead"><div class="vhead-main"><h2>אנשי קשר בוולטורנס</h2><p>ספקים, מלונות, חנויות ציוד ואנשים חשובים באתר. לוחצים על מספר כדי להתקשר, על הסמל הירוק לוואטצאפ, או על המייל כדי לכתוב.</p></div>
       <div class="vhead-side"><div class="vnum"><b id="ctCount">—</b><span>אנשי קשר</span></div></div></div>
+    <div class="fx">
+<!-- 5 · hotels -->
+  <section class="f-track" id="f-s5">
+    <div class="f-stage">
+      <canvas id="f-ridge" aria-hidden="true"></canvas>
+      <div class="f-big" aria-hidden="true">Val Thorens</div>
+      <div class="f-hcard">
+        <div class="tp"><span>PINGWIN</span><span>VAL THORENS</span></div>
+        <h3>המלונות שלנו.<br>2,300 מ׳ מעל הים.</h3>
+        <div class="bt"><span>מובילים</span><b>5</b><span>נכסים באתר</span><b>17</b></div>
+      </div>
+      <div class="f-hotel">
+        <div class="lab"><span>המלונות שאנחנו מוכרים</span><b id="f-hIdx" dir="ltr">1 / 5</b></div>
+        <div class="f-hname" id="f-hName"></div>
+        <div class="f-hloc" id="f-hLoc"></div>
+        <p class="f-hdesc" id="f-hDesc"></p>
+        <div class="f-hdots" id="f-hDots"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </section>
+</div>
     <div class="ct-tools"><input type="search" id="ctSearch" class="ct-search" placeholder="חיפוש לפי שם, מלון, חנות או תפקיד…" autocomplete="off"><div class="ct-chips" id="ctChips"></div></div>
     <div id="ctBody"><p class="ct-msg">טוען אנשי קשר…</p></div>
   </section>
@@ -2921,7 +2839,75 @@ footer.src{background-color:#060B10}
       <article class="tm-card"><span class="tm-n">02</span><h3>איך עובדים</h3><ul><li>בגרות וגמישות, לא מקובעים</li><li>הכול נבנה על כבוד ותקשורת</li><li>אי אפשר לקרוא מחשבות, מדברים</li></ul></article>
       <article class="tm-card red"><span class="tm-n">03</span><h3>קווים אדומים</h3><ul><li>זלזול ולרדת על מישהו</li><li>פגיעה בכבוד בסיסי</li><li>שומרים על סביבה בטוחה לכולם</li></ul></article>
     </div>
-    <div class="tm-photo"><div><b>צוות וולטורנס · חורף 2027</b><span>בן · יותם · דורון · קרן</span></div></div>
+    <div class="fx">
+<!-- 3b · team building -->
+  <section class="f-track" id="f-team">
+    <div class="f-stage">
+      <div class="f-tm-bg" style="background-image:var(--bg3)"></div>
+      <div class="f-tm-head">
+        <span class="f-eyebrow">בניית צוות · פתיחת היום · 15–20 דקות שיחה</span>
+        <h2>מה זה בשבילכם<br><em>צוות חזק?</em></h2>
+        <p>לפני שנכנסים למשימות, חמש דקות של תיאום ציפיות. כל אחד עונה, וביחד בונים תמונה אחת של הצוות שאנחנו רוצים להיות.</p>
+      </div>
+      <svg id="f-rope" viewBox="0 0 600 440" aria-hidden="true">
+        <path id="f-ropeBase" d="M530 380 Q470 372 400 290 Q330 268 260 200 Q190 180 120 104 Q96 84 70 58" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-dasharray="3 7"/>
+        <path id="f-ropeLine" d="M530 380 Q470 372 400 290 Q330 268 260 200 Q190 180 120 104 Q96 84 70 58" fill="none" stroke="#E2B676" stroke-width="3.2" stroke-linecap="round"/>
+        <g id="f-flag" opacity="0"><path d="M70 58 V8" stroke="#fff" stroke-width="2.4"/><path d="M70 8 L104 18 L70 28 Z" fill="#E2B676"/><text x="70" y="82" text-anchor="middle" fill="#F3D9AE" font-size="15" font-weight="700" font-family="Assistant, sans-serif">צוות חזק</text></g>
+        <g id="f-knots"></g>
+      </svg>
+      <div class="f-q">
+        <div class="f-q-lab"><span>שאלה</span><b id="f-qIdx" dir="ltr">01 / 06</b></div>
+        <div class="f-q-stack" id="f-qStack"></div>
+        <div class="f-hdots" id="f-qDots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="f-team-ans">
+    <div class="f-ta-in">
+      <div class="f-ta-head">
+        <div>
+          <span class="f-eyebrow">התשובות שלנו</span>
+          <h2>אין תשובה נכונה.<br><span>יש תמונה משותפת.</span></h2>
+        </div>
+        <p>כל אחד כותב כאן את התשובות שלו לשש השאלות. הכול נשמר אוטומטית לכל הצוות, ומופיע גם בשקופית בניית הצוות במצגת. בסוף היום חוזרים לזה.</p>
+      </div>
+      <ol class="f-ta-qs">
+        <li><b>מה הופך צוות לחזק?</b><span>מה חייב להיות בינינו כדי שזה יעבוד</span></li>
+        <li><b>מה אני צריך מהצוות?</b><span>גיבוי, ביטחון, מידע, סבלנות</span></li>
+        <li><b>מה אני מביא איתי?</b><span>החוזקה האישית שאני שם על השולחן</span></li>
+        <li><b>איך נראית תקשורת טובה?</b><span>מתי מעדכנים, איך מתלוננים, איך מבקשים עזרה</span></li>
+        <li><b>מה קורה כשמישהו נבלע בעומס?</b><span>מי מרים, ומתי, בלי לחכות שיבקש</span></li>
+        <li><b>מה אסור שיקרה בינינו?</b><span>הקווים האדומים של העונה</span></li>
+      </ol>
+      <div class="f-ta-grid">
+        <label class="f-ta-card" for="fv-ben"><span><b>בן</b><i data-roles="בן" data-max="3">ראש הצוות</i></span><textarea id="fv-ben" data-src="v-ben" placeholder="מה בן אומר…"></textarea></label>
+        <label class="f-ta-card" for="fv-yotam"><span><b>יותם</b><i data-roles="יותם" data-max="3">אחראי לה מנואיר</i></span><textarea id="fv-yotam" data-src="v-yotam" placeholder="מה יותם אומר…"></textarea></label>
+        <label class="f-ta-card" for="fv-doron"><span><b>דורון</b><i data-roles="דורון" data-max="3"></i></span><textarea id="fv-doron" data-src="v-doron" placeholder="מה דורון אומר…"></textarea></label>
+        <label class="f-ta-card" for="fv-keren"><span><b>קרן</b><i data-roles="קרן" data-max="3"></i></span><textarea id="fv-keren" data-src="v-keren" placeholder="מה קרן אומרת…"></textarea></label>
+      </div>
+      <div class="f-ta-foot">
+        <button type="button" class="f-ta-btn" id="f-copyVoices">העתקת התשובות</button>
+        <button type="button" class="f-ta-btn ghost" id="f-toVoices">לשקופית בניית הצוות במצגת</button>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="tm-photo"><div><b>צוות וולטורנס · חורף 2027</b><span>בן · יותם · דורון · קרן</span></div></div>
+  <div class="fx">
+<!-- 7 · closing -->
+  <section id="f-s7">
+    <div class="bgp" style="background-image:var(--bg7)"></div><div class="bgv"></div>
+    <div class="f-s7-in">
+      <span class="f-eyebrow">תשעה עקרונות לעונה</span>
+      <h2>מוכנים<br><em>לעלות.</em></h2>
+      <div class="f-pr">
+        <div><small>01</small><b>משאירים את האגו בארץ</b><p>אף אחד לא מעל אף אחד. מקשיבים, מקבלים ביקורת ושמים את הצוות לפני עצמנו.</p></div><div><small>02</small><b>מדברים על הכול</b><p>בעיה קטנה שעולה בזמן עדיפה על בעיה גדולה שמתפוצצת. אף אחד לא סוחב לבד.</p></div><div><small>03</small><b>בעלות על התחום</b><p>מכירים את התחום לעומק ומביאים אותו עד הסוף, בלי שירדפו אחריכם.</p></div><div><small>04</small><b>סוגרים מראש</b><p>כל מה שאפשר לבדוק ולתאם מוקדם חוסך כיבוי שריפות ברגע האחרון.</p></div><div><small>05</small><b>סטנדרט גבוה כל העונה</b><p>עמידה בזמנים, סדר, שירות ויחס מכבד לספקים ולצוות, גם כשרגוע.</p></div><div><small>06</small><b>דואגים אחד לשני</b><p>חיים ועובדים יחד חודשים. שמים לב לעומס, ויודעים להפריד בין חברות לאחריות.</p></div><div><small>07</small><b>יוזמה וראש גדול</b><p>לא מחכים לרשימה. רעיון לשיפור, לפעילות או לייעול? מעלים אותו.</p></div><div><small>08</small><b>הלקוחות במרכז</b><p>לא רק חופשה בלי תקלות, אלא חוויה שזוכרים. זמינות, סבלנות ויחס אישי.</p></div><div><small>09</small><b>קודם כול צוות</b><p>אין "זה לא התפקיד שלי". כשיש עומס או בעיה, כולם מתגייסים.</p></div>
+      </div>
+      <p class="f-pr-close">לא אחד שעובד קשה בשביל כולם, כולנו עובדים נכון ביחד.</p>
+    </div>
+  </section>
+</div>
   </section>
   <footer class="src">
     <div class="src-in"><b>פינגווין · צוות וולטורנס 2027</b><span>כל סימון באתר נשמר אוטומטית לכל הצוות</span></div>
@@ -3650,7 +3636,7 @@ document.addEventListener('keydown', e => {
 window.addEventListener('resize', () => { if (document.body.classList.contains('deck-mode')) fitDeck(); });
 
 function setMode(m){
-  if (!['deck','board','film'].includes(m)) m = 'film';
+  if (!['deck','board'].includes(m)) m = 'board';
   document.body.classList.toggle('deck-mode', m === 'deck');
   document.body.classList.toggle('film-mode', m === 'film');
   document.getElementById('view-deck').style.display = m === 'deck' ? 'flex' : 'none';
@@ -3658,7 +3644,7 @@ function setMode(m){
   if (m === 'deck') { fitDeck(); showSlide(si); if (window.DeckMotion) DeckMotion.size(); }
   try { localStorage.setItem('penguin-mode', m); } catch(e){}
   window.scrollTo({ top: 0 });
-  if (m === 'film' && window.FilmMode) FilmMode.enter();
+  if (m === 'board' && window.FilmMode) FilmMode.enter();
   if (m === 'board' && window.BoardMotion) BoardMotion.enter();
 }
 document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
@@ -4689,8 +4675,12 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
   const easeOut = t => 1 - Math.pow(1 - t, 3);
   const seg = (p, a, b) => clamp((p - a) / (b - a));
-  const prog = el => { const r = el.getBoundingClientRect(); const span = r.height - innerHeight; return span > 0 ? clamp(-r.top / span) : (r.top < innerHeight ? 1 : 0); };
-  const isFilm = () => document.body.classList.contains('film-mode');
+  let HH = 0;
+  const tabsEl = document.getElementById('boardTabs');
+  function sizeHH(){ HH = 0; try { const cs = getComputedStyle(tabsEl); if (cs.position === 'sticky') HH = (parseFloat(cs.top) || 0) + tabsEl.offsetHeight; } catch(e){} document.documentElement.style.setProperty('--hh', HH + 'px'); }
+  sizeHH();
+  const prog = el => { const r = el.getBoundingClientRect(), vh = innerHeight - HH; const span = r.height - vh; return span > 0 ? clamp((HH - r.top) / span) : (r.top < innerHeight ? 1 : 0); };
+  const isFilm = () => !document.body.classList.contains('deck-mode');
 
   /* --- 1 · goggle lens --- */
   const LENS = 'M-300 -110 C-300 -150 -262 -162 -200 -162 L200 -162 C262 -162 300 -150 300 -110 L300 58 C300 118 262 140 202 140 L92 140 C60 140 46 96 0 96 C-46 96 -60 140 -92 140 L-202 140 C-262 140 -300 118 -300 58 Z';
@@ -4702,7 +4692,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     if (m) img.setAttribute('href', m[1]);
   } catch(e){}
   let W = innerWidth, H = innerHeight;
-  function sizeLens(){ W = innerWidth; H = innerHeight; lensSvg.setAttribute('viewBox', `0 0 ${W} ${H}`); }
+  function sizeLens(){ sizeHH(); W = innerWidth; H = innerHeight - HH; lensSvg.setAttribute('viewBox', `0 0 ${W} ${H}`); }
 
   function drawLens(p){
     const mob = W < 760;
@@ -4961,13 +4951,8 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   }));
 
   /* --- snow --- */
-  const snow = $('f-snow'), sctx = snow.getContext('2d'); let flakes = [], sW = 0, sH = 0;
-  function sizeSnow(){
-    const dpr = Math.min(2, devicePixelRatio || 1); sW = innerWidth; sH = innerHeight;
-    snow.width = sW * dpr; snow.height = sH * dpr; sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const n = Math.min(150, Math.round(sW * sH / 10000));
-    flakes = Array.from({ length: n }, () => ({ x: Math.random() * sW, y: Math.random() * sH, r: .6 + Math.random() * 2.2, v: .25 + Math.random() * .9, w: Math.random() * 6.28 }));
-  }
+  const snow = null, sctx = null; let flakes = [], sW = 0, sH = 0;
+  function sizeSnow(){}
   let lastY = scrollY, drift = 0;
   function tickSnow(){
     sctx.clearRect(0, 0, sW, sH);
@@ -5034,7 +5019,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
 
   /* --- loop --- */
   const sT = $('f-team'), sTA = $('f-team-ans'), s1 = $('f-s1'), s2 = $('f-s2'), s3 = $('f-s3'), s4 = $('f-s4'), s5 = $('f-s5'), s6 = $('f-s6');
-  const inView = el => { const r = el.getBoundingClientRect(); return r.bottom > -50 && r.top < innerHeight + 50; };
+  const inView = el => { if (!el || el.offsetParent === null) return false; const r = el.getBoundingClientRect(); return r.bottom > -50 && r.top < innerHeight + 50; };
   let raf = 0, statsT = 0;
   function frame(){
     raf = 0;
@@ -5057,11 +5042,10 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const req = () => { if (!raf) raf = requestAnimationFrame(frame); };
   addEventListener('scroll', req, { passive: true });
   addEventListener('resize', () => { sizeLens(); sizeSnow(); pMob = null; rW = 0; req(); });
-  function loop(){ if (isFilm() && !RM && !document.hidden) tickSnow(); requestAnimationFrame(loop); }
+  
 
   sizeLens(); sizeSnow();
-  if (!RM) requestAnimationFrame(loop);
-  window.FilmMode = { enter(){ sizeLens(); sizeSnow(); pMob = null; rW = 0; updateStats(); req(); setTimeout(req, 60); } };
+    window.FilmMode = { enter(){ sizeLens(); sizeSnow(); pMob = null; rW = 0; updateStats(); req(); setTimeout(req, 60); } };
 })();
 
 
@@ -5179,12 +5163,8 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   requestAnimationFrame(frame);
 })();
 
-let startMode = 'deck';
-try {
-  const seen = localStorage.getItem('penguin-film-v1');
-  startMode = 'film';
-  localStorage.setItem('penguin-film-v1', '1');
-} catch(e){}
+let startMode = 'board';
+try { if (localStorage.getItem('penguin-mode') === 'deck') startMode = 'deck'; } catch(e){}
 setMode(startMode);
 
 </script>
