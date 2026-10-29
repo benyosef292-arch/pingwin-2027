@@ -1644,6 +1644,26 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
   .view .vhead,#view-overview .hero,footer.src,#view-overview .pcard{background:#fff!important;color:#000!important}
 }
 
+
+.rfull{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.rf{background:#fff;border:1px solid #E3EAF0;border-top:6px solid var(--pc);border-radius:20px;padding:20px 22px;box-shadow:0 18px 44px -32px rgba(0,40,60,.55)}
+.rf header{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.rf-av{width:48px;height:48px;border-radius:50%;background:var(--pc);color:#fff;display:grid;place-items:center;font-size:22px;font-weight:900;flex:0 0 auto}
+.rf h3{margin:0;font-size:22px;font-weight:900;color:#0B2A3C}
+.rf h3 small{font-size:12px;font-weight:800;color:var(--pc);background:color-mix(in srgb,var(--pc) 12%,#fff);padding:2px 9px;border-radius:20px;vertical-align:middle}
+.rf header p{margin:2px 0 0;font-size:13px;color:#5E7382}
+.rf ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.rf li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:10px 14px;border-radius:12px;background:#F5F8FA;border-inline-start:4px solid color-mix(in srgb,var(--pc) 35%,#fff)}
+.rf li.hi{border-inline-start-color:var(--pc)}
+.rf li b{font-size:15px;font-weight:800;color:#0B2A3C}
+.rf li em{font-style:normal;font-size:11px;font-weight:800;color:var(--pc);align-self:center}
+.rf li span{grid-column:1 / -1;font-size:13px;color:#5E7382;line-height:1.5}
+.rf li span i{display:block;font-style:normal;color:#0B2A3C;margin-top:3px}
+.rf li span i::before{content:'הערה: ';font-weight:800}
+.rf li.none{display:block;color:#8AA3B0;background:none;border:0}
+.rf-open{grid-column:1 / -1;font-size:14px;color:#5E7382;background:#FFF7E8;border:1px solid #F2DDB0;border-radius:14px;padding:12px 16px}
+.rf-open b{color:#8A5A00}
+@media (max-width:760px){.rfull{grid-template-columns:1fr}.rf{padding:16px}}
 </style>
 <header class="topbar">
   <div class="brand">
@@ -1784,7 +1804,7 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
       <h2 class="sl-h" style="font-size:34px">מפגשי הצוות ולוח העונה</h2>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:11px;flex:0 0 auto">
         <div class="mr ok"><span class="k">פגישה 1</span><span class="v" dir="ltr">21.10.26</span><span class="h">יום ד׳</span></div>
-        <div class="mr"><span class="k">פגישה 2</span><span class="v" dir="ltr">04.11.26</span><span class="h">עם סמדר · יום ד׳</span></div>
+        <div class="mr"><span class="k">פגישה 2</span><span class="v" dir="ltr">01.11.26</span><span class="h">עם סמדר · יום א׳</span></div>
         <div class="mr"><span class="k">פגישה 3</span><span class="v" dir="ltr">28.10.26</span><span class="h">עם כרמל · שאלות לקראת סמדר</span></div>
         <div class="mr"><span class="k">אורן וחן · במשרד</span><span class="v" dir="ltr">11.11.26</span><span class="h">סגירת הלו״ז ואישורו</span></div>
         <div class="mr"><span class="k">פגישה 4 · נציגים</span><span class="v" dir="ltr">24.11.26</span><span class="h">הנהלה + מנכ״ל</span></div>
@@ -1840,7 +1860,7 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
           </div>
         </div>
       </div>
-      <div class="sl-foot"><span class="sl-chip">לסגירה</span><span>כרמל ב־28.10 · סמדר ב־04.11 · טיסה לצרפת ב־26.11 ובאתר ברצף עד הוואקאנס ב־06.02 · טיסת מרץ טרם נקבעה · לברר את החזרה של לה מנואיר בפברואר · לה מנואיר מתחילה ומסתיימת יום אחרי וולטורנס · חוזרים לארץ ב־04.04.27</span></div>
+      <div class="sl-foot"><span class="sl-chip">לסגירה</span><span>כרמל ב־28.10 · סמדר ב־01.11 · טיסה לצרפת ב־26.11 ובאתר ברצף עד הוואקאנס ב־06.02 · טיסת מרץ טרם נקבעה · לברר את החזרה של לה מנואיר בפברואר · לה מנואיר מתחילה ומסתיימת יום אחרי וולטורנס · חוזרים לארץ ב־04.04.27</span></div>
     </section>
 
     
@@ -2129,12 +2149,7 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
     </div>
 
     <div class="sec-h"><span>מי מוביל מה</span><h2>תחומי אחריות</h2></div>
-    <div class="roles">
-      <div class="rl"><i data-pc="בן"></i><b>בן</b><span data-roles="בן" data-max="5"></span></div>
-      <div class="rl"><i data-pc="יותם"></i><b>יותם</b><span data-roles="יותם" data-max="5"></span></div>
-      <div class="rl"><i data-pc="דורון"></i><b>דורון</b><span data-roles="דורון" data-max="5"></span></div>
-      <div class="rl"><i data-pc="קרן"></i><b>קרן</b><span data-roles="קרן" data-max="5"></span></div>
-    </div>
+    <div class="rfull" id="rolesFull"></div>
 
     <div class="sec-h"><span>שלושה שלבים עד הלקוחות</span><h2>שלבי העבודה</h2></div>
     <div class="phases" id="phaseCards"></div>
@@ -2259,8 +2274,8 @@ const PHASES = [
 
 const ORDER_KEY = "penguin-order";
 const DL_KEY = "penguin-dl";
-const DL_OPTS = [["21.10.26","ישיבת צוות 1 · 21.10"],["בבית","משימות בבית · עד 04.11"],["ישיבת צוות 3","ישיבה עם כרמל · 28.10 · שאלות לקראת סמדר"],["פגישה 2","ישיבה עם סמדר · 04.11"],["11.11.26","סגירת לו״ז מול אורן וחן · 11.11"],["24.11.26","פגישת נציגים והנהלה · 24.11"],["ימים 1–3 בהכנה","הכנה · 26.11–28.11"],["ימים 4–6 בהכנה","הכנה · 29.11–03.12"],["יום לפני הגעת הלקוחות","יום לפני הלקוחות · 04.12"]];
-const DL_NOTE = {"21.10.26":"השבוע","בבית":"כל אחד לפי השיבוץ שלו","פגישה 2":"04.11.26","ישיבת צוות 3":"28.10.26","11.11.26":"פגישה פיזית במשרד · סגירת הלו״ז ואישורו","24.11.26":"פגישה 4 · פגישת נציגים אחרונה","ימים 1–3 בהכנה":"26.11 – 28.11 · עם הנחיתה","ימים 4–6 בהכנה":"29.11 – 03.12 · המשך ההכנה באתר","יום לפני הגעת הלקוחות":"04.12 · צ׳ק־ליסט סגור"};
+const DL_OPTS = [["21.10.26","ישיבת צוות 1 · 21.10"],["בבית","משימות בבית · עד 01.11"],["ישיבת צוות 3","ישיבה עם כרמל · 28.10 · שאלות לקראת סמדר"],["פגישה 2","ישיבה עם סמדר · 01.11"],["11.11.26","סגירת לו״ז מול אורן וחן · 11.11"],["24.11.26","פגישת נציגים והנהלה · 24.11"],["ימים 1–3 בהכנה","הכנה · 26.11–28.11"],["ימים 4–6 בהכנה","הכנה · 29.11–03.12"],["יום לפני הגעת הלקוחות","יום לפני הלקוחות · 04.12"]];
+const DL_NOTE = {"21.10.26":"השבוע","בבית":"כל אחד לפי השיבוץ שלו","פגישה 2":"01.11.26","ישיבת צוות 3":"28.10.26","11.11.26":"פגישה פיזית במשרד · סגירת הלו״ז ואישורו","24.11.26":"פגישה 4 · פגישת נציגים אחרונה","ימים 1–3 בהכנה":"26.11 – 28.11 · עם הנחיתה","ימים 4–6 בהכנה":"29.11 – 03.12 · המשך ההכנה באתר","יום לפני הגעת הלקוחות":"04.12 · צ׳ק־ליסט סגור"};
 const dlOv = () => { try { return JSON.parse(localStorage.getItem(DL_KEY) || "{}") || {}; } catch(e){ return {}; } };
 const dlLabel = v => (DL_OPTS.find(o => o[0] === v) || [v, v])[1];
 /* only the artifact owner assigns owners, deadlines and moves tasks */
@@ -3737,6 +3752,53 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     });
     return out;
   }
+
+  const INFO = {
+    11: 'תיאום ההסעות בצרפת: שדה התעופה, העברות ולוחות זמנים מול חברת האוטובוסים',
+    12: 'האחראי באתר הלווין: קשר עם המלון והלקוחות בלה מנואיר',
+    21: 'תחום התנ״ך של העונה',
+    2: 'קשר שוטף עם המלון: חדרים, רשימות לקוחות, בקשות ובעיות',
+    3: 'קשר שוטף עם המלון: חדרים, רשימות לקוחות, בקשות ובעיות',
+    4: 'קשר שוטף עם המלון: חדרים, רשימות לקוחות, בקשות ובעיות',
+    5: 'קשר שוטף עם המלון: חדרים, רשימות לקוחות, בקשות ובעיות',
+    6: 'קשר שוטף עם המלון: חדרים, רשימות לקוחות, בקשות ובעיות',
+    1: 'הזמנה, הפקה וחלוקה של הסקיפסים מול חברת המעליות',
+    24: 'מוביל את הצוות, הישיבות והקשר עם המשרד',
+    25: 'ההודעות לקבוצות הלקוחות בוואטצאפ',
+    7: 'ההדרכות ללקוחות, מול בתי הספר לסקי והחנויות',
+    8: 'הציוד מהארץ ובאתר: רשימות, אריזה ומלאי',
+    10: 'בניית הלו״ז השבועי ופרסומו לצוות וללקוחות',
+    9: 'ניהול הקופה הקטנה והקבלות',
+    14: 'מעקב אחרי ימי הולדת ולקוחות שחשוב לשים לב אליהם',
+    15: 'תוכן ותמונות מהאתר לרשתות החברתיות',
+    17: 'הכנת המעטפות ללקוחות לפני ההגעה',
+    18: 'כל מה שצריך להיות מוכן ליום ההגעה, כולל הפק״ל לשדה',
+    19: 'סדר בתיקיות הצוות בדרייב',
+    20: 'הדו״ח השבועי למשרד וסיכום כל הגעה',
+    22: 'ההזמנות מהמאפייה',
+    23: 'הקשר עם מסעדת ג׳אפסר'
+  };
+  const PRI = { hi: 'עדיפות גבוהה', mid: '', lo: '' };
+  const escH = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  function full(){
+    const box = document.getElementById('rolesFull'); if (!box) return;
+    let st = {}; try { st = JSON.parse(localStorage.getItem('penguin-resp') || '{}') || {}; } catch(e){}
+    const areas = (typeof RESP_AREAS !== 'undefined') ? RESP_AREAS : [];
+    const ord = { hi: 0, mid: 1, lo: 2 };
+    const PC = window.PERSON_COLORS || {};
+    const people = ['בן', 'יותם', 'דורון', 'קרן'];
+    const by = {}; people.forEach(p => by[p] = []);
+    const open = [];
+    areas.slice().sort((a, b) => ord[a[2]] - ord[b[2]]).forEach(a => { const w = st['rw-' + a[0]]; if (w && by[w]) by[w].push(a); else open.push(a); });
+    box.innerHTML = people.map(p => {
+      const l = by[p];
+      const items = l.map(([i, n, pr]) => {
+        const note = (st['rd-' + i] || '').trim();
+        return `<li class="${pr}"><b>${escH(short(n))}</b>${PRI[pr] ? `<em>${PRI[pr]}</em>` : ''}<span>${escH(INFO[i] || '')}${note && note !== INFO[i] && !note.includes(short(n)) ? `<i>${escH(note)}</i>` : ''}</span></li>`;
+      }).join('');
+      return `<article class="rf" style="--pc:${PC[p] || '#5B6B78'}"><header><span class="rf-av">${escH(p[0])}</span><div><h3>${escH(p)}${p === 'בן' ? ' <small>ראש הצוות</small>' : ''}</h3><p>${l.length} תחומי אחריות</p></div></header><ul>${items || '<li class="none">עוד לא שובצו תחומים</li>'}</ul></article>`;
+    }).join('') + (open.length ? `<div class="rf-open"><b>עוד בלי אחראי:</b> ${open.map(a => escH(short(a[1]))).join(' · ')}</div>` : '');
+  }
   function paint(){
     const r = roles();
     document.querySelectorAll('[data-roles]').forEach(el => {
@@ -3745,6 +3807,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
       el.textContent = list.length ? list.join(' · ') : 'תחום אחריות ייקבע בטבלת האחריות';
       if (el.dataset.tag){ const i = document.createElement('i'); i.textContent = el.dataset.tag; el.appendChild(i); }
     });
+    full();
     if (typeof SPLIT_PEOPLE !== 'undefined'){ let ch = false; SPLIT_PEOPLE.forEach(p => { const l = r[p[0]] || []; const t = l.slice(0, 3).join(' · ') + (l.length > 3 ? ' · +' + (l.length - 3) : ''); if (p[1] !== t){ p[1] = t; ch = true; } }); if (ch && typeof splitRender === 'function' && typeof SPLIT_READY !== 'undefined' && SPLIT_READY) splitRender(); }
   }
   const _u = window.updateResp;
@@ -3789,7 +3852,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const SEED = [
     { t: 'ישיבת צוות 1', s: '2026-10-21', type: 'team', d: 'חלוקת תפקידים ומשימות' },
     { t: 'ישיבה עם כרמל', s: '2026-10-28', type: 'team', d: 'שאלות לקראת הישיבה עם סמדר' },
-    { t: 'ישיבה עם סמדר', s: '2026-11-04', type: 'team', d: 'עוברים על המשימות והלו״ז' },
+    { t: 'ישיבה עם סמדר', s: '2026-11-01', type: 'team', d: 'עוברים על המשימות והלו״ז' },
     { t: 'שבוע עבודה על המשימות', s: '2026-11-05', e: '2026-11-10', type: 'work', d: 'ביצוע המשימות לפני הסגירה מול אורן וחן' },
     { t: 'אורן וחן · במשרד', s: '2026-11-11', type: 'team', d: 'פגישה פיזית · סגירת הלו״ז ואישורו' },
     { t: 'פגישת נציגים והנהלה', s: '2026-11-24', type: 'team', d: 'פגישה אחרונה לפני הטיסה' },
