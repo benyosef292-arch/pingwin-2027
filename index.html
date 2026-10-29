@@ -1665,6 +1665,290 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
 .rf-open b{color:#8A5A00}
 @media (max-width:760px){.rfull{grid-template-columns:1fr}.rf{padding:16px}}
 </style>
+<style id="film">
+/* ================= FILM MODE · scroll story ================= */
+/* layout: six pinned scenes (sticky 100vh stages inside tall scroll tracks); night-alpine dark with alpenglow gold, snow-mist light scenes */
+:root{
+  --f-night:#060B10; --f-night2:#0B1822; --f-snow:#EEF2F4; --f-mist:#DCE5EA;
+  --f-gold:#E2B676; --f-gold2:#F3D9AE; --f-ice:#9FD8F2; --f-ink:#0A1E2A; --f-dim:#7F98A6;
+  --f-serif:"Frank Ruhl Libre","Times New Roman",serif;
+}
+#view-film{display:none;background:var(--f-night);color:#fff;position:relative}
+body.film-mode #view-film{display:block}
+body.film-mode #boardTabs, body.film-mode #boardMain, body.film-mode .ring-wrap{display:none}
+body.film-mode{background:var(--f-night)}
+body.film-mode .topbar{position:fixed;inset-inline:0;top:0;background:linear-gradient(180deg,rgba(4,10,15,.78),rgba(4,10,15,0));box-shadow:none;padding-bottom:22px}
+.f-track{position:relative}
+.f-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.f-serif{font-family:var(--f-serif);font-weight:400;letter-spacing:-.5px}
+.f-eyebrow{font-family:var(--fb);font-size:12.5px;font-weight:700;letter-spacing:1.6px;color:var(--f-gold);display:inline-flex;align-items:center;gap:10px}
+.f-eyebrow::before{content:"";width:26px;height:1px;background:currentColor;opacity:.7}
+
+/* snow */
+#f-snow{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:40;display:none}
+body.film-mode #f-snow{display:block}
+
+/* chapter rail */
+.f-rail{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom,0px));inset-inline-end:max(18px,env(safe-area-inset-left,0px));z-index:45;display:none;gap:4px;
+  background:rgba(6,14,20,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:5px}
+body.film-mode .f-rail{display:flex}
+.f-rail button{border:0;background:transparent;color:rgba(255,255,255,.62);font:600 12.5px var(--fb);padding:6px 12px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s;white-space:nowrap}
+.f-rail button:hover{color:#fff}
+.f-rail button.on{background:rgba(255,255,255,.92);color:var(--f-ink)}
+.f-rail button:focus-visible{outline:2px solid var(--f-ice);outline-offset:2px}
+
+/* --- 1 · goggle lens --- */
+#f-s1{height:320vh;background:var(--f-night)}
+#f-s1 .f-stage{background:radial-gradient(70% 60% at 34% 52%,#13222D 0,#060B10 70%)}
+#f-lens{position:absolute;inset:0;width:100%;height:100%;display:block}
+.f-hero-txt{position:absolute;inset-inline-start:max(5vw,24px);top:50%;transform:translateY(-50%);z-index:3;max-width:min(560px,44vw);will-change:transform,opacity}
+.f-hero-txt h1{font-family:var(--f-serif);font-weight:400;font-size:clamp(46px,6.2vw,96px);line-height:1;letter-spacing:-1.5px;margin:18px 0 0;color:#fff}
+.f-hero-txt h1 em{font-style:normal;color:var(--f-gold2)}
+.f-hero-txt p{margin-top:22px;font-size:16px;line-height:1.65;color:#B9CCD6;max-width:40ch}
+.f-hero-meta{display:flex;gap:26px;margin-top:28px;flex-wrap:wrap}
+.f-hero-meta div{display:flex;flex-direction:column;gap:2px}
+.f-hero-meta b{font-family:var(--f-serif);font-weight:500;font-size:26px;color:#fff;font-variant-numeric:tabular-nums;unicode-bidi:isolate}
+.f-hero-meta span{font-size:12px;color:var(--f-dim);letter-spacing:.4px}
+.f-cue{position:absolute;bottom:calc(30px + env(safe-area-inset-bottom,0px));inset-inline-start:50%;transform:translateX(50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:11.5px;letter-spacing:2px;color:#9FB4C0}
+.f-cue i{width:1px;height:46px;background:linear-gradient(#9FB4C0,transparent);animation:fCue 2.2s ease-in-out infinite;transform-origin:top}
+@keyframes fCue{0%{transform:scaleY(0);opacity:0}40%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1) translateY(20px);opacity:0}}
+
+/* --- 2 · word reveal --- */
+#f-s2{height:230vh}
+#f-s2 .f-stage{background-size:cover;background-position:center}
+#f-s2 .f-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,10,15,.25) 0%,rgba(5,10,15,.55) 45%,rgba(5,10,15,.88) 100%)}
+.f-words{position:absolute;inset-inline:max(6vw,20px);top:50%;transform:translateY(-50%);z-index:2;max-width:1100px}
+.f-words p{font-family:var(--f-serif);font-size:clamp(28px,4.1vw,60px);line-height:1.22;letter-spacing:-.6px;margin:0;color:#fff;text-wrap:balance}
+.f-words p span{opacity:.18;transition:opacity .25s linear}
+.f-words p span.lit{opacity:1}
+.f-words p span.gold.lit{color:var(--f-gold2)}
+.f-side{position:absolute;bottom:calc(10vh + env(safe-area-inset-bottom,0px));inset-inline:max(6vw,20px);z-index:2;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;max-width:1100px}
+.f-side div{border-top:1px solid rgba(255,255,255,.22);padding-top:12px;font-size:13.5px;line-height:1.55;color:#AFC4CF}
+.f-side b{display:block;font-family:var(--f-serif);font-weight:500;color:#fff;font-size:19px;margin-bottom:3px}
+
+/* --- 3 · split title + gondola --- */
+#f-s3{height:340vh}
+#f-s3 .f-stage{background:linear-gradient(180deg,#C9D6DE 0%,#E3EAEE 46%,#F1F4F5 100%);color:var(--f-ink)}
+.f-s3-pano{position:absolute;inset-inline:0;bottom:0;height:46%;background-size:cover;background-position:center 60%;opacity:.42;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 70%);mask-image:linear-gradient(180deg,transparent,#000 70%);filter:saturate(.55)}
+#f-cable{position:absolute;inset:0;width:100%;height:100%}
+.f-split{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding-inline:max(4vw,16px);z-index:1;pointer-events:none}
+.f-split span{font-family:var(--f-serif);font-size:clamp(64px,12.5vw,220px);line-height:1;letter-spacing:-4px;color:#0B2533;will-change:transform,opacity;white-space:nowrap}
+#f-gondola{position:absolute;left:0;top:0;width:clamp(150px,17vw,280px);z-index:3;will-change:transform;transform-origin:50% 5.3%}
+#f-gondola .gd-line{fill:none;stroke:#0B2533;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+#f-gondola .gd-fill{transition:none}
+.f-sheet{position:absolute;inset-inline-start:max(6vw,20px);top:50%;transform:translateY(-50%);z-index:4;width:min(480px,44vw);opacity:0}
+.f-sheet h2{font-family:var(--f-serif);font-weight:400;font-size:clamp(40px,4.4vw,64px);line-height:1;color:#0B2533;margin:12px 0 4px;letter-spacing:-1px}
+.f-sheet .f-eyebrow{color:#9A6B2A}
+.f-sheet .nb{font-size:13px;color:#5E7988;letter-spacing:1px}
+.f-rows{margin-top:24px;display:flex;flex-direction:column}
+.f-row{display:grid;grid-template-columns:78px minmax(0,1fr);gap:14px;align-items:baseline;padding:13px 0;border-bottom:1px solid rgba(11,37,51,.14);opacity:0;transform:translateY(10px)}
+.f-row b{font-family:var(--f-serif);font-weight:500;font-size:22px;color:#0B2533}
+.f-row span{font-size:14.5px;color:#3F5D6D;line-height:1.45}
+.f-row span i{font-style:normal;font-size:11px;font-weight:800;letter-spacing:.6px;color:#9A6B2A;margin-inline-start:8px}
+.f-sheet .f-note{margin-top:16px;font-size:13.5px;color:#5E7988;line-height:1.55;max-width:44ch}
+
+/* --- 4 · season piste --- */
+#f-s4{height:420vh}
+#f-s4 .f-stage{background:radial-gradient(90% 70% at 70% 0%,#10273A 0,#060B10 72%)}
+.f-big{position:absolute;font-family:var(--f-serif);font-weight:400;line-height:.8;color:rgba(255,255,255,.045);pointer-events:none;white-space:nowrap;letter-spacing:-6px;z-index:0}
+#f-s4 .f-big{font-size:clamp(180px,34vw,560px);bottom:-4vw;inset-inline-start:-1vw}
+#f-piste{position:absolute;inset:7vh 2vw 4vh;width:calc(100% - 4vw);height:89vh;z-index:1}
+#f-piste text{font-family:var(--fb)}
+#f-piste .lbl-d{font-family:var(--f-serif);font-weight:500;fill:#fff}
+#f-piste .lbl-t{fill:#A8BFCB;font-weight:600}
+#f-piste .lbl-s{fill:#6F8C9B;font-weight:600}
+#f-piste .gate{transition:opacity .35s, transform .45s cubic-bezier(.2,1.5,.4,1);transform-box:fill-box;transform-origin:50% 100%}
+#f-piste .mk{transition:opacity .4s}
+.f-s4-head{position:absolute;top:calc(84px + env(safe-area-inset-top,0px));inset-inline-end:max(5vw,20px);z-index:2;max-width:420px}
+.f-s4-head h2{font-family:var(--f-serif);font-weight:400;font-size:clamp(34px,3.6vw,54px);line-height:1.05;margin:10px 0 0;color:#fff}
+.f-now{margin-top:18px;display:flex;flex-direction:column;gap:2px}
+.f-now b{font-family:var(--f-serif);font-weight:500;font-size:clamp(30px,3vw,44px);color:var(--f-gold2);font-variant-numeric:tabular-nums;unicode-bidi:isolate;direction:ltr;text-align:end;}
+.f-now span{font-size:14px;color:#B9CCD6}
+.f-legend{position:absolute;bottom:calc(70px + env(safe-area-inset-bottom,0px));inset-inline-start:max(5vw,20px);z-index:2;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#8FA8B5;max-width:90vw}
+.f-legend span{display:inline-flex;align-items:center;gap:7px}
+.f-legend i{width:22px;height:3px;border-radius:2px;display:inline-block}
+
+/* --- 5 · hotels --- */
+#f-s5{height:360vh}
+#f-s5 .f-stage{background:#070D12}
+#f-ridge{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+#f-s5 .f-big{font-size:clamp(120px,22vw,380px);top:12vh;inset-inline-end:-2vw;color:rgba(255,255,255,.04)}
+.f-hcard{position:absolute;inset-inline-end:max(5vw,20px);top:calc(90px + env(safe-area-inset-top,0px));z-index:3;width:min(300px,70vw);background:#E9E3D6;color:#1B2A31;border-radius:4px;padding:18px 20px 16px;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.8);transform:rotate(-2.5deg)}
+.f-hcard .tp{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:1.6px;font-weight:700;color:#6F6A5C}
+.f-hcard h3{font-family:var(--f-serif);font-weight:400;font-size:30px;line-height:1.08;margin:14px 0 14px;color:#14232A}
+.f-hcard .bt{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(20,35,42,.18);padding-top:10px;font-size:12.5px;color:#4D5A5E}
+.f-hcard .bt b{font-family:var(--f-serif);font-weight:500;color:#14232A;font-size:15px}
+.f-hotel{position:absolute;inset-inline-start:max(5vw,20px);bottom:calc(16vh + env(safe-area-inset-bottom,0px));z-index:3;width:min(620px,88vw)}
+.f-hotel .lab{display:flex;align-items:center;gap:12px;font-size:13px;color:#8FA8B5}
+.f-hotel .lab b{font-variant-numeric:tabular-nums;color:var(--f-gold);font-weight:700;unicode-bidi:isolate}
+.f-hname{position:relative;height:clamp(58px,6.4vw,96px);overflow:hidden;margin-top:8px}
+.f-hname div{position:absolute;inset:0;font-family:var(--f-serif);font-size:clamp(40px,5.4vw,80px);line-height:1.1;color:#fff;letter-spacing:-1px;white-space:nowrap;direction:ltr;text-align:right;
+  transition:transform .7s cubic-bezier(.2,.8,.2,1),opacity .5s}
+.f-hname div.up{transform:translateY(-100%);opacity:0}
+.f-hname div.dn{transform:translateY(100%);opacity:0}
+.f-hloc{margin-top:10px;font-size:14px;font-weight:700;color:var(--f-ice);min-height:1.5em}
+.f-hdesc{margin-top:6px;font-size:15px;line-height:1.6;color:#B9CCD6;max-width:52ch;min-height:3.2em}
+.f-hdots{display:flex;gap:6px;margin-top:18px}
+.f-hdots i{width:26px;height:3px;border-radius:2px;background:rgba(255,255,255,.18);transition:background .3s}
+.f-hdots i.on{background:var(--f-gold)}
+
+/* --- 6 · phases accordion --- */
+#f-s6{background:var(--f-snow);color:var(--f-ink);padding-block:clamp(70px,12vh,140px);padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+.f-s6-in{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(28px,5vw,80px);align-items:start}
+.f-s6-in h2{font-family:var(--f-serif);font-weight:400;font-size:clamp(40px,5vw,74px);line-height:1.02;letter-spacing:-1.2px;color:#0B2533;margin:14px 0 0;text-wrap:balance}
+.f-s6-in h2 span{color:#7E99A8}
+.f-s6-in .f-eyebrow{color:#9A6B2A}
+.f-acc{margin-top:34px;border-top:1px solid rgba(11,37,51,.16)}
+.f-acc details{border-bottom:1px solid rgba(11,37,51,.16)}
+.f-acc summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:16px;align-items:center;padding:18px 2px}
+.f-acc summary::-webkit-details-marker{display:none}
+.f-acc summary b{font-family:var(--f-serif);font-weight:500;font-size:22px;color:#0B2533}
+.f-acc summary em{font-style:normal;font-size:13px;font-weight:700;color:#4F6E7E;font-variant-numeric:tabular-nums;unicode-bidi:isolate;white-space:nowrap}
+.f-acc summary i{width:22px;height:22px;position:relative;flex:0 0 auto}
+.f-acc summary i::before,.f-acc summary i::after{content:"";position:absolute;inset-inline:3px;top:10px;height:1.6px;background:#0B2533;transition:transform .3s}
+.f-acc summary i::after{transform:rotate(90deg)}
+.f-acc details[open] summary i::after{transform:rotate(0)}
+.f-acc summary:focus-visible{outline:2px solid #1B93DA;outline-offset:2px}
+.f-acc .bd{padding:0 2px 22px;display:flex;flex-direction:column;gap:12px;animation:fOpen .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes fOpen{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.f-acc .bd p{font-size:15px;line-height:1.6;color:#3F5D6D;max-width:56ch}
+.f-acc .chips{display:flex;flex-wrap:wrap;gap:6px}
+.f-acc .chips span{font-size:12.5px;font-weight:600;color:#24485A;background:#fff;border:1px solid #D2DEE5;border-radius:999px;padding:3px 11px}
+.f-acc .meter{height:4px;border-radius:2px;background:#D9E3E8;overflow:hidden;max-width:420px}
+.f-acc .meter i{display:block;height:100%;background:linear-gradient(90deg,#1B93DA,#57C6EA);width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.f-acc .go{align-self:flex-start;border:0;background:#0B2533;color:#fff;font:700 13.5px var(--fb);padding:9px 16px;border-radius:999px;cursor:pointer;transition:transform .15s,background .2s}
+.f-acc .go:hover{background:#163C50}
+.f-acc .go:active{transform:scale(.97)}
+.f-pic{position:sticky;top:110px;border-radius:6px;overflow:hidden;aspect-ratio:4/5;max-width:100%;box-shadow:0 40px 80px -40px rgba(11,37,51,.55)}
+.f-pic div{position:absolute;inset:-8% 0;background-size:cover;background-position:center;will-change:transform}
+.f-pic span{position:absolute;inset-inline-start:16px;bottom:14px;z-index:1;color:#fff;font-size:12.5px;font-weight:700;background:rgba(6,14,20,.5);backdrop-filter:blur(6px);padding:4px 11px;border-radius:999px}
+
+/* --- 7 · closing --- */
+#f-s7{position:relative;overflow:hidden;background:var(--f-night);padding-block:clamp(80px,14vh,160px) clamp(110px,16vh,170px);padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px))}
+#f-s7 .bgp{position:absolute;inset:0;background-size:cover;background-position:center 30%;opacity:.28}
+#f-s7 .bgv{position:absolute;inset:0;background:linear-gradient(180deg,#060B10 0%,rgba(6,11,16,.6) 40%,#060B10 100%)}
+.f-s7-in{position:relative;z-index:1;max-width:1180px;margin:0 auto}
+.f-s7-in h2{font-family:var(--f-serif);font-weight:400;font-size:clamp(48px,7vw,112px);line-height:1;letter-spacing:-2px;margin:14px 0 0;color:#fff}
+.f-s7-in h2 em{font-style:normal;color:var(--f-gold2)}
+.f-pr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 22px;margin-top:40px}
+.f-pr-close{margin-top:22px;font-family:var(--f-serif);font-size:22px;color:#fff;border-inline-start:3px solid var(--f-gold);padding-inline-start:14px}
+.f-pr div{border-top:1px solid rgba(255,255,255,.22);padding-top:14px}
+.f-pr small{font-size:11.5px;font-weight:700;color:var(--f-gold);letter-spacing:1.2px;font-variant-numeric:tabular-nums}
+.f-pr b{display:block;font-family:var(--f-serif);font-weight:500;font-size:21px;line-height:1.2;margin:8px 0 6px;color:#fff}
+.f-pr p{font-size:13.5px;line-height:1.55;color:#AFC4CF}
+.f-open{margin-top:44px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:20px 22px}
+.f-open h3{font-family:var(--f-serif);font-weight:500;font-size:20px;color:#fff}
+.f-open ul{list-style:none;margin:12px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 26px}
+.f-open li{font-size:14px;color:#C3D4DC;display:flex;gap:10px;align-items:baseline;line-height:1.5}
+.f-open li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--f-gold);flex:0 0 auto;transform:translateY(-2px)}
+.f-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:36px}
+.f-cta button{border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;font:700 15px var(--fb);padding:13px 22px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s,transform .15s}
+.f-cta button.pri{background:var(--f-gold2);border-color:var(--f-gold2);color:#1B1408}
+.f-cta button:hover{background:#fff;color:var(--f-ink)}
+.f-cta button:active{transform:scale(.97)}
+.f-cta button:focus-visible{outline:2px solid var(--f-ice);outline-offset:3px}
+
+@media (max-width:760px){
+  .f-hero-txt{top:auto;bottom:calc(14vh + env(safe-area-inset-bottom,0px));transform:none;max-width:none;inset-inline:20px}
+  .f-hero-txt p{display:none}
+  .f-hero-meta{gap:18px;margin-top:18px}
+  .f-cue{display:none}
+  .f-side{grid-template-columns:1fr;gap:10px;bottom:calc(9vh + env(safe-area-inset-bottom,0px))}
+  .f-side div:nth-child(n+2){display:none}
+  .f-split{flex-direction:column;justify-content:center;gap:32vh}
+  .f-split span{font-size:21vw;letter-spacing:-2px}
+  .f-sheet{width:auto;inset-inline:20px;top:auto;bottom:calc(8vh + env(safe-area-inset-bottom,0px));transform:none;background:rgba(241,244,245,.86);backdrop-filter:blur(8px);padding:14px 16px;border-radius:12px}
+  .f-sheet h2{font-size:34px}
+  .f-rows{margin-top:10px}
+  .f-row{padding:7px 0;grid-template-columns:60px minmax(0,1fr)}
+  .f-row b{font-size:18px}.f-row span{font-size:13px}
+  .f-sheet .f-note{display:none}
+  #f-piste{inset:29vh 0 17vh;width:100%;height:54vh}
+  .f-s4-head{top:calc(100px + env(safe-area-inset-top,0px))}
+  .f-s4-head .f-eyebrow{display:none}
+  .f-now{flex-wrap:wrap}
+  .f-s4-head h2{font-size:28px}
+  .f-now{flex-direction:row;align-items:baseline;gap:10px;margin-top:6px}
+  .f-now b{font-size:24px}.f-now span{font-size:12.5px}
+  .f-legend{bottom:calc(64px + env(safe-area-inset-bottom,0px));gap:10px;font-size:11px}
+  .f-hcard{width:220px;padding:13px 15px}.f-hcard h3{font-size:22px;margin:8px 0}
+  .f-hotel{bottom:calc(12vh + env(safe-area-inset-bottom,0px))}
+  .f-hname div{font-size:30px;white-space:normal}
+  .f-s6-in{grid-template-columns:1fr}
+  .f-pic{position:relative;top:0;aspect-ratio:16/10;order:-1}
+  .f-pr{grid-template-columns:1fr 1fr}
+  .f-open ul{grid-template-columns:1fr}
+  .f-rail button{padding:5px 8px;font-size:11.5px}
+  body.film-mode .topbar .icon-btn, body.film-mode .topbar .sync{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  .f-cue i{animation:none}
+  .f-words p span{transition:none}
+}
+
+
+/* --- 3b · team building --- */
+#f-team{height:380vh}
+#f-team .f-stage{background:radial-gradient(80% 70% at 20% 30%,#11283A 0,#060B10 75%)}
+.f-tm-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.16;filter:saturate(.6)}
+.f-tm-head{position:absolute;top:calc(96px + env(safe-area-inset-top,0px));inset-inline-start:max(5vw,20px);z-index:2;max-width:520px}
+.f-tm-head h2{font-family:var(--f-serif);font-weight:400;font-size:clamp(38px,4.6vw,70px);line-height:1.02;letter-spacing:-1px;color:#fff;margin:12px 0 0}
+.f-tm-head h2 em{font-style:normal;color:var(--f-gold2)}
+.f-tm-head p{margin-top:14px;font-size:15px;line-height:1.6;color:#AFC4CF;max-width:46ch}
+#f-rope{position:absolute;inset-inline-end:max(3vw,12px);top:calc(90px + env(safe-area-inset-top,0px));width:min(46vw,640px);height:auto;z-index:1}
+#f-rope .knot circle{transition:r .4s cubic-bezier(.2,1.5,.4,1),fill .3s}
+#f-rope text{font-family:var(--fb)}
+.f-q{position:absolute;inset-inline-start:max(5vw,20px);bottom:calc(14vh + env(safe-area-inset-bottom,0px));z-index:2;width:min(640px,88vw)}
+.f-q-lab{display:flex;gap:10px;align-items:baseline;font-size:13px;color:#8FA8B5}
+.f-q-lab b{color:var(--f-gold);font-variant-numeric:tabular-nums}
+.f-q-stack{position:relative;height:clamp(110px,10vw,150px);overflow:hidden;margin-top:6px}
+.f-q-stack div{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.8,.2,1),opacity .5s}
+.f-q-stack div.up{transform:translateY(-60%);opacity:0}
+.f-q-stack div.dn{transform:translateY(60%);opacity:0}
+.f-q-stack h3{font-family:var(--f-serif);font-weight:400;font-size:clamp(32px,3.6vw,54px);line-height:1.1;color:#fff;margin:0;text-wrap:balance}
+.f-q-stack p{margin-top:8px;font-size:15px;color:#9FD8F2;font-weight:600}
+#f-team-ans{background:var(--f-night2);padding-block:clamp(60px,10vh,110px);padding-inline:max(16px,env(safe-area-inset-left,0px)) max(16px,env(safe-area-inset-right,0px));position:relative;z-index:1}
+.f-ta-in{max-width:1240px;margin:0 auto}
+.f-ta-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:end}
+.f-ta-head h2{font-family:var(--f-serif);font-weight:400;font-size:clamp(34px,4vw,58px);line-height:1.05;color:#fff;margin:12px 0 0}
+.f-ta-head h2 span{color:#7F98A6}
+.f-ta-head p{font-size:15px;line-height:1.65;color:#AFC4CF;max-width:52ch}
+.f-ta-qs{list-style:none;counter-reset:q;margin:36px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 26px}
+.f-ta-qs li{counter-increment:q;border-top:1px solid rgba(255,255,255,.16);padding-top:10px;display:flex;flex-direction:column;gap:2px}
+.f-ta-qs li::before{content:"0" counter(q);font-size:11px;font-weight:700;letter-spacing:1.2px;color:var(--f-gold)}
+.f-ta-qs b{font-family:var(--f-serif);font-weight:500;font-size:18px;color:#fff}
+.f-ta-qs span{font-size:13px;color:#8FA8B5}
+.f-ta-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:34px}
+.f-ta-card{display:flex;flex-direction:column;gap:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:14px;cursor:text;transition:border-color .2s,background .2s}
+.f-ta-card:focus-within{border-color:var(--f-gold);background:rgba(255,255,255,.08)}
+.f-ta-card > span{display:flex;align-items:baseline;gap:8px}
+.f-ta-card b{font-family:var(--f-serif);font-weight:500;font-size:21px;color:#fff}
+.f-ta-card i{font-style:normal;font-size:12px;color:#8FA8B5}
+.f-ta-card textarea{min-height:170px;resize:vertical;background:transparent;border:0;outline:none;color:#EAF2F6;font:15px/1.55 var(--fb);padding:0}
+.f-ta-card textarea::placeholder{color:#5F7A88}
+.f-ta-foot{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.f-ta-btn{border:1px solid var(--f-gold2);background:var(--f-gold2);color:#1B1408;font:700 14px var(--fb);padding:10px 18px;border-radius:999px;cursor:pointer;transition:transform .15s,background .2s}
+.f-ta-btn.ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.3)}
+.f-ta-btn:hover{transform:translateY(-1px)}
+.f-ta-btn:focus-visible{outline:2px solid var(--f-ice);outline-offset:3px}
+.f-rail{max-width:calc(100vw - 32px);overflow-x:auto;scrollbar-width:none}
+@media (max-width:760px){
+  .f-tm-head{top:calc(92px + env(safe-area-inset-top,0px))}
+  .f-tm-head p{display:none}
+  .f-tm-head h2{font-size:34px}
+  #f-rope{width:86vw;inset-inline-end:7vw;top:34vh}
+  .f-q{bottom:calc(11vh + env(safe-area-inset-bottom,0px))}
+  .f-q-stack{height:120px}
+  .f-q-stack h3{font-size:28px}
+  .f-ta-head{grid-template-columns:1fr;gap:12px}
+  .f-ta-qs{grid-template-columns:1fr}
+  .f-ta-grid{grid-template-columns:1fr}
+  .f-ta-card textarea{min-height:110px}
+}
+
+</style>
 <style id="winter">
 /* ================= deck look for the whole site (photos, veils, glass, deck type) ================= */
 :root{
@@ -1672,16 +1956,16 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
   --ice:#0A8FC9; --deep:#0B2A3C; --sky:#7FD3F7; --hair:rgba(11,42,60,.08);
   --shw:0 1px 1px rgba(11,42,60,.03),0 22px 46px -32px rgba(0,40,60,.5);
 }
-body:not(.deck-mode){background:#EEF4F8}
+body:not(.deck-mode):not(.film-mode){background:#EEF4F8}
 /* page background: the view's photo, slow zoom, white veil from the right like the light slides */
 #pageBg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#EEF4F8}
 #pageBg i{position:absolute;inset:-2%;background-size:cover;background-position:center;opacity:0;transition:opacity 1.1s ease}
 #pageBg i.on{opacity:1;animation:kb 26s ease-out both}
 #pageBg::after{content:"";position:absolute;inset:0;background:linear-gradient(to left,rgba(246,250,253,.95) 0%,rgba(246,250,253,.9) 40%,rgba(240,247,252,.74) 72%,rgba(236,244,250,.5) 100%)}
-body.deck-mode #pageBg{display:none}
+body.deck-mode #pageBg,body.film-mode #pageBg{display:none}
 body:not(.deck-mode) .wrap,body:not(.deck-mode) footer.src{position:relative;z-index:1}
 #snowfx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
-body.deck-mode #snowfx{display:none}
+body.deck-mode #snowfx,body.film-mode #snowfx{display:none}
 
 .topbar{background:rgba(5,24,36,.82)}
 .tabs{background:rgba(255,255,255,.7);backdrop-filter:blur(14px) saturate(1.3);-webkit-backdrop-filter:blur(14px) saturate(1.3);border-bottom:1px solid var(--hair);box-shadow:none}
@@ -1731,6 +2015,27 @@ body.deck-mode #snowfx{display:none}
 .sec-h .dk-kick{font-size:14px;font-weight:800;letter-spacing:.5px;color:var(--ice)}
 .sec-h h2 .w,.view .vhead h2 .w,.hero h1 .w{font:inherit;color:inherit;letter-spacing:inherit}
 
+/* ================= film language for the work board: night photos, snow mist, serif titles, alpenglow gold ================= */
+body:not(.deck-mode):not(.film-mode){background:#E9EEF1}
+#pageBg{background:#E9EEF1}
+#pageBg::after{background:linear-gradient(to left,rgba(238,242,244,.95) 0%,rgba(234,239,242,.9) 40%,rgba(226,233,237,.76) 72%,rgba(220,229,234,.55) 100%)}
+.topbar{background:linear-gradient(180deg,rgba(6,11,16,.96),rgba(9,19,27,.92))!important}
+.tab[aria-selected="true"]{border-bottom-color:#E2B676!important}
+.dk-kick{font-family:var(--fb)!important;font-size:12.5px!important;font-weight:700!important;letter-spacing:1.6px!important;color:#A9792F!important;gap:10px}
+.dk-kick::before{width:26px!important;height:1px!important;border-radius:0!important;background:currentColor!important;box-shadow:none!important;opacity:.7}
+.view .vhead .dk-kick,#view-overview .hero .eyebrow{color:#E2B676!important}
+#view-overview .hero .eyebrow::before{width:26px;height:1px;border-radius:0;background:currentColor;box-shadow:none;opacity:.7}
+.sec-h h2,.view .vhead h2,#view-overview .hero h1,.rf h3,.tm-card h3,footer.src b{font-family:"Frank Ruhl Libre","Times New Roman",serif!important;font-weight:400!important;letter-spacing:-.5px!important}
+.sec-h h2{font-size:clamp(34px,4vw,54px);line-height:1.05;color:#0A1E2A}
+#view-overview .hero h1{font-size:clamp(56px,8vw,112px);line-height:1}
+#view-overview .hero h1 .l2{color:#F3D9AE}
+.view .vhead h2{font-size:clamp(40px,5vw,68px)!important}
+#view-overview .hero-veil,.view .vhead::before{background:linear-gradient(to left,rgba(6,11,16,.92) 0%,rgba(6,11,16,.8) 40%,rgba(8,18,26,.5) 70%,rgba(8,18,26,.15) 100%)!important}
+.view .vhead,#view-overview .hero{background-color:#060B10!important}
+.rf h3{font-size:28px}
+#view-overview .hstat b{font-family:"Frank Ruhl Libre",serif!important;font-weight:500!important}
+footer.src{background-color:#060B10}
+
 </style>
 <header class="topbar">
   <div class="brand">
@@ -1756,7 +2061,7 @@ body.deck-mode #snowfx{display:none}
     </div>
   </div>
   <div class="top-right">
-    <div class="modes" role="group" aria-label="תצוגה"><button class="mode-btn" data-mode="board" aria-pressed="true" type="button">לוח עבודה</button><button class="mode-btn" data-mode="deck" aria-pressed="false" type="button">מצגת</button></div>
+    <div class="modes" role="group" aria-label="תצוגה"><button class="mode-btn" data-mode="film" aria-pressed="false" type="button">סיפור</button><button class="mode-btn" data-mode="board" aria-pressed="true" type="button">לוח עבודה</button><button class="mode-btn" data-mode="deck" aria-pressed="false" type="button">מצגת</button></div>
     <div class="ring-wrap" title="התקדמות כללית">
       <svg class="ring" viewBox="0 0 46 46" aria-hidden="true">
         <circle class="bg" cx="23" cy="23" r="19"/>
@@ -1783,6 +2088,306 @@ body.deck-mode #snowfx{display:none}
   <button class="tab" role="tab" data-view="contacts" aria-selected="false">אנשי קשר</button>
   <button class="tab" role="tab" data-view="team" aria-selected="false">הצוות שלנו</button>
 </nav>
+
+<div id="view-film" aria-label="סיפור העונה">
+  <canvas id="f-snow" aria-hidden="true"></canvas>
+  <nav class="f-rail" id="f-rail" aria-label="פרקים">
+    <button type="button" data-go="f-s1">פתיחה</button>
+    <button type="button" data-go="f-s3">הצוות</button>
+    <button type="button" data-go="f-team">בניית צוות</button>
+    <button type="button" data-go="f-s4">הלו״ז</button>
+    <button type="button" data-go="f-s5">המלונות</button>
+    <button type="button" data-go="f-s6">השלבים</button>
+    <button type="button" data-go="f-s7">יציאה</button>
+  </nav>
+
+  <!-- 1 · through the goggles -->
+  <section class="f-track" id="f-s1">
+    <div class="f-stage">
+      <svg id="f-lens" aria-hidden="true">
+        <defs>
+          <clipPath id="f-lensClip" clipPathUnits="userSpaceOnUse"><path id="f-lensClipPath"/></clipPath>
+          <linearGradient id="f-rim" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#F3D9AE"/><stop offset=".45" stop-color="#E2B676"/><stop offset=".7" stop-color="#7FD3F7"/><stop offset="1" stop-color="#2A7FB0"/>
+          </linearGradient>
+          <linearGradient id="f-tint" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#7FD3F7" stop-opacity=".30"/><stop offset=".5" stop-color="#E2B676" stop-opacity=".06"/><stop offset="1" stop-color="#E2B676" stop-opacity=".34"/>
+          </linearGradient>
+          <linearGradient id="f-strap" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1A2833"/><stop offset=".5" stop-color="#0E1820"/><stop offset="1" stop-color="#1A2833"/>
+          </linearGradient>
+          <linearGradient id="f-strapFade" gradientUnits="userSpaceOnUse" x1="-760" y1="0" x2="760" y2="0">
+            <stop offset="0" stop-color="#16232C" stop-opacity="0"/><stop offset=".25" stop-color="#16232C"/><stop offset=".75" stop-color="#16232C"/><stop offset="1" stop-color="#16232C" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="f-shine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <image id="f-lensImg" preserveAspectRatio="xMidYMid slice" clip-path="url(#f-lensClip)"/>
+        <g id="f-gog">
+          <path class="strap" d="M-760 -46 H-300 V40 H-760 Z M300 -46 H760 V40 H300 Z" fill="url(#f-strapFade)"/>
+          <path class="lensP" fill="url(#f-tint)"/>
+          <path class="lensP" fill="none" stroke="#0C151C" stroke-width="46" stroke-linejoin="round"/>
+          <path class="lensP" fill="none" stroke="#24343F" stroke-width="2" transform="scale(1.09 1.12)"/>
+          <path class="lensP" fill="none" stroke="url(#f-rim)" stroke-width="5"/>
+          <path d="M-250 -128 L-120 -128 L-230 110 L-300 110 Z" fill="url(#f-shine)" opacity=".55" id="f-sheen"/>
+        </g>
+      </svg>
+      <div class="f-hero-txt" id="f-heroTxt">
+        <span class="f-eyebrow">פינגווין · אתר וולטורנס · 2,300 מ׳</span>
+        <h1>צוות וולטורנס<br><em>חורף 2027</em></h1>
+        <p>הנציגים שיורדים לשטח, כל משימות ההיערכות ולוח העונה המלא. גללו כדי להיכנס לעונה.</p>
+        <div class="f-hero-meta">
+          <div><b>4</b><span>נציגים</span></div>
+          <div><b>130</b><span>משימות</span></div>
+          <div><b>9 + 1</b><span>שבועות לקוחות + חנוכה</span></div>
+        </div>
+      </div>
+      <div class="f-cue" id="f-cue"><span>גללו</span><i></i></div>
+    </div>
+  </section>
+
+  <!-- 2 · word reveal -->
+  <section class="f-track" id="f-s2">
+    <div class="f-stage" style="background-image:var(--bg5)">
+      <div class="f-veil"></div>
+      <div class="f-words"><p id="f-words">יש דרך אחרת לעבור עונה. ארבעה אנשים, |130 משימות| ו|תשעה שבועות| של לקוחות. תמונה אחת משותפת של הצוות שאנחנו רוצים להיות.</p></div>
+      <div class="f-side">
+        <div><b>45 · בארץ</b>משימות לפני היציאה, בשלושה נושאים שרצים במקביל.</div>
+        <div><b>65 · באתר</b>משימות שטח בשבוע ההכנה. בשבוע הזה כולם עושים הכול.</div>
+        <div><b>20 · במזוודה</b>פריטי ציוד מהארץ, לפי כמויות והערות.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · split title + gondola + team -->
+  <section class="f-track" id="f-s3">
+    <div class="f-stage">
+      <div class="f-s3-pano" style="background-image:var(--bg7)"></div>
+      <svg id="f-cable" aria-hidden="true"><line id="f-cableLine" stroke="#21394A" stroke-width="2.2"/><line id="f-cableLine2" stroke="#21394A" stroke-width="1.2" opacity=".5"/></svg>
+      <div class="f-split" aria-hidden="true"><span id="f-wR">מוכנים</span><span id="f-wL">לעלות.</span></div>
+      <svg id="f-gondola" viewBox="0 0 240 320" aria-hidden="true">
+        <defs>
+          <linearGradient id="gdBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0A2E44"/><stop offset=".35" stop-color="#145A80"/><stop offset=".6" stop-color="#0E4566"/><stop offset="1" stop-color="#082436"/></linearGradient>
+          <linearGradient id="gdGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D9AE"/><stop offset=".45" stop-color="#9FCBE2"/><stop offset="1" stop-color="#2E5C77"/></linearGradient>
+          <linearGradient id="gdRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9D3D9"/><stop offset="1" stop-color="#7E8E98"/></linearGradient>
+        </defs>
+        <g class="gd-fill" id="gdFill">
+          <g id="gdGrip"><rect x="98" y="8" width="44" height="18" rx="5" fill="#2B3B46"/><circle cx="120" cy="17" r="4" fill="#8A9AA4"/></g>
+          <path d="M120 28 V62 Q120 74 108 78 L70 90" fill="none" stroke="#3A4C58" stroke-width="7" stroke-linecap="round"/>
+          <path d="M44 98 Q120 74 196 98 L200 112 H40 Z" fill="url(#gdRoof)"/>
+          <rect x="30" y="108" width="180" height="196" rx="26" fill="url(#gdBody)"/>
+          <rect x="44" y="124" width="70" height="104" rx="12" fill="url(#gdGlass)"/>
+          <rect x="126" y="124" width="70" height="104" rx="12" fill="url(#gdGlass)" opacity=".92"/>
+          <path d="M52 132 L80 132 L56 216 L50 216 Z" fill="#fff" opacity=".28"/>
+          <rect x="30" y="242" width="180" height="9" fill="#00AAEB"/>
+          <rect x="30" y="256" width="180" height="3" fill="#E2B676"/>
+          <path d="M120 112 V300" stroke="#06202F" stroke-width="2" opacity=".6"/>
+          <rect x="62" y="300" width="116" height="10" rx="4" fill="#1A2A34"/>
+        </g>
+        <g id="gdLine">
+          <rect class="gd-line" x="104" y="6" width="32" height="22" rx="5"/>
+          <path class="gd-line" d="M120 28 V62 Q120 74 108 78 L70 90"/>
+          <path class="gd-line" d="M44 98 Q120 74 196 98 L200 112 H40 Z"/>
+          <rect class="gd-line" x="30" y="108" width="180" height="196" rx="26"/>
+          <rect class="gd-line" x="44" y="124" width="70" height="104" rx="12"/>
+          <rect class="gd-line" x="126" y="124" width="70" height="104" rx="12"/>
+          <path class="gd-line" d="M30 242 H210 M30 251 H210 M120 112 V300"/>
+        </g>
+      </svg>
+      <div class="f-sheet" id="f-sheet">
+        <span class="f-eyebrow">הצוות של העונה</span>
+        <h2>וולטורנס 2027</h2>
+        <span class="nb">ארבעה נציגים · אתר אחד ואתר לווין</span>
+        <div class="f-rows">
+          <div class="f-row"><b>בן</b><span data-roles="בן" data-tag="מוביל">ראש הצוות · אחראי אוטובוסים צרפת<i>מוביל</i></span></div>
+          <div class="f-row"><b>יותם</b><span data-roles="יותם">אחראי אתר לה מנואיר (Les Menuires)</span></div>
+          <div class="f-row"><b>דורון</b><span data-roles="דורון"></span></div>
+          <div class="f-row"><b>קרן</b><span data-roles="קרן"></span></div>
+        </div>
+        <p class="f-note">תחומי האחריות לפי טבלת האחריות. מעבר לתחומים, כל נציג לוקח חלק בכל משימות העונה.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3b · team building -->
+  <section class="f-track" id="f-team">
+    <div class="f-stage">
+      <div class="f-tm-bg" style="background-image:var(--bg3)"></div>
+      <div class="f-tm-head">
+        <span class="f-eyebrow">בניית צוות · פתיחת היום · 15–20 דקות שיחה</span>
+        <h2>מה זה בשבילכם<br><em>צוות חזק?</em></h2>
+        <p>לפני שנכנסים למשימות, חמש דקות של תיאום ציפיות. כל אחד עונה, וביחד בונים תמונה אחת של הצוות שאנחנו רוצים להיות.</p>
+      </div>
+      <svg id="f-rope" viewBox="0 0 600 440" aria-hidden="true">
+        <path id="f-ropeBase" d="M530 380 Q470 372 400 290 Q330 268 260 200 Q190 180 120 104 Q96 84 70 58" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-dasharray="3 7"/>
+        <path id="f-ropeLine" d="M530 380 Q470 372 400 290 Q330 268 260 200 Q190 180 120 104 Q96 84 70 58" fill="none" stroke="#E2B676" stroke-width="3.2" stroke-linecap="round"/>
+        <g id="f-flag" opacity="0"><path d="M70 58 V8" stroke="#fff" stroke-width="2.4"/><path d="M70 8 L104 18 L70 28 Z" fill="#E2B676"/><text x="70" y="82" text-anchor="middle" fill="#F3D9AE" font-size="15" font-weight="700" font-family="Assistant, sans-serif">צוות חזק</text></g>
+        <g id="f-knots"></g>
+      </svg>
+      <div class="f-q">
+        <div class="f-q-lab"><span>שאלה</span><b id="f-qIdx" dir="ltr">01 / 06</b></div>
+        <div class="f-q-stack" id="f-qStack"></div>
+        <div class="f-hdots" id="f-qDots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="f-team-ans">
+    <div class="f-ta-in">
+      <div class="f-ta-head">
+        <div>
+          <span class="f-eyebrow">התשובות שלנו</span>
+          <h2>אין תשובה נכונה.<br><span>יש תמונה משותפת.</span></h2>
+        </div>
+        <p>כל אחד כותב כאן את התשובות שלו לשש השאלות. הכול נשמר אוטומטית לכל הצוות, ומופיע גם בשקופית בניית הצוות במצגת. בסוף היום חוזרים לזה.</p>
+      </div>
+      <ol class="f-ta-qs">
+        <li><b>מה הופך צוות לחזק?</b><span>מה חייב להיות בינינו כדי שזה יעבוד</span></li>
+        <li><b>מה אני צריך מהצוות?</b><span>גיבוי, ביטחון, מידע, סבלנות</span></li>
+        <li><b>מה אני מביא איתי?</b><span>החוזקה האישית שאני שם על השולחן</span></li>
+        <li><b>איך נראית תקשורת טובה?</b><span>מתי מעדכנים, איך מתלוננים, איך מבקשים עזרה</span></li>
+        <li><b>מה קורה כשמישהו נבלע בעומס?</b><span>מי מרים, ומתי, בלי לחכות שיבקש</span></li>
+        <li><b>מה אסור שיקרה בינינו?</b><span>הקווים האדומים של העונה</span></li>
+      </ol>
+      <div class="f-ta-grid">
+        <label class="f-ta-card" for="fv-ben"><span><b>בן</b><i data-roles="בן" data-max="3">ראש הצוות</i></span><textarea id="fv-ben" data-src="v-ben" placeholder="מה בן אומר…"></textarea></label>
+        <label class="f-ta-card" for="fv-yotam"><span><b>יותם</b><i data-roles="יותם" data-max="3">אחראי לה מנואיר</i></span><textarea id="fv-yotam" data-src="v-yotam" placeholder="מה יותם אומר…"></textarea></label>
+        <label class="f-ta-card" for="fv-doron"><span><b>דורון</b><i data-roles="דורון" data-max="3"></i></span><textarea id="fv-doron" data-src="v-doron" placeholder="מה דורון אומר…"></textarea></label>
+        <label class="f-ta-card" for="fv-keren"><span><b>קרן</b><i data-roles="קרן" data-max="3"></i></span><textarea id="fv-keren" data-src="v-keren" placeholder="מה קרן אומרת…"></textarea></label>
+      </div>
+      <div class="f-ta-foot">
+        <button type="button" class="f-ta-btn" id="f-copyVoices">העתקת התשובות</button>
+        <button type="button" class="f-ta-btn ghost" id="f-toVoices">לשקופית בניית הצוות במצגת</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · the season as a run -->
+  <section class="f-track" id="f-s4">
+    <div class="f-stage">
+      <div class="f-big" aria-hidden="true">2027</div>
+      <div class="f-s4-head">
+        <span class="f-eyebrow">לוז העונה · שער אחרי שער</span>
+        <h2>מהפגישה הראשונה<br>ועד החזרה הביתה</h2>
+        <div class="f-now"><b id="f-nowD">21.10.26</b><span id="f-nowT">פגישה 1 · יום ד׳</span></div>
+      </div>
+      <svg id="f-piste" role="img" aria-label="ציר העונה: פגישה 1 ב-21.10.26, פגישה 4, פגישת נציגים אחרונה, ב-24.11.26, שבוע חנוכה 05–12.12.26, פתיחת העונה 02.01.27, חזרה לארץ 06.02.27, חזרה לאתר 06.03.27, סיום העונה 04.04.27">
+        <path id="f-pBase" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="16" stroke-linecap="round"/>
+        <path id="f-pVac" fill="none" stroke="rgba(160,185,200,.55)" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
+        <path id="f-pDraw" fill="none" stroke="#F4F8FB" stroke-width="3" stroke-linecap="round"/>
+        <path class="f-pSeg" data-a="45" data-b="52" fill="none" stroke="#E2B676" stroke-width="9" stroke-linecap="round"/>
+        <path class="f-pSeg" data-a="73" data-b="108" fill="none" stroke="#57C6EA" stroke-width="9" stroke-linecap="round"/>
+        <path class="f-pSeg" data-a="136" data-b="165" fill="none" stroke="#57C6EA" stroke-width="9" stroke-linecap="round"/>
+        <g id="f-marks"></g>
+        <g id="f-skier"><circle r="13" fill="rgba(226,182,118,.22)"/><circle r="6.5" fill="#F3D9AE"/></g>
+      </svg>
+      <div class="f-legend">
+        <span><i style="background:#57C6EA"></i>שבועות לקוחות</span>
+        <span><i style="background:#E2B676"></i>חנוכה · וולטורנס בלבד</span>
+        <span><i style="background:repeating-linear-gradient(90deg,#A0B9C8 0 3px,transparent 3px 8px)"></i>ואקאנס</span>
+        <span>כרמל 28.10 · סמדר 01.11 · אורן וחן 11.11 · נציגים 24.11 · טיסה 26.11</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · hotels -->
+  <section class="f-track" id="f-s5">
+    <div class="f-stage">
+      <canvas id="f-ridge" aria-hidden="true"></canvas>
+      <div class="f-big" aria-hidden="true">Val Thorens</div>
+      <div class="f-hcard">
+        <div class="tp"><span>PINGWIN</span><span>VAL THORENS</span></div>
+        <h3>המלונות שלנו.<br>2,300 מ׳ מעל הים.</h3>
+        <div class="bt"><span>מובילים</span><b>5</b><span>נכסים באתר</span><b>17</b></div>
+      </div>
+      <div class="f-hotel">
+        <div class="lab"><span>המלונות שאנחנו מוכרים</span><b id="f-hIdx" dir="ltr">1 / 5</b></div>
+        <div class="f-hname" id="f-hName"></div>
+        <div class="f-hloc" id="f-hLoc"></div>
+        <p class="f-hdesc" id="f-hDesc"></p>
+        <div class="f-hdots" id="f-hDots"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · phases -->
+  <section id="f-s6">
+    <div class="f-s6-in">
+      <div>
+        <span class="f-eyebrow">שלוש שכבות הכנה ורשימה אחת</span>
+        <h2>כל פרט.<br><span>על השולחן.</span></h2>
+        <div class="f-acc" id="f-acc">
+          <details open>
+            <summary><b>לפני היציאה · בארץ</b><em data-fs="p1">0 / 30</em><i></i></summary>
+            <div class="bd">
+              <p>שלושה נושאים שרצים במקביל, כל אחד עם אחראי, דדליין ורשימת שאלות פתוחות לחן ולאורן.</p>
+              <div class="chips"><span>הכנת צוות</span><span>תיאום שבוע ההכנה</span><span>הכנה לעונה</span></div>
+              <div class="meter"><i data-fm="p1"></i></div>
+              <button class="go" type="button" data-board="p1">לרשימה בלוח העבודה</button>
+            </div>
+          </details>
+          <details>
+            <summary><b>שבוע ההכנה באתר</b><em data-fs="p2">0 / 49</em><i></i></summary>
+            <div class="bd">
+              <p>שש קטגוריות שטח, מהתמקמות ועד שיחת הסיכום. כלל ברזל: בשבוע הזה כולם עושים הכול.</p>
+              <div class="chips"><span>התמקמות ולוגיסטיקה</span><span>ספקים וקומישנים</span><span>היכרות אתר ועיירה</span><span>תיקוף ותפעול</span><span>ריקו</span><span>סגירה וסיכום</span></div>
+              <div class="meter"><i data-fm="p2"></i></div>
+              <button class="go" type="button" data-board="p2">לרשימה בלוח העבודה</button>
+            </div>
+          </details>
+          <details>
+            <summary><b>ציוד מהארץ</b><em data-fs="p3">0 / 20</em><i></i></summary>
+            <div class="bd">
+              <p>לקוחות, משרדי, הגעות ועזיבות. כל פריט שכמותו “תלוי” נגזר מצפי הלקוחות, ובכל מקרה לוקחים אקסטרה.</p>
+              <div class="chips"><span>באפים וגוגלס</span><span>ציוד משרדי ולפטופ</span><span>דגלי טיפה ושלטי וולקאם</span></div>
+              <div class="meter"><i data-fm="p3"></i></div>
+              <button class="go" type="button" data-board="p3">לרשימה בלוח העבודה</button>
+            </div>
+          </details>
+          <details>
+            <summary><b>העונה עצמה</b><em>9 שבועות + חנוכה</em><i></i></summary>
+            <div class="bd">
+              <p>וולטורנס שבת–שבת, לה מנואיר ראשון–ראשון. נאום אוטובוס, ברוכים הבאים, ליווי יומי ושגרת צוות עם שיחה שבועית.</p>
+              <div class="chips"><span dir="ltr">05.12.26 → 04.04.27</span><span>ואקאנס 06.02–06.03</span></div>
+              <button class="go" type="button" data-board="sum">לסיכומים השבועיים</button>
+            </div>
+          </details>
+        </div>
+      </div>
+      <div class="f-pic"><div id="f-picImg" style="background-image:var(--bg3)"></div><span>וולטורנס · ערב בעיירה</span></div>
+    </div>
+  </section>
+
+  <!-- 7 · closing -->
+  <section id="f-s7">
+    <div class="bgp" style="background-image:var(--bg7)"></div><div class="bgv"></div>
+    <div class="f-s7-in">
+      <span class="f-eyebrow">תשעה עקרונות לעונה</span>
+      <h2>מוכנים<br><em>לעלות.</em></h2>
+      <div class="f-pr">
+        <div><small>01</small><b>משאירים את האגו בארץ</b><p>אף אחד לא מעל אף אחד. מקשיבים, מקבלים ביקורת ושמים את הצוות לפני עצמנו.</p></div><div><small>02</small><b>מדברים על הכול</b><p>בעיה קטנה שעולה בזמן עדיפה על בעיה גדולה שמתפוצצת. אף אחד לא סוחב לבד.</p></div><div><small>03</small><b>בעלות על התחום</b><p>מכירים את התחום לעומק ומביאים אותו עד הסוף, בלי שירדפו אחריכם.</p></div><div><small>04</small><b>סוגרים מראש</b><p>כל מה שאפשר לבדוק ולתאם מוקדם חוסך כיבוי שריפות ברגע האחרון.</p></div><div><small>05</small><b>סטנדרט גבוה כל העונה</b><p>עמידה בזמנים, סדר, שירות ויחס מכבד לספקים ולצוות, גם כשרגוע.</p></div><div><small>06</small><b>דואגים אחד לשני</b><p>חיים ועובדים יחד חודשים. שמים לב לעומס, ויודעים להפריד בין חברות לאחריות.</p></div><div><small>07</small><b>יוזמה וראש גדול</b><p>לא מחכים לרשימה. רעיון לשיפור, לפעילות או לייעול? מעלים אותו.</p></div><div><small>08</small><b>הלקוחות במרכז</b><p>לא רק חופשה בלי תקלות, אלא חוויה שזוכרים. זמינות, סבלנות ויחס אישי.</p></div><div><small>09</small><b>קודם כול צוות</b><p>אין "זה לא התפקיד שלי". כשיש עומס או בעיה, כולם מתגייסים.</p></div>
+      </div>
+      <p class="f-pr-close">לא אחד שעובד קשה בשביל כולם, כולנו עובדים נכון ביחד.</p>
+      <div class="f-open">
+        <h3>מה עוד לא סגור</h3>
+        <ul>
+          <li>לאשר שכל הצוות טס ב־26.11</li>
+          <li>תאריך טיסת החזרה לאתר במרץ</li>
+          <li>חזרה בפברואר: הטיסה ב־06.02, אבל שבוע 5 בלה מנואיר נגמר ב־07.02</li>
+          <li>חלוקת אחריות סופית בין חברי הצוות</li>
+          <li>מועדי הגשה לכל משימה</li>
+        </ul>
+      </div>
+      <div class="f-cta">
+        <button class="pri" type="button" data-mode-go="deck">למצגת לפגישה</button>
+        <button type="button" data-mode-go="board">ללוח העבודה</button>
+        <button type="button" data-go="f-s1">חזרה להתחלה</button>
+      </div>
+    </div>
+  </section>
+</div>
+
 
 
 
@@ -3045,7 +3650,7 @@ document.addEventListener('keydown', e => {
 window.addEventListener('resize', () => { if (document.body.classList.contains('deck-mode')) fitDeck(); });
 
 function setMode(m){
-  if (!['deck','board'].includes(m)) m = 'deck';
+  if (!['deck','board','film'].includes(m)) m = 'film';
   document.body.classList.toggle('deck-mode', m === 'deck');
   document.body.classList.toggle('film-mode', m === 'film');
   document.getElementById('view-deck').style.display = m === 'deck' ? 'flex' : 'none';
@@ -3053,6 +3658,7 @@ function setMode(m){
   if (m === 'deck') { fitDeck(); showSlide(si); if (window.DeckMotion) DeckMotion.size(); }
   try { localStorage.setItem('penguin-mode', m); } catch(e){}
   window.scrollTo({ top: 0 });
+  if (m === 'film' && window.FilmMode) FilmMode.enter();
   if (m === 'board' && window.BoardMotion) BoardMotion.enter();
 }
 document.querySelectorAll('.mode-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
@@ -4074,6 +4680,391 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
 })();
 
+/* ================= FILM MODE ================= */
+(function(){
+  const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = id => document.getElementById(id);
+  const clamp = (v, a=0, b=1) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const seg = (p, a, b) => clamp((p - a) / (b - a));
+  const prog = el => { const r = el.getBoundingClientRect(); const span = r.height - innerHeight; return span > 0 ? clamp(-r.top / span) : (r.top < innerHeight ? 1 : 0); };
+  const isFilm = () => document.body.classList.contains('film-mode');
+
+  /* --- 1 · goggle lens --- */
+  const LENS = 'M-300 -110 C-300 -150 -262 -162 -200 -162 L200 -162 C262 -162 300 -150 300 -110 L300 58 C300 118 262 140 202 140 L92 140 C60 140 46 96 0 96 C-46 96 -60 140 -92 140 L-202 140 C-262 140 -300 118 -300 58 Z';
+  document.querySelectorAll('#f-gog .lensP').forEach(p => p.setAttribute('d', LENS));
+  const lensSvg = $('f-lens'), clip = $('f-lensClipPath'), gog = $('f-gog'), img = $('f-lensImg');
+  try {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--bg5');
+    const m = /url\(["']?(data:[^"')]+)/.exec(v);
+    if (m) img.setAttribute('href', m[1]);
+  } catch(e){}
+  let W = innerWidth, H = innerHeight;
+  function sizeLens(){ W = innerWidth; H = innerHeight; lensSvg.setAttribute('viewBox', `0 0 ${W} ${H}`); }
+
+  function drawLens(p){
+    const mob = W < 760;
+    const s0 = mob ? (W * .88) / 680 : Math.min(W * .44 / 680, H * .5 / 330);
+    const cx0 = mob ? W / 2 : W * .33, cy0 = mob ? H * .36 : H * .5;
+    const sEnd = Math.max((H / 2) / 78, (W / 2) / 240) * 1.25;
+    const z = ease(seg(p, .04, .86));
+    const s = s0 * Math.pow(sEnd / s0, z);
+    const cx = lerp(cx0, W / 2, z), cy = lerp(cy0, H / 2, z);
+    const tf = `translate(${cx.toFixed(1)} ${cy.toFixed(1)}) scale(${s.toFixed(4)})`;
+    clip.setAttribute('d', LENS); clip.setAttribute('transform', tf);
+    gog.setAttribute('transform', tf);
+    gog.style.opacity = String(1 - seg(z, .55, .9));
+    const k = lerp(1.32, 1, z);
+    img.setAttribute('x', ((W - W * k) / 2 + (cx0 - W/2) * (1 - z) * .25).toFixed(1));
+    img.setAttribute('y', ((H - H * k) / 2).toFixed(1));
+    img.setAttribute('width', (W * k).toFixed(1)); img.setAttribute('height', (H * k).toFixed(1));
+    const sh = $('f-sheen'); if (sh) sh.setAttribute('transform', `translate(${(seg(p, 0, .5) * 420).toFixed(1)} 0)`);
+    const t = $('f-heroTxt'); const tp = seg(p, 0, .28);
+    t.style.opacity = String(1 - tp); t.style.transform = (mob ? '' : 'translateY(-50%) ') + `translateY(${(-tp * 60).toFixed(1)}px)`;
+    $('f-cue').style.opacity = String(1 - seg(p, 0, .08));
+  }
+
+  /* --- 2 · words --- */
+  const wordsHost = $('f-words');
+  (function splitWords(){
+    const raw = wordsHost.textContent; let gold = false; const out = [];
+    raw.split('|').forEach((chunk, i) => {
+      gold = i % 2 === 1;
+      chunk.split(/(\s+)/).forEach(w => { if (!w) return; if (/^\s+$/.test(w)) out.push(w); else out.push(`<span${gold ? ' class="gold"' : ''}>${w}</span>`); });
+    });
+    wordsHost.innerHTML = out.join('');
+  })();
+  const words = [...wordsHost.querySelectorAll('span')];
+  function drawWords(p){
+    const n = Math.round(seg(p, .08, .78) * words.length);
+    words.forEach((w, i) => w.classList.toggle('lit', i < n));
+  }
+
+  /* --- 3 · gondola --- */
+  const cable = $('f-cableLine'), cable2 = $('f-cableLine2'), cabSvg = $('f-cable'), gd = $('f-gondola');
+  const gdLines = [...gd.querySelectorAll('.gd-line')];
+  gdLines.forEach(l => { let len = 900; try { len = l.getTotalLength(); } catch(e){} l.style.strokeDasharray = len; l.style.strokeDashoffset = len; l.dataset.len = len; });
+  const rows = [...document.querySelectorAll('#f-sheet .f-row')];
+  function drawGondola(p){
+    const mob = W < 760;
+    cabSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const A = { x: W * (mob ? -.1 : .02), y: -H * .08 }, B = { x: W * (mob ? 1.1 : .98), y: H * (mob ? .62 : .78) };
+    cable.setAttribute('x1', A.x); cable.setAttribute('y1', A.y); cable.setAttribute('x2', B.x); cable.setAttribute('y2', B.y);
+    cable2.setAttribute('x1', A.x); cable2.setAttribute('y1', A.y + 26); cable2.setAttribute('x2', B.x); cable2.setAttribute('y2', B.y + 26);
+    const a = easeOut(seg(p, 0, .42));
+    const t = lerp(.06, .5, a);
+    let gx = lerp(A.x, B.x, t), gy = lerp(A.y, B.y, t);
+    const gw = gd.offsetWidth || 200;
+    let sc = lerp(.55, mob ? 1.15 : 1.5, a);
+    const b = ease(seg(p, .42, .7));
+    if (!mob){ gx = lerp(gx, W * .27, b); gy = lerp(gy, H * .40, b); sc = lerp(sc, 1.25, b); }
+    else { gy = lerp(gy, H * .2, b); sc = lerp(sc, .9, b); }
+    gd.dataset.sc = sc;
+    const ang = Math.atan2(B.y - A.y, B.x - A.x) * 180 / Math.PI * (1 - b);
+    $('gdGrip').setAttribute('transform', `rotate(${ang.toFixed(1)} 120 17)`);
+    gd.style.transform = `translate(${(gx - gw / 2).toFixed(1)}px, ${(gy - gw * .071).toFixed(1)}px) scale(${sc.toFixed(3)})`;
+    const dr = seg(p, 0, .22);
+    gdLines.forEach(l => l.style.strokeDashoffset = (l.dataset.len * (1 - dr)).toFixed(1));
+    $('gdFill').style.opacity = String(seg(p, .14, .32));
+    $('gdLine').style.opacity = String(1 - seg(p, .3, .42) * .85);
+    cabSvg.style.opacity = String(1 - seg(p, .48, .66));
+    const sp = ease(seg(p, .05, .5));
+    const wr = $('f-wR'), wl = $('f-wL');
+    if (!mob){ wr.style.transform = `translateX(${(sp * 22).toFixed(2)}vw)`; wl.style.transform = `translateX(${(-sp * 22).toFixed(2)}vw)`; }
+    else { wr.style.transform = `translateY(${(-sp * 8).toFixed(2)}vh)`; wl.style.transform = `translateY(${(sp * 8).toFixed(2)}vh)`; }
+    const fo = 1 - seg(p, .4, .6) * .92;
+    wr.style.opacity = wl.style.opacity = String(fo);
+    const sh = seg(p, .5, .66);
+    const sheet = $('f-sheet'); sheet.style.opacity = String(sh);
+    rows.forEach((r, i) => { const q = easeOut(seg(p, .55 + i * .05, .7 + i * .05)); r.style.opacity = String(q); r.style.transform = `translateY(${((1 - q) * 12).toFixed(1)}px)`; });
+  }
+
+  /* --- 4 · piste --- */
+  const piste = $('f-piste');
+  const MARKS = [
+    { d: 0,   date: '21.10.26', t: 'פגישה 1 · יום ד׳', s: 'שיחת צוות, תכנים, לפטופ' },
+    { d: 11,  date: '01.11.26', t: 'ישיבה עם סמדר', s: 'עוברים על המשימות והלו״ז' },
+    { d: 21,  date: '11.11.26', t: 'אורן וחן · במשרד', s: 'סגירת הלו״ז ואישורו' },
+    { d: 36,  date: '26.11.26', t: 'טיסה לצרפת', s: 'הכנה באתר עד 04.12' },
+    { d: 45,  date: '05.12.26', t: 'שבוע חנוכה', s: 'וולטורנס בלבד · עד 12.12' },
+    { d: 73,  date: '02.01.27', t: 'פתיחת העונה', s: 'שבועות 1–5 · לה מנואיר מ־03.01' },
+    { d: 108, date: '06.02.27', t: 'חזרה לארץ', s: 'ואקאנס עד 06.03' },
+    { d: 136, date: '06.03.27', t: 'חזרה לאתר', s: 'שבועות 6–9' },
+    { d: 165, date: '04.04.27', t: 'סיום העונה', s: 'חזרה לארץ' }
+  ];
+  const SPAN = 165, F0 = .03, F1 = .97;
+  const fOf = d => F0 + (F1 - F0) * d / SPAN;
+  let pL = 0, pMob = null;
+  function buildPiste(){
+    const mob = W < 760; if (mob === pMob) return; pMob = mob;
+    const vb = mob ? [0, 0, 400, 610] : [0, 0, 1600, 900];
+    piste.setAttribute('viewBox', vb.join(' '));
+    piste.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    const d = mob
+      ? 'M330 20 C120 40 70 110 190 160 S350 240 220 290 S40 360 150 420 S340 490 220 550 S80 590 70 598'
+      : 'M1480 330 C1330 300 1290 420 1140 450 S900 360 800 480 S880 690 680 700 S420 590 330 700 S190 820 110 800';
+    ['f-pBase','f-pVac','f-pDraw'].forEach(id => $(id).setAttribute('d', d));
+    document.querySelectorAll('.f-pSeg').forEach(s => s.setAttribute('d', d));
+    const base = $('f-pBase'); pL = base.getTotalLength();
+    const a = fOf(108) * pL, b = fOf(136) * pL;
+    $('f-pVac').style.strokeDasharray = `0 ${a} ${b - a} ${pL * 2}`;
+    $('f-pVac').style.strokeDashoffset = '0';
+    const g = $('f-marks'); g.innerHTML = '';
+    MARKS.forEach((m, i) => {
+      const pt = base.getPointAtLength(fOf(m.d) * pL);
+      const red = i % 2 === 0;
+      let dx, ty, anchor;
+      if (mob){ const left = i % 2 === 1; dx = left ? -22 : 22; anchor = left ? 'end' : 'start'; ty = -2; }
+      else if (i === 3) { dx = -26; anchor = 'side'; ty = -30; }
+      else { const up = i % 2 === 0; dx = 0; anchor = 'middle'; ty = up ? -112 : 34; }
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      el.setAttribute('class', 'mk'); el.style.opacity = '.22';
+      el.innerHTML = `<g class="gate" transform="translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})"><g style="transform:scale(.6)"><path d="M-9 0 V-34 M9 0 V-34" stroke="#fff" stroke-width="2"/><path d="M-9 -34 H9 V-20 H-9 Z" fill="${red ? '#E2574C' : '#2E8FD6'}"/></g></g>`
+        + `<text x="${(pt.x + dx).toFixed(1)}" y="${(pt.y + ty + (mob ? 0 : 24)).toFixed(1)}" text-anchor="${anchor === 'side' ? 'end' : anchor}" direction="ltr" class="lbl-d" font-size="${mob ? 17 : 27}">${m.date}</text>`
+        + `<text x="${(pt.x + dx).toFixed(1)}" y="${(pt.y + ty + (mob ? 18 : 50)).toFixed(1)}" text-anchor="${anchor === 'side' ? 'start' : anchor}" direction="rtl" class="lbl-t" font-size="${mob ? 12.5 : 17}">${m.t}</text>`
+        + (mob ? '' : `<text x="${(pt.x + dx).toFixed(1)}" y="${(pt.y + ty + (mob ? 33 : 71)).toFixed(1)}" text-anchor="${anchor === 'side' ? 'start' : anchor}" direction="rtl" class="lbl-s" font-size="${mob ? 11 : 14}">${m.s}</text>`);
+      g.appendChild(el);
+      m.el = el;
+      m.gate = el.querySelector('.gate > g');
+    });
+    /* today marker, when today falls inside the timeline */
+    const start = new Date(2026, 9, 21), now = new Date();
+    const dd = Math.round((now - start) / 864e5);
+    if (dd > 0 && dd < SPAN){
+      const pt = base.getPointAtLength(fOf(dd) * pL);
+      const el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      el.innerHTML = `<circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#9FD8F2"/><circle cx="${pt.x}" cy="${pt.y}" r="11" fill="none" stroke="#9FD8F2" stroke-opacity=".5"/><text x="${pt.x}" y="${pt.y + 30}" text-anchor="middle" font-size="${mob ? 11 : 13}" fill="#9FD8F2" font-weight="700">היום</text>`;
+      g.appendChild(el);
+    }
+  }
+  let lastMark = -1;
+  function drawPiste(p){
+    buildPiste();
+    const q = seg(p, .04, .9);
+    const len = q * pL;
+    const dr = $('f-pDraw'); dr.style.strokeDasharray = `${len} ${pL * 2}`;
+    document.querySelectorAll('.f-pSeg').forEach(s => {
+      const a = fOf(+s.dataset.a) * pL, b = fOf(+s.dataset.b) * pL;
+      const vis = clamp(len - a, 0, b - a);
+      s.style.strokeDasharray = `0 ${a} ${vis} ${pL * 2}`;
+    });
+    const pt = $('f-pBase').getPointAtLength(Math.max(.01, len));
+    $('f-skier').setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})`);
+    let cur = 0;
+    MARKS.forEach((m, i) => {
+      const on = len >= fOf(m.d) * pL - 1;
+      if (on) cur = i;
+      if (m.el){ m.el.style.opacity = on ? '1' : '.22'; m.gate.style.transform = on ? 'scale(1)' : 'scale(.6)'; }
+    });
+    if (cur !== lastMark){ lastMark = cur; $('f-nowD').textContent = MARKS[cur].date; $('f-nowT').textContent = MARKS[cur].t + ' · ' + MARKS[cur].s; }
+  }
+
+  /* --- 5 · hotels --- */
+  const HOTELS = [
+    { n: 'Montana Plein Sud', l: 'Village Montana · רובע Plein Sud · Rue du Soleil', d: 'דירות Village Montana בקצה השמשי של הכפר, בריכה מקורה וספא, גישה ישירה למדרונות.' },
+    { n: 'Le Cheval Blanc', l: 'רובע Soleil · Rue du Soleil', d: 'רזידנס 3 כוכבים באזור שקט ושמשי, עץ בכל החדרים, גישה ישירה למדרונות ולבתי הספר לסקי.' },
+    { n: 'Montana Soleil', l: 'Village Montana · 430 Rue du Soleil', d: 'סקי־אין סקי־אאוט, מעלית האתר ליד הדלת. הנוח ביותר ללקוחות שמגיעים בלי רכב.' },
+    { n: 'Kashmir', l: 'Hameau du Kashmir · שכונת Les Arolles', d: 'מלון 4 כוכבים ורזידנס באותו מתחם, כ־50 מ׳ מהמדרון, בריכה מקורה וספא, אזור שקט.' },
+    { n: "L'Oxalys", l: 'הכניסה לוולטורנס · תחתית מדרון Cairn', d: 'רזידנס 4 כוכבים עם 36 דירות ל־2–8 נפשות, סקי־אין סקי־אאוט ונוף פנורמי על שלושת העמקים.' }
+  ];
+  const hName = $('f-hName');
+  hName.innerHTML = HOTELS.map((h, i) => `<div class="${i ? 'dn' : ''}">${h.n}</div>`).join('');
+  const hEls = [...hName.children];
+  let hCur = -1;
+  function setHotel(i){
+    if (i === hCur) return;
+    hEls.forEach((el, k) => { el.className = k < i ? 'up' : (k > i ? 'dn' : ''); });
+    $('f-hLoc').textContent = HOTELS[i].l; $('f-hDesc').textContent = HOTELS[i].d;
+    $('f-hIdx').textContent = (i + 1) + ' / 5';
+    [...$('f-hDots').children].forEach((d, k) => d.classList.toggle('on', k <= i));
+    hCur = i;
+  }
+  setHotel(0);
+
+  const ridge = $('f-ridge'); let rctx = ridge.getContext('2d'), rDots = [], rPins = [], rW = 0, rH = 0;
+  function ridgeY(x, w, h){
+    const u = x / w;
+    return h * (.56 - .16 * Math.exp(-Math.pow((u - .62) / .09, 2)) - .1 * Math.exp(-Math.pow((u - .32) / .12, 2)) - .07 * Math.exp(-Math.pow((u - .86) / .07, 2))
+      + .025 * Math.sin(u * 37) + .015 * Math.sin(u * 91 + 1.3));
+  }
+  function buildRidge(){
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    rW = ridge.clientWidth; rH = ridge.clientHeight; if (!rW || !rH) return;
+    ridge.width = rW * dpr; ridge.height = rH * dpr; rctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    rDots = []; const st = W < 760 ? 9 : 11;
+    for (let x = st / 2; x < rW; x += st){
+      const top = ridgeY(x, rW, rH);
+      for (let y = top; y < rH * .98; y += st){
+        const depth = (y - top) / (rH - top);
+        rDots.push({ x, y, a: .75 - depth * .62, g: Math.max(0, 1 - (y - top) / 60) });
+      }
+    }
+    rPins = HOTELS.map((h, i) => { const x = rW * (W < 760 ? .14 + i * .18 : .07 + i * .105); return { x, y: ridgeY(x, rW, rH) + rH * (W < 760 ? .05 + (i % 2) * .04 : .16 + (i % 2) * .05) }; });
+  }
+  function drawRidge(p){
+    if (!rW) buildRidge(); if (!rW) return;
+    rctx.clearRect(0, 0, rW, rH);
+    const glow = .5 + .5 * Math.sin(p * Math.PI);
+    for (const d of rDots){
+      rctx.fillStyle = d.g > 0 ? `rgba(243,217,174,${(d.a * (.5 + .5 * d.g) * (.6 + .4 * glow)).toFixed(3)})` : `rgba(159,216,242,${(d.a * .45).toFixed(3)})`;
+      rctx.fillRect(d.x - .9, d.y - .9, 1.8, 1.8);
+    }
+    const hp = seg(p, .06, .94) * HOTELS.length;
+    const hi = Math.min(HOTELS.length - 1, Math.floor(hp));
+    setHotel(hi);
+    /* route arcs between pins */
+    rctx.lineWidth = 1.4;
+    for (let i = 0; i < hi + 1 && i < rPins.length - 1; i++){
+      const a = rPins[i], b = rPins[i + 1];
+      const t = i < hi ? 1 : clamp(hp - hi);
+      if (t <= 0) continue;
+      rctx.strokeStyle = 'rgba(226,182,118,.85)';
+      rctx.beginPath();
+      const mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - rH * .12;
+      const N = 30;
+      for (let k = 0; k <= N * t; k++){
+        const u = k / N; const x = (1-u)*(1-u)*a.x + 2*(1-u)*u*mx + u*u*b.x; const y = (1-u)*(1-u)*a.y + 2*(1-u)*u*my + u*u*b.y;
+        k ? rctx.lineTo(x, y) : rctx.moveTo(x, y);
+      }
+      rctx.stroke();
+    }
+    rPins.forEach((pn, i) => {
+      const on = i === hi;
+      rctx.fillStyle = on ? '#F3D9AE' : (i < hi ? 'rgba(226,182,118,.9)' : 'rgba(255,255,255,.35)');
+      rctx.beginPath(); rctx.arc(pn.x, pn.y, on ? 6 : 4, 0, 7); rctx.fill();
+      if (on){ rctx.strokeStyle = 'rgba(243,217,174,.45)'; rctx.beginPath(); rctx.arc(pn.x, pn.y, 14, 0, 7); rctx.stroke(); }
+      rctx.fillStyle = on ? '#fff' : 'rgba(255,255,255,.45)';
+      rctx.font = `${on ? 700 : 600} 12px Assistant, sans-serif`; rctx.textAlign = 'center';
+      rctx.fillText(String(i + 1), pn.x, pn.y + 26);
+    });
+  }
+
+  /* --- 6 · phases --- */
+  function updateStats(){
+    if (typeof phaseStats !== 'function') return;
+    ['p1','p2','p3'].forEach(pid => {
+      const st = phaseStats(pid);
+      const e = document.querySelector(`[data-fs="${pid}"]`); if (e) e.textContent = `${st.done} / ${st.total} הושלמו`;
+      const m = document.querySelector(`[data-fm="${pid}"]`); if (m) m.style.width = (st.total ? st.done / st.total * 100 : 0) + '%';
+    });
+  }
+  document.querySelectorAll('#f-acc details').forEach(d => d.addEventListener('toggle', () => {
+    if (d.open) document.querySelectorAll('#f-acc details').forEach(o => { if (o !== d) o.open = false; });
+  }));
+  document.querySelectorAll('#f-acc [data-board]').forEach(b => b.addEventListener('click', () => { setMode('board'); go(b.dataset.board); }));
+  document.querySelectorAll('[data-mode-go]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.modeGo)));
+  document.querySelectorAll('#view-film [data-go]').forEach(b => b.addEventListener('click', () => {
+    const t = $(b.dataset.go); if (!t) return;
+    window.scrollTo({ top: t.getBoundingClientRect().top + scrollY + (b.dataset.go === 'f-s1' ? 0 : 2), behavior: RM ? 'auto' : 'smooth' });
+  }));
+
+  /* --- snow --- */
+  const snow = $('f-snow'), sctx = snow.getContext('2d'); let flakes = [], sW = 0, sH = 0;
+  function sizeSnow(){
+    const dpr = Math.min(2, devicePixelRatio || 1); sW = innerWidth; sH = innerHeight;
+    snow.width = sW * dpr; snow.height = sH * dpr; sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.min(150, Math.round(sW * sH / 10000));
+    flakes = Array.from({ length: n }, () => ({ x: Math.random() * sW, y: Math.random() * sH, r: .6 + Math.random() * 2.2, v: .25 + Math.random() * .9, w: Math.random() * 6.28 }));
+  }
+  let lastY = scrollY, drift = 0;
+  function tickSnow(){
+    sctx.clearRect(0, 0, sW, sH);
+    const dy = scrollY - lastY; lastY = scrollY; drift = drift * .9 + dy * .1;
+    for (const f of flakes){
+      f.w += .01; f.y += f.v * (1 + f.r * .3) - drift * f.r * .12; f.x += Math.sin(f.w) * .35 - .15;
+      if (f.y > sH + 5) { f.y = -5; f.x = Math.random() * sW; } if (f.y < -6) { f.y = sH + 4; }
+      if (f.x < -5) f.x = sW + 5; if (f.x > sW + 5) f.x = -5;
+      sctx.fillStyle = `rgba(255,255,255,${(.25 + f.r * .18).toFixed(2)})`;
+      sctx.beginPath(); sctx.arc(f.x, f.y, f.r, 0, 6.283); sctx.fill();
+    }
+  }
+
+  /* --- rail --- */
+  const railBtns = [...document.querySelectorAll('#f-rail button')];
+  const railSecs = railBtns.map(b => $(b.dataset.go));
+
+  /* --- 3b · team building --- */
+  const QS = [
+    ['מה הופך צוות לחזק?', 'מה חייב להיות בינינו כדי שזה יעבוד'],
+    ['מה אני צריך מהצוות?', 'גיבוי, ביטחון, מידע, סבלנות'],
+    ['מה אני מביא איתי?', 'החוזקה האישית שאני שם על השולחן'],
+    ['איך נראית תקשורת טובה?', 'מתי מעדכנים, איך מתלוננים, איך מבקשים עזרה'],
+    ['מה קורה כשמישהו נבלע בעומס?', 'מי מרים, ומתי, בלי לחכות שיבקש'],
+    ['מה אסור שיקרה בינינו?', 'הקווים האדומים של העונה']
+  ];
+  const qStack = $('f-qStack');
+  qStack.innerHTML = QS.map((q, i) => `<div class="${i ? 'dn' : ''}"><h3>${q[0]}</h3><p>${q[1]}</p></div>`).join('');
+  const qEls = [...qStack.children]; let qCur = -1;
+  const rope = $('f-ropeLine'); let ropeL = 1; try { ropeL = rope.getTotalLength(); } catch(e){}
+  rope.style.strokeDasharray = `${ropeL} ${ropeL}`;
+  const TEAM = [['בן','ראש הצוות'],['יותם','לה מנואיר'],['דורון',''],['קרן','']];
+  const KN = [[530,380],[400,290],[260,200],[120,104]];
+  $('f-knots').innerHTML = KN.map((k, i) => `<g class="knot" data-i="${i}" opacity=".3"><circle cx="${k[0]}" cy="${k[1]}" r="9" fill="#0B1822" stroke="#E2B676" stroke-width="2.5"/><text x="${k[0]}" y="${k[1] + 34}" text-anchor="middle" fill="#fff" font-size="19" font-weight="700">${TEAM[i][0]}</text>${TEAM[i][1] ? `<text x="${k[0]}" y="${k[1] + 53}" text-anchor="middle" fill="#8FA8B5" font-size="13">${TEAM[i][1]}</text>` : ''}</g>`).join('');
+  const knots = [...$('f-knots').children];
+  function drawTeam(p){
+    const r = seg(p, .06, .82);
+    rope.style.strokeDashoffset = (ropeL * (1 - r)).toFixed(1);
+    knots.forEach((k, i) => {
+      const on = r >= i / 3.4 - .001;
+      k.setAttribute('opacity', on ? '1' : '.3');
+      const c = k.querySelector('circle'); c.setAttribute('r', on ? 11 : 8); c.setAttribute('fill', on ? '#E2B676' : '#0B1822');
+    });
+    $('f-flag').setAttribute('opacity', String(seg(r, .9, 1)));
+    const qi = Math.min(QS.length - 1, Math.floor(seg(p, .04, .9) * QS.length));
+    if (qi !== qCur){
+      qEls.forEach((el, k) => el.className = k < qi ? 'up' : (k > qi ? 'dn' : ''));
+      $('f-qIdx').textContent = '0' + (qi + 1) + ' / 06';
+      [...$('f-qDots').children].forEach((d, k) => d.classList.toggle('on', k <= qi));
+      qCur = qi;
+    }
+  }
+  /* answers mirror the deck's team-building fields (same saved data) */
+  const fvs = [...document.querySelectorAll('#f-team-ans textarea[data-src]')];
+  function pullAnswers(){ fvs.forEach(f => { const s = $(f.dataset.src); if (s && f !== document.activeElement && f.value !== s.value) f.value = s.value; }); }
+  fvs.forEach(f => f.addEventListener('input', () => { const s = $(f.dataset.src); if (!s) return; s.value = f.value; s.dispatchEvent(new Event('input', { bubbles: true })); }));
+  $('f-copyVoices').addEventListener('click', () => { const b = $('copyVoices'); if (b) b.click(); });
+  $('f-toVoices').addEventListener('click', () => {
+    setMode('deck');
+    const sl = [...document.querySelectorAll('#stage .sl')].findIndex(s => s.querySelector('#v-ben'));
+    if (sl >= 0) showSlide(sl);
+  });
+  pullAnswers();
+
+  /* --- loop --- */
+  const sT = $('f-team'), sTA = $('f-team-ans'), s1 = $('f-s1'), s2 = $('f-s2'), s3 = $('f-s3'), s4 = $('f-s4'), s5 = $('f-s5'), s6 = $('f-s6');
+  const inView = el => { const r = el.getBoundingClientRect(); return r.bottom > -50 && r.top < innerHeight + 50; };
+  let raf = 0, statsT = 0;
+  function frame(){
+    raf = 0;
+    if (!isFilm()) return;
+    if (inView(s1)) drawLens(prog(s1));
+    if (inView(s2)) drawWords(prog(s2));
+    if (inView(s3)) drawGondola(prog(s3));
+    if (inView(sT)) drawTeam(prog(sT));
+    if (inView(sTA)) pullAnswers();
+    if (inView(s4)) drawPiste(prog(s4));
+    if (inView(s5)) drawRidge(prog(s5));
+    if (inView(s6)){
+      const r = s6.getBoundingClientRect();
+      $('f-picImg').style.transform = `translateY(${(clamp((innerHeight - r.top) / (innerHeight + r.height)) * 12 - 6).toFixed(2)}%)`;
+      if (!statsT){ updateStats(); statsT = 1; }
+    } else statsT = 0;
+    let on = 0; railSecs.forEach((s, i) => { if (s && s.getBoundingClientRect().top <= innerHeight * .45) on = i; });
+    railBtns.forEach((b, i) => b.classList.toggle('on', i === on));
+  }
+  const req = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('resize', () => { sizeLens(); sizeSnow(); pMob = null; rW = 0; req(); });
+  function loop(){ if (isFilm() && !RM && !document.hidden) tickSnow(); requestAnimationFrame(loop); }
+
+  sizeLens(); sizeSnow();
+  if (!RM) requestAnimationFrame(loop);
+  window.FilmMode = { enter(){ sizeLens(); sizeSnow(); pMob = null; rW = 0; updateStats(); req(); setTimeout(req, 60); } };
+})();
+
+
 /* ================= winter theme: falling snow + deck look (photo backgrounds, deck headings) ================= */
 (function(){
   const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -4191,7 +5182,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
 let startMode = 'deck';
 try {
   const seen = localStorage.getItem('penguin-film-v1');
-  startMode = 'board';
+  startMode = 'film';
   localStorage.setItem('penguin-film-v1', '1');
 } catch(e){}
 setMode(startMode);
