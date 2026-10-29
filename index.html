@@ -7,9 +7,15 @@
   var KEYK = 'penguin-owner-key';
   var PHOTOS = {"1": ["1bad2ed169c6af24a7cbc77276cf382d.jpg"], "2": ["63db9c98f11af489d205fa906c702cdf.jpg"], "3": ["65b466cd1056609c3d75eafde1bd86b6.jpg"], "4": ["522feee066fe6daf07a6ce138e97dd38.webp"], "5": ["6fabc72ab9fb6218c910cad6db03e0af.jpg"]};
   try {
-    var m = location.search.match(/[?&]key=([^&]+)/);
-    if (m) { localStorage.setItem(KEYK, decodeURIComponent(m[1])); history.replaceState(null, '', location.pathname + location.hash); }
+    var m = location.search.match(/[?&]key=([^&]+)/), t = location.search.match(/[?&]team=([^&]+)/);
+    if (m) localStorage.setItem(KEYK, decodeURIComponent(m[1]));
+    if (t) localStorage.setItem('penguin-team-key', decodeURIComponent(t[1]));
+    if (m || t) history.replaceState(null, '', location.pathname + location.hash);
   } catch (e) {}
+  window.PENGUIN_AUTH = function () {
+    var tk = ''; try { tk = localStorage.getItem('penguin-team-key') || ''; } catch (e) {}
+    return '&tk=' + encodeURIComponent(tk) + '&key=' + encodeURIComponent(key());
+  };
   function key() { try { return localStorage.getItem(KEYK) || ''; } catch (e) { return ''; } }
 
   var remote = {}, subs = {}, loaded = false, ownerOk = false, inflight = null;
@@ -1563,6 +1569,29 @@ body:not(.deck-mode){background:#F4F7FA}
 #view-qs .vhead{background-image:var(--bg6)}
 #view-sum .vhead{background-image:var(--bg1)}
 #view-team .vhead{background-image:var(--bg5);min-height:300px}
+#view-contacts .vhead{background-image:var(--bg6)}
+.ct-tools{display:flex;flex-direction:column;gap:12px;margin-bottom:10px}
+.ct-search{width:100%;font:inherit;font-size:15px;padding:13px 18px;border-radius:14px;border:1px solid #DCE6EE;background:#fff;box-shadow:0 10px 30px -26px rgba(0,40,60,.5)}
+.ct-search:focus{outline:none;border-color:#0A8FC9;box-shadow:0 0 0 3px rgba(10,143,201,.15)}
+.ct-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ct-chips button{font:inherit;font-size:13px;font-weight:800;border:1px solid #DCE6EE;background:#fff;color:#3F5363;border-radius:999px;padding:6px 14px;cursor:pointer}
+.ct-chips button[aria-pressed="true"]{background:#0B2A3C;border-color:#0B2A3C;color:#fff}
+.ct-g{margin-top:30px}
+.ct-g h3{font-size:20px;font-weight:900;color:#0B2A3C;margin-bottom:12px;display:flex;align-items:baseline;gap:8px}
+.ct-g h3 small{font-size:13px;color:#8AA0AE;font-weight:700}
+.ct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.ct{background:#fff;border:1px solid #E3EAF0;border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;box-shadow:0 16px 40px -34px rgba(0,40,60,.5)}
+.ct b{font-size:16.5px;color:#0B2A3C;line-height:1.3}
+.ct .ct-r{font-size:13px;color:#6A7E8B;margin-top:-4px}
+.ct-l{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ct-l a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;font-size:14px;font-weight:700;color:#0B5C8C;background:#F0F6FA;border-radius:10px;padding:6px 10px;direction:ltr;unicode-bidi:isolate}
+.ct-l a:hover{background:#E1EEF6}
+.ct-l a.wa{background:#E8F7EF;color:#1F8A57;padding:6px 9px}
+.ct-l a.ml{font-weight:600;font-size:13px;word-break:break-all}
+.ct-l em{font-style:normal;font-size:11.5px;font-weight:800;color:#C27400}
+.ct .ct-none{font-size:12.5px;color:#A0AFBA}
+.ct-msg{background:#fff;border:1px solid #E3EAF0;border-radius:18px;padding:22px;text-align:center;color:#5E7382}
+
 
 /* team page */
 .tm-names{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
@@ -1664,6 +1693,7 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
   <button class="tab" role="tab" data-view="p3" aria-selected="false">ציוד מהארץ <span class="pill" id="tabP3">0/0</span></button>
   <button class="tab" role="tab" data-view="qs" aria-selected="false">שאלות פתוחות <span class="pill" id="tabQs">0</span></button>
   <button class="tab" role="tab" data-view="sum" aria-selected="false">סיכומים שבועיים</button>
+  <button class="tab" role="tab" data-view="contacts" aria-selected="false">אנשי קשר</button>
   <button class="tab" role="tab" data-view="team" aria-selected="false">הצוות שלנו</button>
 </nav>
 
@@ -2185,6 +2215,14 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
   </section>
 
 
+
+  <!-- ===== CONTACTS ===== -->
+  <section class="view" id="view-contacts" role="tabpanel" hidden>
+    <div class="vhead"><div class="vhead-main"><h2>אנשי קשר בוולטורנס</h2><p>ספקים, מלונות, חנויות ציוד ואנשים חשובים באתר. לוחצים על מספר כדי להתקשר, על הסמל הירוק לוואטצאפ, או על המייל כדי לכתוב.</p></div>
+      <div class="vhead-side"><div class="vnum"><b id="ctCount">—</b><span>אנשי קשר</span></div></div></div>
+    <div class="ct-tools"><input type="search" id="ctSearch" class="ct-search" placeholder="חיפוש לפי שם, מלון, חנות או תפקיד…" autocomplete="off"><div class="ct-chips" id="ctChips"></div></div>
+    <div id="ctBody"><p class="ct-msg">טוען אנשי קשר…</p></div>
+  </section>
 
   <!-- ===== TEAM ===== -->
   <section class="view" id="view-team" role="tabpanel" hidden>
@@ -3861,6 +3899,41 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   /* person colour dots on the roles card */
   const PC = window.PERSON_COLORS || {};
   document.querySelectorAll('.roles [data-pc]').forEach(i => { i.style.background = PC[i.dataset.pc] || '#8AA3B0'; });
+})();
+
+/* ================= contacts ================= */
+(function(){
+  const body = document.getElementById('ctBody'); if (!body) return;
+  const ORDER = ['כללי','בתי ספר לסקי','חנויות ציוד','מלונות וולטורנס','מלונות לה מנואיר','מסעדה','מאפייה','מרכז ספורט'];
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const WA = '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
+  let ALL = [], grp = '', q = '';
+  function card(c){
+    const ph = (c.p || []).map(p => `<span class="ct-l"><a href="tel:${esc(p.t)}">${esc(p.v)}</a>${p.w ? `<a class="wa" href="https://wa.me/${esc(p.t.slice(1))}" target="_blank" rel="noopener" aria-label="וואטצאפ">${WA}</a>` : ''}${p.l ? `<em>${esc(p.l)}</em>` : ''}</span>`).join('');
+    const ml = c.m ? `<span class="ct-l"><a class="ml" href="mailto:${esc(c.m)}">${esc(c.m)}</a></span>` : '';
+    return `<div class="ct"><b>${esc(c.n)}</b><span class="ct-r">${esc(c.r)}</span>${ph}${ml}${!ph && !ml ? '<span class="ct-none">עוד אין פרטים</span>' : ''}</div>`;
+  }
+  function render(){
+    const qq = q.trim().toLowerCase();
+    const list = ALL.filter(c => (!grp || c.g === grp) && (!qq || [c.n, c.r, c.g, c.m].join(' ').toLowerCase().includes(qq)));
+    const groups = ORDER.concat([...new Set(ALL.map(c => c.g))].filter(g => !ORDER.includes(g)));
+    const h = groups.map(g => { const l = list.filter(c => c.g === g); return l.length ? `<div class="ct-g"><h3>${esc(g)} <small>${l.length}</small></h3><div class="ct-grid">${l.map(card).join('')}</div></div>` : ''; }).join('');
+    body.innerHTML = h || '<p class="ct-msg">לא נמצאו אנשי קשר</p>';
+  }
+  function chips(){
+    const groups = ORDER.filter(g => ALL.some(c => c.g === g));
+    const el = document.getElementById('ctChips');
+    el.innerHTML = ['<button type="button" data-g="" aria-pressed="true">הכול</button>'].concat(groups.map(g => `<button type="button" data-g="${esc(g)}" aria-pressed="false">${esc(g)}</button>`)).join('');
+    el.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; grp = b.dataset.g; el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); render(); });
+  }
+  document.getElementById('ctSearch').addEventListener('input', e => { q = e.target.value; render(); });
+  if (!window.PENGUIN_API){ body.innerHTML = '<p class="ct-msg">אנשי הקשר זמינים רק באתר הצוות</p>'; return; }
+  fetch(window.PENGUIN_API + '?a=contacts' + (window.PENGUIN_AUTH ? window.PENGUIN_AUTH() : '') + '&t=' + Date.now()).then(r => r.json()).then(j => {
+    if (!j || !j.ok){ body.innerHTML = '<p class="ct-msg">' + (j && j.error === 'team_only' ? 'אנשי הקשר פתוחים רק לצוות. פתחו את האתר דרך קישור הצוות שבן שלח.' : 'אנשי הקשר עוד לא זמינים. נסו שוב בעוד רגע.') + '</p>'; return; }
+    ALL = j.contacts || [];
+    document.getElementById('ctCount').textContent = ALL.length;
+    chips(); render();
+  }).catch(() => { body.innerHTML = '<p class="ct-msg">אנשי הקשר עוד לא זמינים. נסו שוב בעוד רגע.</p>'; });
 })();
 
 let startMode = 'deck';
