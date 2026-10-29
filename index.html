@@ -1959,6 +1959,88 @@ html,body{overflow-x:clip}
 .view > .fx{margin-block:0}
 .view > .fx + .sec-h{margin-top:56px}
 #view-contacts > .fx,#view-team > .fx{margin-block:28px}
+
+/* ================= season timeline (overview) ================= */
+.ssn{position:relative;margin:56px 0 0;padding:clamp(24px,3.4vw,44px);border-radius:26px;color:#fff;overflow:hidden;isolation:isolate;
+  background:radial-gradient(120% 90% at 85% 0%,rgba(226,182,118,.16),transparent 55%),linear-gradient(160deg,#0B1822,#060B10 70%)}
+.ssn::after{content:"";position:absolute;inset:auto 0 0 0;height:46%;z-index:-1;opacity:.13;background:var(--bg7) center 70%/cover;-webkit-mask:linear-gradient(transparent,#000);mask:linear-gradient(transparent,#000)}
+.ssn-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.ssn-head h2{font-family:var(--f-serif);font-weight:400;font-size:clamp(32px,3.8vw,52px);line-height:1.05;letter-spacing:-.6px;margin:12px 0 0;color:#fff}
+.ssn-head h2 em{font-style:normal;color:var(--f-gold2)}
+.ssn-next{border:1px solid rgba(226,182,118,.45);background:rgba(226,182,118,.08);border-radius:16px;padding:12px 18px;min-width:220px}
+.ssn-next small{display:block;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--f-gold)}
+.ssn-next b{display:block;font-family:var(--f-serif);font-weight:400;font-size:26px;margin-top:2px}
+.ssn-next span{display:block;font-size:13px;color:#B9CAD3;margin-top:2px}
+.ssn-track{position:relative;margin:34px 0 6px;padding-top:26px}
+.ssn-band{position:relative;height:16px;border-radius:999px;background:rgba(255,255,255,.07)}
+.ssn-seg{position:absolute;top:0;bottom:0;border-radius:999px;transform:scaleX(0);transform-origin:right center;transition:transform .9s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i) * .12s)}
+.ssn.in .ssn-seg{transform:scaleX(1)}
+.k-isr,.ssn-seg.isr{background:rgba(255,255,255,.28)}
+.k-prep,.ssn-seg.prep{background:#F3D9AE}
+.k-han,.ssn-seg.han{background:#E2B676}
+.k-wk,.ssn-seg.wk{background:#57C6EA}
+.k-vac,.ssn-seg.vac{background:repeating-linear-gradient(90deg,#A0B9C8 0 3px,transparent 3px 8px)}
+.ssn-pin{position:absolute;top:50%;width:12px;height:12px;margin-inline-start:-6px;margin-top:-6px;border-radius:50%;background:#060B10;border:2px solid #fff;opacity:0;transition:opacity .4s,transform .25s;transition-delay:calc(.5s + var(--i) * .06s)}
+.ssn.in .ssn-pin{opacity:1}
+.ssn-pin.hl{transform:scale(1.6);background:var(--f-gold);border-color:var(--f-gold)}
+.ssn-today{position:absolute;top:-26px;bottom:-6px;width:0;border-inline-start:2px solid #9FD8F2;opacity:0;transition:opacity .5s 1s}
+.ssn.in .ssn-today{opacity:1}
+.ssn-today span{position:absolute;top:0;inset-inline-start:6px;font-size:11.5px;font-weight:800;color:#9FD8F2;white-space:nowrap}
+.ssn-today::after{content:"";position:absolute;bottom:0;inset-inline-start:-6px;width:10px;height:10px;border-radius:50%;background:#9FD8F2;animation:ssnPulse 2s infinite}
+@keyframes ssnPulse{0%{box-shadow:0 0 0 0 rgba(159,216,242,.6)}100%{box-shadow:0 0 0 12px rgba(159,216,242,0)}}
+.ssn-months{position:relative;height:22px;margin-top:8px}
+.ssn-months span{position:absolute;top:0;font-size:12px;font-weight:700;color:#7F98A6;transform:translateX(50%);white-space:nowrap}
+.ssn-months span::before{content:"";position:absolute;top:-12px;inset-inline-end:50%;width:1px;height:6px;background:rgba(255,255,255,.25)}
+.ssn-legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12.5px;color:#B9CAD3;margin:6px 0 26px}
+.ssn-legend span{display:inline-flex;align-items:center;gap:7px}
+.ssn-legend i{display:inline-block;width:22px;height:7px;border-radius:99px}
+.ssn-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.ssn-list li{position:relative;padding:16px 16px 15px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1),background .2s,border-color .2s;transition-delay:calc(.35s + var(--i) * .07s)}
+.ssn.in .ssn-list li{opacity:1;transform:none}
+.ssn-list li:hover{background:rgba(255,255,255,.09);border-color:rgba(226,182,118,.5)}
+.ssn-list .n{position:absolute;top:14px;inset-inline-end:14px;font-size:11.5px;font-weight:800;color:#7F98A6}
+.ssn-list .d{display:block;font-family:var(--f-serif);font-size:28px;line-height:1;direction:ltr;text-align:right}
+.ssn-list .w{display:block;font-size:12px;color:#7F98A6;margin-top:6px}
+.ssn-list b{display:block;font-size:15.5px;font-weight:700;margin-top:8px;color:#fff}
+.ssn-list p{margin:3px 0 0;font-size:13px;line-height:1.45;color:#B9CAD3}
+.ssn-list li.past{opacity:.5}
+.ssn-list li.past .d::after{content:" ✓";font-family:var(--fb);font-size:15px;color:#7FD3A8}
+.ssn-list li.next{background:rgba(226,182,118,.12);border-color:rgba(226,182,118,.6)}
+.ssn-list li.next .n{color:var(--f-gold)}
+.ssn-list li.next .d{color:var(--f-gold2)}
+@media (max-width:760px){
+  .ssn{margin-inline:-6px;border-radius:22px}
+  .ssn-list{grid-template-columns:1fr 1fr;gap:9px}
+  .ssn-list li{padding:13px 12px}
+  .ssn-list .d{font-size:22px}
+  .ssn-months span{font-size:10.5px}
+  .ssn-next{min-width:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){.ssn-seg,.ssn-pin,.ssn-list li,.ssn-today{transition:none}.ssn-today::after{animation:none}}
+
+/* ================= task tables: fill the width, cards in a row end together ================= */
+.cats{align-items:stretch}
+.plan-wrap{overflow-x:visible}
+.pl-grid{grid-template-columns:104px repeat(var(--n),minmax(0,1fr));min-width:0;gap:7px}
+.pl-chip{font-size:12px;overflow-wrap:anywhere}
+.pl-grid .pl-ms{grid-template-columns:auto 1fr;gap:6px 8px;padding:10px}
+.pl-grid .pl-ms .pl-dot{grid-row:auto;width:24px;height:24px;font-size:12px}
+.pl-grid .pl-ms em{justify-self:end}
+.pl-grid .pl-ms b{grid-column:1 / -1;font-size:13px}
+.pl-grid .pl-ms .pl-mb{grid-column:1 / -1}
+.pl-list{display:none}
+@media (max-width:900px){
+  .pl-grid{display:none}
+  .pl-list{display:grid;gap:12px}
+  .pl-stage{background:var(--frost,#fff);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:var(--sh)}
+  .pl-stage .pl-ms{box-shadow:none;border:0;padding:0 0 10px;background:transparent}
+  .pl-stage .pl-ms::after{display:none}
+  .pl-grp{display:grid;grid-template-columns:74px 1fr;gap:8px;align-items:start;padding-top:9px;border-top:1px solid var(--line)}
+  .pl-grp > b{font-family:var(--fd);font-size:14px;font-weight:900;color:var(--pc,var(--navy));padding-top:5px}
+  .pl-grp > div{display:flex;flex-direction:column;gap:5px}
+  .pl-empty{font-size:13px;color:var(--muted)}
+}
 </style>
 <style id="winter">
 /* ================= deck look for the whole site (photos, veils, glass, deck type) ================= */
@@ -2556,18 +2638,7 @@ footer.src{background-color:#060B10}
       <div class="f-cue" id="f-cue"><span>גללו</span><i></i></div>
     </div>
   </section>
-<!-- 2 · word reveal -->
-  <section class="f-track" id="f-s2">
-    <div class="f-stage" style="background-image:var(--bg5)">
-      <div class="f-veil"></div>
-      <div class="f-words"><p id="f-words">יש דרך אחרת לעבור עונה. ארבעה אנשים, |130 משימות| ו|תשעה שבועות| של לקוחות. תמונה אחת משותפת של הצוות שאנחנו רוצים להיות.</p></div>
-      <div class="f-side">
-        <div><b>45 · בארץ</b>משימות לפני היציאה, בשלושה נושאים שרצים במקביל.</div>
-        <div><b>65 · באתר</b>משימות שטח בשבוע ההכנה. בשבוע הזה כולם עושים הכול.</div>
-        <div><b>20 · במזוודה</b>פריטי ציוד מהארץ, לפי כמויות והערות.</div>
-      </div>
-    </div>
-  </section>
+
 </div>
 
     <div class="sec-h"><span>מה קורה ומתי</span><h2>לוח השנה של הצוות</h2></div>
@@ -2588,36 +2659,21 @@ footer.src{background-color:#060B10}
       </aside>
     </div>
 
+    <section class="ssn" id="ssn" aria-label="לו״ז העונה">
+      <div class="ssn-head">
+        <div><span class="f-eyebrow">לו״ז העונה</span><h2>מהפגישה הראשונה<br><em>ועד החזרה הביתה.</em></h2></div>
+        <div class="ssn-next" id="ssnNext"></div>
+      </div>
+      <div class="ssn-track">
+        <div class="ssn-band" id="ssnBand"></div>
+        <div class="ssn-months" id="ssnMonths" aria-hidden="true"></div>
+      </div>
+      <div class="ssn-legend">
+        <span><i class="k-isr"></i>הכנה בארץ</span><span><i class="k-prep"></i>הכנה באתר</span><span><i class="k-han"></i>חנוכה · וולטורנס</span><span><i class="k-wk"></i>שבועות לקוחות</span><span><i class="k-vac"></i>ואקאנס</span>
+      </div>
+      <ol class="ssn-list" id="ssnList"></ol>
+    </section>
     <div class="fx">
-<!-- 4 · the season as a run -->
-  <section class="f-track" id="f-s4">
-    <div class="f-stage">
-      <div class="f-big" aria-hidden="true">2027</div>
-      <div class="f-s4-head">
-        <span class="f-eyebrow">לוז העונה · שער אחרי שער</span>
-        <h2>מהפגישה הראשונה<br>ועד החזרה הביתה</h2>
-        <div class="f-now"><b id="f-nowD">21.10.26</b><span id="f-nowT">פגישה 1 · יום ד׳</span></div>
-      </div>
-      <svg id="f-piste" role="img" aria-label="ציר העונה: פגישה 1 ב-21.10.26, פגישה 4, פגישת נציגים אחרונה, ב-24.11.26, שבוע חנוכה 05–12.12.26, פתיחת העונה 02.01.27, חזרה לארץ 06.02.27, חזרה לאתר 06.03.27, סיום העונה 04.04.27">
-        <path id="f-pBase" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="16" stroke-linecap="round"/>
-        <path id="f-pVac" fill="none" stroke="rgba(160,185,200,.55)" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round"/>
-        <path id="f-pDraw" fill="none" stroke="#F4F8FB" stroke-width="3" stroke-linecap="round"/>
-        <path class="f-pSeg" data-a="45" data-b="52" fill="none" stroke="#E2B676" stroke-width="9" stroke-linecap="round"/>
-        <path class="f-pSeg" data-a="73" data-b="108" fill="none" stroke="#57C6EA" stroke-width="9" stroke-linecap="round"/>
-        <path class="f-pSeg" data-a="136" data-b="165" fill="none" stroke="#57C6EA" stroke-width="9" stroke-linecap="round"/>
-        <g id="f-marks"></g>
-        <g id="f-skier"><circle r="13" fill="rgba(226,182,118,.22)"/><circle r="6.5" fill="#F3D9AE"/></g>
-      </svg>
-      <div class="f-legend">
-        <span><i style="background:#57C6EA"></i>שבועות לקוחות</span>
-        <span><i style="background:#E2B676"></i>חנוכה · וולטורנס בלבד</span>
-        <span><i style="background:repeating-linear-gradient(90deg,#A0B9C8 0 3px,transparent 3px 8px)"></i>ואקאנס</span>
-        <span>כרמל 28.10 · סמדר 01.11 · אורן וחן 11.11 · נציגים 24.11 · טיסה 26.11</span>
-      </div>
-    </div>
-  </section>
-</div>
-<div class="fx">
 <!-- 3 · split title + gondola + team -->
   <section class="f-track" id="f-s3">
     <div class="f-stage">
@@ -2672,56 +2728,8 @@ footer.src{background-color:#060B10}
     <div class="sec-h"><span>מי מוביל מה</span><h2>תחומי אחריות</h2></div>
     <div class="rfull" id="rolesFull"></div>
 
-    <div class="fx">
-<!-- 6 · phases -->
-  <section id="f-s6">
-    <div class="f-s6-in">
-      <div>
-        <span class="f-eyebrow">שלוש שכבות הכנה ורשימה אחת</span>
-        <h2>כל פרט.<br><span>על השולחן.</span></h2>
-        <div class="f-acc" id="f-acc">
-          <details open>
-            <summary><b>לפני היציאה · בארץ</b><em data-fs="p1">0 / 30</em><i></i></summary>
-            <div class="bd">
-              <p>שלושה נושאים שרצים במקביל, כל אחד עם אחראי, דדליין ורשימת שאלות פתוחות לחן ולאורן.</p>
-              <div class="chips"><span>הכנת צוות</span><span>תיאום שבוע ההכנה</span><span>הכנה לעונה</span></div>
-              <div class="meter"><i data-fm="p1"></i></div>
-              <button class="go" type="button" data-board="p1">לרשימה בלוח העבודה</button>
-            </div>
-          </details>
-          <details>
-            <summary><b>שבוע ההכנה באתר</b><em data-fs="p2">0 / 49</em><i></i></summary>
-            <div class="bd">
-              <p>שש קטגוריות שטח, מהתמקמות ועד שיחת הסיכום. כלל ברזל: בשבוע הזה כולם עושים הכול.</p>
-              <div class="chips"><span>התמקמות ולוגיסטיקה</span><span>ספקים וקומישנים</span><span>היכרות אתר ועיירה</span><span>תיקוף ותפעול</span><span>ריקו</span><span>סגירה וסיכום</span></div>
-              <div class="meter"><i data-fm="p2"></i></div>
-              <button class="go" type="button" data-board="p2">לרשימה בלוח העבודה</button>
-            </div>
-          </details>
-          <details>
-            <summary><b>ציוד מהארץ</b><em data-fs="p3">0 / 20</em><i></i></summary>
-            <div class="bd">
-              <p>לקוחות, משרדי, הגעות ועזיבות. כל פריט שכמותו “תלוי” נגזר מצפי הלקוחות, ובכל מקרה לוקחים אקסטרה.</p>
-              <div class="chips"><span>באפים וגוגלס</span><span>ציוד משרדי ולפטופ</span><span>דגלי טיפה ושלטי וולקאם</span></div>
-              <div class="meter"><i data-fm="p3"></i></div>
-              <button class="go" type="button" data-board="p3">לרשימה בלוח העבודה</button>
-            </div>
-          </details>
-          <details>
-            <summary><b>העונה עצמה</b><em>9 שבועות + חנוכה</em><i></i></summary>
-            <div class="bd">
-              <p>וולטורנס שבת–שבת, לה מנואיר ראשון–ראשון. נאום אוטובוס, ברוכים הבאים, ליווי יומי ושגרת צוות עם שיחה שבועית.</p>
-              <div class="chips"><span dir="ltr">05.12.26 → 04.04.27</span><span>ואקאנס 06.02–06.03</span></div>
-              <button class="go" type="button" data-board="sum">לסיכומים השבועיים</button>
-            </div>
-          </details>
-        </div>
-      </div>
-      <div class="f-pic"><div id="f-picImg" style="background-image:var(--bg3)"></div><span>וולטורנס · ערב בעיירה</span></div>
-    </div>
-  </section>
-</div>
-    <div class="phases" id="phaseCards" hidden></div>
+        <div class="sec-h"><span>שלושה שלבים עד הלקוחות</span><h2>שלבי העבודה</h2></div>
+    <div class="phases" id="phaseCards"></div>
 
     <div class="sec-h"><span>עד הטיסה ב־26.11</span><h2>הפוקוס לקראת חנוכה</h2></div>
     <div class="hwcard" style="margin:0 0 18px">
@@ -2804,28 +2812,7 @@ footer.src{background-color:#060B10}
   <section class="view" id="view-contacts" role="tabpanel" hidden>
     <div class="vhead"><div class="vhead-main"><h2>אנשי קשר בוולטורנס</h2><p>ספקים, מלונות, חנויות ציוד ואנשים חשובים באתר. לוחצים על מספר כדי להתקשר, על הסמל הירוק לוואטצאפ, או על המייל כדי לכתוב.</p></div>
       <div class="vhead-side"><div class="vnum"><b id="ctCount">—</b><span>אנשי קשר</span></div></div></div>
-    <div class="fx">
-<!-- 5 · hotels -->
-  <section class="f-track" id="f-s5">
-    <div class="f-stage">
-      <canvas id="f-ridge" aria-hidden="true"></canvas>
-      <div class="f-big" aria-hidden="true">Val Thorens</div>
-      <div class="f-hcard">
-        <div class="tp"><span>PINGWIN</span><span>VAL THORENS</span></div>
-        <h3>המלונות שלנו.<br>2,300 מ׳ מעל הים.</h3>
-        <div class="bt"><span>מובילים</span><b>5</b><span>נכסים באתר</span><b>17</b></div>
-      </div>
-      <div class="f-hotel">
-        <div class="lab"><span>המלונות שאנחנו מוכרים</span><b id="f-hIdx" dir="ltr">1 / 5</b></div>
-        <div class="f-hname" id="f-hName"></div>
-        <div class="f-hloc" id="f-hLoc"></div>
-        <p class="f-hdesc" id="f-hDesc"></p>
-        <div class="f-hdots" id="f-hDots"><i></i><i></i><i></i><i></i><i></i></div>
-      </div>
-    </div>
-  </section>
-</div>
-    <div class="ct-tools"><input type="search" id="ctSearch" class="ct-search" placeholder="חיפוש לפי שם, מלון, חנות או תפקיד…" autocomplete="off"><div class="ct-chips" id="ctChips"></div></div>
+        <div class="ct-tools"><input type="search" id="ctSearch" class="ct-search" placeholder="חיפוש לפי שם, מלון, חנות או תפקיד…" autocomplete="off"><div class="ct-chips" id="ctChips"></div></div>
     <div id="ctBody"><p class="ct-msg">טוען אנשי קשר…</p></div>
   </section>
 
@@ -2847,7 +2834,6 @@ footer.src{background-color:#060B10}
       <div class="f-tm-head">
         <span class="f-eyebrow">בניית צוות · פתיחת היום · 15–20 דקות שיחה</span>
         <h2>מה זה בשבילכם<br><em>צוות חזק?</em></h2>
-        <p>לפני שנכנסים למשימות, חמש דקות של תיאום ציפיות. כל אחד עונה, וביחד בונים תמונה אחת של הצוות שאנחנו רוצים להיות.</p>
       </div>
       <svg id="f-rope" viewBox="0 0 600 440" aria-hidden="true">
         <path id="f-ropeBase" d="M530 380 Q470 372 400 290 Q330 268 260 200 Q190 180 120 104 Q96 84 70 58" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2" stroke-dasharray="3 7"/>
@@ -3633,6 +3619,53 @@ document.addEventListener('keydown', e => {
   else if ((e.key === 'f' || e.key === 'F') && !/^(TEXTAREA|INPUT)$/.test(e.target.tagName)) { document.getElementById('dFull').click(); }
   else if (e.key === 'End') { showSlide(deckSlides.length - 1); }
 });
+/* ================= season timeline (overview) ================= */
+(function(){
+  const host = document.getElementById('ssn'); if (!host) return;
+  const T0 = new Date(2026, 9, 21), SPAN = 166;
+  const dOf = s => { const [d, m, y] = s.split('.').map(Number); return Math.round((new Date(2000 + y, m - 1, d) - T0) / 864e5); };
+  const pct = d => (d / SPAN * 100).toFixed(2) + '%';
+  const DOW = ['יום א׳','יום ב׳','יום ג׳','יום ד׳','יום ה׳','יום ו׳','שבת'];
+  const MARKS = [
+    ['21.10.26', 'פגישה 1', 'שיחת צוות, תכנים, לפטופ'],
+    ['01.11.26', 'ישיבה עם סמדר', 'עוברים על המשימות והלו״ז'],
+    ['11.11.26', 'אורן וחן במשרד', 'סגירת הלו״ז ואישורו'],
+    ['24.11.26', 'פגישת נציגים', 'ישיבה אחרונה עם ההנהלה'],
+    ['26.11.26', 'טיסה לצרפת', 'שבוע הכנה באתר עד 04.12'],
+    ['05.12.26', 'שבוע חנוכה', 'וולטורנס בלבד, עד 12.12'],
+    ['02.01.27', 'פתיחת העונה', 'שבועות 1–5 · לה מנואיר מ־03.01'],
+    ['06.02.27', 'חזרה לארץ', 'ואקאנס עד 06.03'],
+    ['06.03.27', 'חזרה לאתר', 'שבועות 6–9'],
+    ['04.04.27', 'סיום העונה', 'חוזרים הביתה']
+  ];
+  const SEGS = [['isr', 0, 36], ['prep', 36, 45], ['han', 45, 52], ['wk', 73, 109], ['vac', 109, 136], ['wk', 136, 165]];
+  const band = document.getElementById('ssnBand');
+  band.innerHTML = SEGS.map((g, i) => `<i class="ssn-seg ${g[0]}" style="--i:${i};inset-inline-start:${pct(g[1])};width:${pct(g[2] - g[1])}"></i>`).join('')
+    + MARKS.map((m, i) => `<i class="ssn-pin" data-i="${i}" style="--i:${i};inset-inline-start:${pct(dOf(m[0]))}"></i>`).join('');
+  const now = new Date(), today = Math.floor((now - T0) / 864e5);
+  if (today >= 0 && today <= SPAN) band.insertAdjacentHTML('beforeend', `<div class="ssn-today" style="inset-inline-start:${pct(today)}"><span>היום</span></div>`);
+  const MON = [['01.11.26','נוב׳'],['01.12.26','דצמ׳'],['01.01.27','ינו׳'],['01.02.27','פבר׳'],['01.03.27','מרץ'],['01.04.27','אפר׳']];
+  document.getElementById('ssnMonths').innerHTML = MON.map(m => `<span style="inset-inline-start:${pct(dOf(m[0]))}">${m[1]}</span>`).join('');
+  let next = MARKS.findIndex(m => dOf(m[0]) >= today);
+  document.getElementById('ssnList').innerHTML = MARKS.map((m, i) => {
+    const [d, mo, y] = m[0].split('.').map(Number), wd = DOW[new Date(2000 + y, mo - 1, d).getDay()];
+    const cls = i < next || next < 0 ? 'past' : (i === next ? 'next' : '');
+    return `<li class="${cls}" data-i="${i}" style="--i:${i}"><span class="n">${i === next ? 'הבא' : String(i + 1).padStart(2, '0')}</span><span class="d">${m[0].slice(0, 5)}</span><span class="w">${wd} · ${m[0].slice(6) === '26' ? '2026' : '2027'}</span><b>${m[1]}</b><p>${m[2]}</p></li>`;
+  }).join('');
+  const nx = document.getElementById('ssnNext');
+  if (next >= 0){ const m = MARKS[next], dd = dOf(m[0]) - today; nx.innerHTML = `<small>התחנה הבאה</small><b>${m[1]}</b><span>${m[0]} · ${dd === 0 ? 'היום' : dd === 1 ? 'מחר' : 'בעוד ' + dd + ' ימים'}</span>`; }
+  else nx.remove();
+  const pins = [...band.querySelectorAll('.ssn-pin')];
+  host.querySelectorAll('.ssn-list li').forEach(li => {
+    li.addEventListener('mouseenter', () => pins[li.dataset.i].classList.add('hl'));
+    li.addEventListener('mouseleave', () => pins[li.dataset.i].classList.remove('hl'));
+  });
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ host.classList.add('in'); io.disconnect(); } }), { threshold: .15 });
+    io.observe(host);
+  } else host.classList.add('in');
+})();
+
 window.addEventListener('resize', () => { if (document.body.classList.contains('deck-mode')) fitDeck(); });
 
 function setMode(m){
@@ -3904,7 +3937,9 @@ function renderPlan(){
       const list = rows.filter(r => r.who === p && r.dl === k);
       return `<div class="pl-cell">${list.map(r => `<span class="pl-chip ${r.done ? 'done' : ''}" ${PC[p] ? `style="--pc:${PC[p]}"` : ""} data-who="${esc(p)}" title="${esc(r.t)}">${r.done ? '✓ ' : ''}${esc(r.t)}${r.tag ? `<em>${esc(r.tag)}</em>` : ''}</span>`).join('')}</div>`;
     }).join('')).join('');
-  host.innerHTML = `<div class="pl-grid" style="--n:${cols.length}"><div class="pl-corner"></div>${head}${body}</div>`;
+  host.innerHTML = `<div class="pl-grid" style="--n:${cols.length}"><div class="pl-corner"></div>${head}${body}</div>` + `<div class="pl-list">${cols.map((k, i) => { const list = rows.filter(r => r.dl === k), d = list.filter(r => r.done).length, full = list.length && d === list.length;
+    const grps = ppl.map(p => { const l = list.filter(r => r.who === p); return l.length ? `<div class="pl-grp" ${PC[p] ? `style="--pc:${PC[p]}"` : ''}><b>${esc(pname(p))}</b><div>${l.map(r => `<span class="pl-chip ${r.done ? 'done' : ''}" ${PC[p] ? `style="--pc:${PC[p]}"` : ''} data-who="${esc(p)}">${r.done ? '✓ ' : ''}${esc(r.t)}${r.tag ? `<em>${esc(r.tag)}</em>` : ''}</span>`).join('')}</div></div>` : ''; }).join('');
+    return `<div class="pl-stage"><div class="pl-ms ${full ? 'full' : ''}" style="--f:${list.length ? d / list.length : 0}"><span class="pl-dot">${full ? '✓' : i + 1}</span><b>${esc(dlLabel(k))}</b><em>${d}/${list.length}</em><i class="pl-mb"><i></i></i></div>${grps || '<p class="pl-empty">אין משימות בשלב הזה</p>'}</div>`; }).join('')}</div>`;
 }
 { const _s3 = splitRender; splitRender = function(){ _s3.apply(this, arguments); try { renderPlan(); } catch(e){} }; }
 renderPlan();
@@ -4716,22 +4751,6 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     $('f-cue').style.opacity = String(1 - seg(p, 0, .08));
   }
 
-  /* --- 2 · words --- */
-  const wordsHost = $('f-words');
-  (function splitWords(){
-    const raw = wordsHost.textContent; let gold = false; const out = [];
-    raw.split('|').forEach((chunk, i) => {
-      gold = i % 2 === 1;
-      chunk.split(/(\s+)/).forEach(w => { if (!w) return; if (/^\s+$/.test(w)) out.push(w); else out.push(`<span${gold ? ' class="gold"' : ''}>${w}</span>`); });
-    });
-    wordsHost.innerHTML = out.join('');
-  })();
-  const words = [...wordsHost.querySelectorAll('span')];
-  function drawWords(p){
-    const n = Math.round(seg(p, .08, .78) * words.length);
-    words.forEach((w, i) => w.classList.toggle('lit', i < n));
-  }
-
   /* --- 3 · gondola --- */
   const cable = $('f-cableLine'), cable2 = $('f-cableLine2'), cabSvg = $('f-cable'), gd = $('f-gondola');
   const gdLines = [...gd.querySelectorAll('.gd-line')];
@@ -4771,166 +4790,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     rows.forEach((r, i) => { const q = easeOut(seg(p, .55 + i * .05, .7 + i * .05)); r.style.opacity = String(q); r.style.transform = `translateY(${((1 - q) * 12).toFixed(1)}px)`; });
   }
 
-  /* --- 4 · piste --- */
-  const piste = $('f-piste');
-  const MARKS = [
-    { d: 0,   date: '21.10.26', t: 'פגישה 1 · יום ד׳', s: 'שיחת צוות, תכנים, לפטופ' },
-    { d: 11,  date: '01.11.26', t: 'ישיבה עם סמדר', s: 'עוברים על המשימות והלו״ז' },
-    { d: 21,  date: '11.11.26', t: 'אורן וחן · במשרד', s: 'סגירת הלו״ז ואישורו' },
-    { d: 36,  date: '26.11.26', t: 'טיסה לצרפת', s: 'הכנה באתר עד 04.12' },
-    { d: 45,  date: '05.12.26', t: 'שבוע חנוכה', s: 'וולטורנס בלבד · עד 12.12' },
-    { d: 73,  date: '02.01.27', t: 'פתיחת העונה', s: 'שבועות 1–5 · לה מנואיר מ־03.01' },
-    { d: 108, date: '06.02.27', t: 'חזרה לארץ', s: 'ואקאנס עד 06.03' },
-    { d: 136, date: '06.03.27', t: 'חזרה לאתר', s: 'שבועות 6–9' },
-    { d: 165, date: '04.04.27', t: 'סיום העונה', s: 'חזרה לארץ' }
-  ];
-  const SPAN = 165, F0 = .03, F1 = .97;
-  const fOf = d => F0 + (F1 - F0) * d / SPAN;
-  let pL = 0, pMob = null;
-  function buildPiste(){
-    const mob = W < 760; if (mob === pMob) return; pMob = mob;
-    const vb = mob ? [0, 0, 400, 610] : [0, 0, 1600, 900];
-    piste.setAttribute('viewBox', vb.join(' '));
-    piste.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    const d = mob
-      ? 'M330 20 C120 40 70 110 190 160 S350 240 220 290 S40 360 150 420 S340 490 220 550 S80 590 70 598'
-      : 'M1480 330 C1330 300 1290 420 1140 450 S900 360 800 480 S880 690 680 700 S420 590 330 700 S190 820 110 800';
-    ['f-pBase','f-pVac','f-pDraw'].forEach(id => $(id).setAttribute('d', d));
-    document.querySelectorAll('.f-pSeg').forEach(s => s.setAttribute('d', d));
-    const base = $('f-pBase'); pL = base.getTotalLength();
-    const a = fOf(108) * pL, b = fOf(136) * pL;
-    $('f-pVac').style.strokeDasharray = `0 ${a} ${b - a} ${pL * 2}`;
-    $('f-pVac').style.strokeDashoffset = '0';
-    const g = $('f-marks'); g.innerHTML = '';
-    MARKS.forEach((m, i) => {
-      const pt = base.getPointAtLength(fOf(m.d) * pL);
-      const red = i % 2 === 0;
-      let dx, ty, anchor;
-      if (mob){ const left = i % 2 === 1; dx = left ? -22 : 22; anchor = left ? 'end' : 'start'; ty = -2; }
-      else if (i === 3) { dx = -26; anchor = 'side'; ty = -30; }
-      else { const up = i % 2 === 0; dx = 0; anchor = 'middle'; ty = up ? -112 : 34; }
-      const el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      el.setAttribute('class', 'mk'); el.style.opacity = '.22';
-      el.innerHTML = `<g class="gate" transform="translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})"><g style="transform:scale(.6)"><path d="M-9 0 V-34 M9 0 V-34" stroke="#fff" stroke-width="2"/><path d="M-9 -34 H9 V-20 H-9 Z" fill="${red ? '#E2574C' : '#2E8FD6'}"/></g></g>`
-        + `<text x="${(pt.x + dx).toFixed(1)}" y="${(pt.y + ty + (mob ? 0 : 24)).toFixed(1)}" text-anchor="${anchor === 'side' ? 'end' : anchor}" direction="ltr" class="lbl-d" font-size="${mob ? 17 : 27}">${m.date}</text>`
-        + `<text x="${(pt.x + dx).toFixed(1)}" y="${(pt.y + ty + (mob ? 18 : 50)).toFixed(1)}" text-anchor="${anchor === 'side' ? 'start' : anchor}" direction="rtl" class="lbl-t" font-size="${mob ? 12.5 : 17}">${m.t}</text>`
-        + (mob ? '' : `<text x="${(pt.x + dx).toFixed(1)}" y="${(pt.y + ty + (mob ? 33 : 71)).toFixed(1)}" text-anchor="${anchor === 'side' ? 'start' : anchor}" direction="rtl" class="lbl-s" font-size="${mob ? 11 : 14}">${m.s}</text>`);
-      g.appendChild(el);
-      m.el = el;
-      m.gate = el.querySelector('.gate > g');
-    });
-    /* today marker, when today falls inside the timeline */
-    const start = new Date(2026, 9, 21), now = new Date();
-    const dd = Math.round((now - start) / 864e5);
-    if (dd > 0 && dd < SPAN){
-      const pt = base.getPointAtLength(fOf(dd) * pL);
-      const el = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      el.innerHTML = `<circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#9FD8F2"/><circle cx="${pt.x}" cy="${pt.y}" r="11" fill="none" stroke="#9FD8F2" stroke-opacity=".5"/><text x="${pt.x}" y="${pt.y + 30}" text-anchor="middle" font-size="${mob ? 11 : 13}" fill="#9FD8F2" font-weight="700">היום</text>`;
-      g.appendChild(el);
-    }
-  }
-  let lastMark = -1;
-  function drawPiste(p){
-    buildPiste();
-    const q = seg(p, .04, .9);
-    const len = q * pL;
-    const dr = $('f-pDraw'); dr.style.strokeDasharray = `${len} ${pL * 2}`;
-    document.querySelectorAll('.f-pSeg').forEach(s => {
-      const a = fOf(+s.dataset.a) * pL, b = fOf(+s.dataset.b) * pL;
-      const vis = clamp(len - a, 0, b - a);
-      s.style.strokeDasharray = `0 ${a} ${vis} ${pL * 2}`;
-    });
-    const pt = $('f-pBase').getPointAtLength(Math.max(.01, len));
-    $('f-skier').setAttribute('transform', `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)})`);
-    let cur = 0;
-    MARKS.forEach((m, i) => {
-      const on = len >= fOf(m.d) * pL - 1;
-      if (on) cur = i;
-      if (m.el){ m.el.style.opacity = on ? '1' : '.22'; m.gate.style.transform = on ? 'scale(1)' : 'scale(.6)'; }
-    });
-    if (cur !== lastMark){ lastMark = cur; $('f-nowD').textContent = MARKS[cur].date; $('f-nowT').textContent = MARKS[cur].t + ' · ' + MARKS[cur].s; }
-  }
-
-  /* --- 5 · hotels --- */
-  const HOTELS = [
-    { n: 'Montana Plein Sud', l: 'Village Montana · רובע Plein Sud · Rue du Soleil', d: 'דירות Village Montana בקצה השמשי של הכפר, בריכה מקורה וספא, גישה ישירה למדרונות.' },
-    { n: 'Le Cheval Blanc', l: 'רובע Soleil · Rue du Soleil', d: 'רזידנס 3 כוכבים באזור שקט ושמשי, עץ בכל החדרים, גישה ישירה למדרונות ולבתי הספר לסקי.' },
-    { n: 'Montana Soleil', l: 'Village Montana · 430 Rue du Soleil', d: 'סקי־אין סקי־אאוט, מעלית האתר ליד הדלת. הנוח ביותר ללקוחות שמגיעים בלי רכב.' },
-    { n: 'Kashmir', l: 'Hameau du Kashmir · שכונת Les Arolles', d: 'מלון 4 כוכבים ורזידנס באותו מתחם, כ־50 מ׳ מהמדרון, בריכה מקורה וספא, אזור שקט.' },
-    { n: "L'Oxalys", l: 'הכניסה לוולטורנס · תחתית מדרון Cairn', d: 'רזידנס 4 כוכבים עם 36 דירות ל־2–8 נפשות, סקי־אין סקי־אאוט ונוף פנורמי על שלושת העמקים.' }
-  ];
-  const hName = $('f-hName');
-  hName.innerHTML = HOTELS.map((h, i) => `<div class="${i ? 'dn' : ''}">${h.n}</div>`).join('');
-  const hEls = [...hName.children];
-  let hCur = -1;
-  function setHotel(i){
-    if (i === hCur) return;
-    hEls.forEach((el, k) => { el.className = k < i ? 'up' : (k > i ? 'dn' : ''); });
-    $('f-hLoc').textContent = HOTELS[i].l; $('f-hDesc').textContent = HOTELS[i].d;
-    $('f-hIdx').textContent = (i + 1) + ' / 5';
-    [...$('f-hDots').children].forEach((d, k) => d.classList.toggle('on', k <= i));
-    hCur = i;
-  }
-  setHotel(0);
-
-  const ridge = $('f-ridge'); let rctx = ridge.getContext('2d'), rDots = [], rPins = [], rW = 0, rH = 0;
-  function ridgeY(x, w, h){
-    const u = x / w;
-    return h * (.56 - .16 * Math.exp(-Math.pow((u - .62) / .09, 2)) - .1 * Math.exp(-Math.pow((u - .32) / .12, 2)) - .07 * Math.exp(-Math.pow((u - .86) / .07, 2))
-      + .025 * Math.sin(u * 37) + .015 * Math.sin(u * 91 + 1.3));
-  }
-  function buildRidge(){
-    const dpr = Math.min(2, devicePixelRatio || 1);
-    rW = ridge.clientWidth; rH = ridge.clientHeight; if (!rW || !rH) return;
-    ridge.width = rW * dpr; ridge.height = rH * dpr; rctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    rDots = []; const st = W < 760 ? 9 : 11;
-    for (let x = st / 2; x < rW; x += st){
-      const top = ridgeY(x, rW, rH);
-      for (let y = top; y < rH * .98; y += st){
-        const depth = (y - top) / (rH - top);
-        rDots.push({ x, y, a: .75 - depth * .62, g: Math.max(0, 1 - (y - top) / 60) });
-      }
-    }
-    rPins = HOTELS.map((h, i) => { const x = rW * (W < 760 ? .14 + i * .18 : .07 + i * .105); return { x, y: ridgeY(x, rW, rH) + rH * (W < 760 ? .05 + (i % 2) * .04 : .16 + (i % 2) * .05) }; });
-  }
-  function drawRidge(p){
-    if (!rW) buildRidge(); if (!rW) return;
-    rctx.clearRect(0, 0, rW, rH);
-    const glow = .5 + .5 * Math.sin(p * Math.PI);
-    for (const d of rDots){
-      rctx.fillStyle = d.g > 0 ? `rgba(243,217,174,${(d.a * (.5 + .5 * d.g) * (.6 + .4 * glow)).toFixed(3)})` : `rgba(159,216,242,${(d.a * .45).toFixed(3)})`;
-      rctx.fillRect(d.x - .9, d.y - .9, 1.8, 1.8);
-    }
-    const hp = seg(p, .06, .94) * HOTELS.length;
-    const hi = Math.min(HOTELS.length - 1, Math.floor(hp));
-    setHotel(hi);
-    /* route arcs between pins */
-    rctx.lineWidth = 1.4;
-    for (let i = 0; i < hi + 1 && i < rPins.length - 1; i++){
-      const a = rPins[i], b = rPins[i + 1];
-      const t = i < hi ? 1 : clamp(hp - hi);
-      if (t <= 0) continue;
-      rctx.strokeStyle = 'rgba(226,182,118,.85)';
-      rctx.beginPath();
-      const mx = (a.x + b.x) / 2, my = Math.min(a.y, b.y) - rH * .12;
-      const N = 30;
-      for (let k = 0; k <= N * t; k++){
-        const u = k / N; const x = (1-u)*(1-u)*a.x + 2*(1-u)*u*mx + u*u*b.x; const y = (1-u)*(1-u)*a.y + 2*(1-u)*u*my + u*u*b.y;
-        k ? rctx.lineTo(x, y) : rctx.moveTo(x, y);
-      }
-      rctx.stroke();
-    }
-    rPins.forEach((pn, i) => {
-      const on = i === hi;
-      rctx.fillStyle = on ? '#F3D9AE' : (i < hi ? 'rgba(226,182,118,.9)' : 'rgba(255,255,255,.35)');
-      rctx.beginPath(); rctx.arc(pn.x, pn.y, on ? 6 : 4, 0, 7); rctx.fill();
-      if (on){ rctx.strokeStyle = 'rgba(243,217,174,.45)'; rctx.beginPath(); rctx.arc(pn.x, pn.y, 14, 0, 7); rctx.stroke(); }
-      rctx.fillStyle = on ? '#fff' : 'rgba(255,255,255,.45)';
-      rctx.font = `${on ? 700 : 600} 12px Assistant, sans-serif`; rctx.textAlign = 'center';
-      rctx.fillText(String(i + 1), pn.x, pn.y + 26);
-    });
-  }
-
+  let pMob = null, rW = 0;
   /* --- 6 · phases --- */
   function updateStats(){
     if (typeof phaseStats !== 'function') return;
@@ -5025,12 +4885,9 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     raf = 0;
     if (!isFilm()) return;
     if (inView(s1)) drawLens(prog(s1));
-    if (inView(s2)) drawWords(prog(s2));
     if (inView(s3)) drawGondola(prog(s3));
     if (inView(sT)) drawTeam(prog(sT));
     if (inView(sTA)) pullAnswers();
-    if (inView(s4)) drawPiste(prog(s4));
-    if (inView(s5)) drawRidge(prog(s5));
     if (inView(s6)){
       const r = s6.getBoundingClientRect();
       $('f-picImg').style.transform = `translateY(${(clamp((innerHeight - r.top) / (innerHeight + r.height)) * 12 - 6).toFixed(2)}%)`;
