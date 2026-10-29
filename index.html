@@ -2237,6 +2237,78 @@ footer.src{background:var(--slate)!important}
 :focus-visible{outline:2px solid var(--run-blue);outline-offset:2px}
 .topbar :focus-visible{outline-color:#8FC1FF}
 </style>
+<style id="v3">
+/* ================= v3 · design review pass (DESIGN.md): one palette for board + scenes, contrast, color = meaning ================= */
+:root{--muted:#536572;--marker-ink:#A4520A;--glow:#F6C38B;--f-gold:#F6C38B;--f-gold2:#FFFFFF;--f-dim:#9DB1BC}
+
+/* scenes: no gold, no tracked eyebrow with a rule, no single painted word */
+.f-eyebrow{letter-spacing:0!important;font-weight:600!important;font-size:13px!important;color:rgba(255,255,255,.72)!important;text-transform:none}
+.f-eyebrow::before{display:none!important}
+.f-sheet .f-eyebrow,.f-s6-in .f-eyebrow{color:var(--muted)!important}
+.f-hero-txt h1 em,.f-s7-in h2 em,.f-tm-head h2 em,.ssn-head h2 em{color:inherit!important;font-style:normal}
+.f-hero-txt h1 em{opacity:.78}
+.f-cta button.pri,.f-ta-btn{background:#fff!important;border-color:#fff!important;color:var(--slate)!important}
+.f-pr-close{border-inline-start-color:var(--marker)!important}
+.f-cue{letter-spacing:0!important;font-size:12.5px!important}
+.fx #f-s1{height:200vh}.fx #f-s3{height:220vh}
+.fx .hero-badge{border-color:rgba(246,195,139,.5)!important}
+#heroNextK{color:var(--glow)!important;letter-spacing:0!important}
+
+/* "today" is the orange marker everywhere (green only means done) */
+.cal-c.today{background:#FFF3E6!important;border-color:var(--marker)!important;box-shadow:0 0 0 2px rgba(238,132,24,.2)!important}
+.cal-c.today .cn{background:var(--marker-ink)!important;color:#fff!important}
+.ci.now{background:#FFF3E6!important;box-shadow:inset 0 0 0 1px var(--marker)!important}
+.ci em.now{background:var(--marker-ink)!important;color:#fff!important}
+
+/* contrast (WCAG AA 4.5:1) */
+.cal-dow span{color:var(--muted)!important}
+.cal-c.past .cn,.cal-c.out .cn{color:#56666F!important}
+.cal-empty{color:var(--muted)!important}
+.cal-c.out .cn{opacity:.75}
+.ci small,.dlpick,.cnt{color:var(--muted)!important;opacity:1!important}
+.cat-dl i{color:#46555F!important;opacity:1!important}
+.ci.past,.ssn-list li.past{opacity:1!important}
+.ssn-list li.past .d,.ssn-list li.past b,.ssn-list li.past p,.ssn-list li.past .n,.ssn-list li.past .w{color:var(--muted)!important}
+.ssn-list li.past .d{text-decoration:line-through;text-decoration-thickness:1px}
+.ssn-next small,.ssn-list li.next .n,.ssn-list li.next .d,.ssn-today span{color:var(--marker-ink)!important}
+.rf h3 small{color:#fff!important;background:var(--pc)!important}
+.ct-g h3 small{color:var(--slate)!important;background:#E5EBEF!important}
+.tab .pill{color:var(--slate)!important}
+.tab[aria-selected="true"] .pill{color:#fff!important;background:var(--run-blue)!important}
+
+/* people chips: tinted, readable, never a run color */
+.own{color:var(--pc,#475966)!important;font-weight:700!important;background:color-mix(in srgb,var(--pc,#475966) 9%,#fff)!important;border-color:color-mix(in srgb,var(--pc,#475966) 30%,#fff)!important}
+.own[data-who="כולם"]{--pc:#475966}
+.own[data-who="כולם"]::before{display:none}
+.own[data-who="פתוח"]{--pc:#6E4D00}
+.pl-who[data-who="כולם"],.pl-chip[data-who="כולם"]{--pc:#475966!important}
+.pl-who[data-who="פתוח"],.pl-chip[data-who="פתוח"]{--pc:#8A6100!important}
+
+/* deadline is shown once on the group; the owner's per-task picker stays quiet until hovered or changed */
+@media (hover:hover){
+  .dlpick:not(.set){opacity:0!important;transition:opacity .15s}
+  .task:hover .dlpick,.task:focus-within .dlpick{opacity:1!important}
+}
+.dlpick.set select{border-style:solid;border-color:var(--line2);color:var(--slate);background:#fff}
+body:not(.pg-owner) .dlpick.same{display:none!important}
+@media (hover:hover){.dlpick.same{opacity:0!important}.task:hover .dlpick.same,.task:focus-within .dlpick.same{opacity:1!important}}
+
+/* team charter: plain cards, the red-lines card says it in its border */
+.tm-card.red{border-top-color:var(--run-red)!important}
+.tm-quote b{color:var(--slate)!important;font-family:var(--fd)!important}
+
+/* phones: tabs show there is more to scroll, bigger targets */
+@media (max-width:760px){
+  .tabs{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 36px);mask-image:linear-gradient(to left,transparent 0,#000 36px)}
+  .qf-btn,.mode-btn,.me-btn{min-height:38px}
+  .qf-btn{min-width:40px;justify-content:center}
+  .f-hero-txt{bottom:calc(3vh + var(--heroLift,0px) + env(safe-area-inset-bottom,0px))!important}
+  .f-hero-txt h1{font-size:clamp(40px,11vw,56px)!important}
+  .f-hero-txt h1{margin-top:0!important}
+  .f-hero-meta{margin-top:12px!important}
+  .fx .hero-badge{margin-top:12px!important;padding:12px 16px!important}
+}
+</style>
 <header class="topbar">
   <div class="brand">
     <svg class="logo" viewBox="0 0 48 48" aria-hidden="true">
@@ -2702,7 +2774,7 @@ footer.src{background:var(--slate)!important}
         <defs>
           <clipPath id="f-lensClip" clipPathUnits="userSpaceOnUse"><path id="f-lensClipPath"/></clipPath>
           <linearGradient id="f-rim" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F3D9AE"/><stop offset=".45" stop-color="#E2B676"/><stop offset=".7" stop-color="#7FD3F7"/><stop offset="1" stop-color="#2A7FB0"/>
+            <stop offset="0" stop-color="#FFD9AE"/><stop offset=".45" stop-color="#EE8418"/><stop offset=".7" stop-color="#7FD3F7"/><stop offset="1" stop-color="#2A7FB0"/>
           </linearGradient>
           <linearGradient id="f-tint" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0" stop-color="#7FD3F7" stop-opacity=".30"/><stop offset=".5" stop-color="#E2B676" stop-opacity=".06"/><stop offset="1" stop-color="#E2B676" stop-opacity=".34"/>
@@ -2728,13 +2800,12 @@ footer.src{background:var(--slate)!important}
         </g>
       </svg>
       <div class="f-hero-txt" id="f-heroTxt">
-        <span class="f-eyebrow">פינגווין · אתר וולטורנס · 2,300 מ׳</span>
-        <h1>צוות וולטורנס<br><em>חורף 2027</em></h1>
-        <p>הנציגים שיורדים לשטח, כל משימות ההיערכות ולוח העונה המלא. גללו כדי להיכנס לעונה.</p>
+                <h1>צוות וולטורנס<br><em>חורף 2027</em></h1>
+        <p>מי עושה מה, עד מתי, ומה הבא בלו״ז. גללו פנימה.</p>
         <div class="f-hero-meta">
           <div><b>4</b><span>נציגים</span></div>
-          <div><b>130</b><span>משימות</span></div>
-          <div><b>9 + 1</b><span>שבועות לקוחות + חנוכה</span></div>
+          <div><b id="heroMetaTotal">130</b><span>משימות</span></div>
+          <div><b>10</b><span>שבועות לקוחות, כולל חנוכה</span></div>
         </div>
         <div class="hero-badge">
           <span id="heroNextK">המפגש הבא</span>
@@ -2927,11 +2998,11 @@ footer.src{background:var(--slate)!important}
   <section class="view" id="view-team" role="tabpanel" hidden>
     <div class="vhead"><div class="vhead-main"><h2>בית רחוק מהבית</h2><p>אמנת הצוות שלנו, מתוך התרגיל "מה זה צוות". ככה אנחנו רוצים להיות אחד עם השני העונה.</p></div>
       <div class="vhead-side"><div class="tm-names"><span>בן</span><span>יותם</span><span>דורון</span><span>קרן</span></div></div></div>
-    <div class="tm-quote"><span>המשפט שלנו</span><b>"כל עוד זה עובד, זה שלך."</b></div>
+    <div class="tm-quote"><b>"כל עוד זה עובד, זה שלך."</b></div>
     <div class="tm-grid">
-      <article class="tm-card"><span class="tm-n">01</span><h3>מה מחזיק אותנו</h3><ul><li>מכילים אחד את השני ויודעים לוותר</li><li>מכירים לעומק, ושומרים על סטלבט בינינו</li><li>מחוות קטנות, ועוזרים כשקשה, גם בדברים הקטנים</li></ul></article>
-      <article class="tm-card"><span class="tm-n">02</span><h3>איך עובדים</h3><ul><li>בגרות וגמישות, לא מקובעים</li><li>הכול נבנה על כבוד ותקשורת</li><li>אי אפשר לקרוא מחשבות, מדברים</li></ul></article>
-      <article class="tm-card red"><span class="tm-n">03</span><h3>קווים אדומים</h3><ul><li>זלזול ולרדת על מישהו</li><li>פגיעה בכבוד בסיסי</li><li>שומרים על סביבה בטוחה לכולם</li></ul></article>
+      <article class="tm-card"><h3>מה מחזיק אותנו</h3><ul><li>מכילים אחד את השני ויודעים לוותר</li><li>מכירים לעומק, ושומרים על סטלבט בינינו</li><li>מחוות קטנות, ועוזרים כשקשה, גם בדברים הקטנים</li></ul></article>
+      <article class="tm-card"><h3>איך עובדים</h3><ul><li>בגרות וגמישות, לא מקובעים</li><li>הכול נבנה על כבוד ותקשורת</li><li>אי אפשר לקרוא מחשבות, מדברים</li></ul></article>
+      <article class="tm-card red"><h3>קווים אדומים</h3><ul><li>זלזול ולרדת על מישהו</li><li>פגיעה בכבוד בסיסי</li><li>שומרים על סביבה בטוחה לכולם</li></ul></article>
     </div>
     <div class="fx">
 <!-- 3b · team building -->
@@ -3203,6 +3274,7 @@ function refreshAll(){
   document.getElementById("ringFg").style.strokeDashoffset = String(119.4 * (1 - pct / 100));
   document.getElementById("heroDone").textContent = g.done;
   document.getElementById("heroTotal").textContent = g.total;
+  { const mt = document.getElementById("heroMetaTotal"); if (mt && g.total) mt.textContent = g.total; }
   document.getElementById("heroOpen").textContent = g.total - g.done;
 
   PHASES.forEach(p => {
@@ -3385,11 +3457,12 @@ function wfFilled(w){
   const o = tstore(TKEY.wform), p = `wf-${w}-`;
   return !!(tstore(TKEY.sums)["s-" + w] || "").trim() || Object.keys(o).some(k => k.startsWith(p) && String(o[k]).trim());
 }
-function wfField(id, ph, area){
+function wfField(id, ph, area, lab){
   const v = wfEsc(wfVal(id));
+  const al = lab ? ` aria-label="${wfEsc(String(lab).replace(/<[^>]+>/g, ""))}"` : "";
   return area
-    ? `<textarea class="wf-in wf-ta" id="${id}" placeholder="${wfEsc(ph || "")}" rows="3">${v}</textarea>`
-    : `<input class="wf-in" id="${id}" value="${v}" placeholder="${wfEsc(ph || "")}" autocomplete="off">`;
+    ? `<textarea class="wf-in wf-ta" id="${id}"${al} placeholder="${wfEsc(ph || "")}" rows="3">${v}</textarea>`
+    : `<input class="wf-in" id="${id}"${al} value="${v}" placeholder="${wfEsc(ph || "")}" autocomplete="off">`;
 }
 function wfBlock(w, wk, b){
   let h = b.h3 ? `<h4 class="wf-h3">${b.h3}</h4>` : "";
@@ -3397,7 +3470,7 @@ function wfBlock(w, wk, b){
   if (b.t === "text") return h + `<label class="wf-lab" for="s-${w}">${b.l}</label>` + wfField("s-" + w, "מה עבד, מה לא, ומה משנים לשבוע הבא… (בהיעדר פירוט אפשר לכתוב 'ללא')", true);
   if (b.t === "pair") return h + `<div class="wf-pair">${b.l.map((l, i) => `<div><label class="wf-lab" for="${wfId(w, b.k, 0, i)}">${l}</label>${wfField(wfId(w, b.k, 0, i), "", true)}</div>`).join("")}</div>`;
   if (b.t === "hotels") return h + `<div class="wf-hotels">${WF_HOTELS.map((n, r) => `
-    <div class="wf-hotel"><div class="wf-hn">${wfField(wfId(w, b.k, r, 0), n)}</div>
+    <div class="wf-hotel"><div class="wf-hn">${wfField(wfId(w, b.k, r, 0), n, false, "שם המלון")}</div>
       ${["התנהלות כללית עם המלון ועבודה משותפת", "לקוחות", "דברים נוספים שעלו לחיוב / שלילה"].map((l, i) => `<label class="wf-lab" for="${wfId(w, b.k, r, i + 1)}">${l}</label>${wfField(wfId(w, b.k, r, i + 1), "הערות כלליות, מספר הזמנה אם רלוונטי", true)}`).join("")}
     </div>`).join("")}</div>`;
   const def = b.def ? b.def(wk) : null;
@@ -3406,7 +3479,7 @@ function wfBlock(w, wk, b){
     b.rows.map((row, r) => `<tr>${b.cols.map((c, ci) => {
       if (ci === 0 && row.l) return `<th class="wf-rl">${row.l}</th>`;
       const ph = ci === 0 && row.p ? row.p : (def ? def[ci] : "");
-      return `<td>${wfField(wfId(w, b.k, r, ci), ph, ci > 0 && n <= 3)}</td>`;
+      return `<td>${wfField(wfId(w, b.k, r, ci), ph, ci > 0 && n <= 3, c + (row.l ? " · " + row.l : ""))}</td>`;
     }).join("")}</tr>`).join("")
   }</tbody></table></div>`;
 }
@@ -3604,7 +3677,7 @@ bindFields("#view-meetings textarea.wl2", TKEY.hw);
 
 /* ================= responsibility table ================= */
 const RESP_AREAS = [[11, "אוטובוסים צרפת", "hi"], [12, "לה מנואיר · אתר לווין", "hi"], [21, "תנ״ך", "hi"], [2, "מלון 1 · Montana Plein Sud", "hi"], [3, "מלון 2 · Le Cheval Blanc", "hi"], [4, "מלון 3 · Montana Soleil", "hi"], [5, "מלון 4 · Kashmir", "hi"], [6, "מלון 5 · L'Oxalys", "hi"], [1, "סקיפסים", "hi"], [24, "ראש צוות", "mid"], [25, "הודעות וואטצאפ", "mid"], [7, "הדרכות", "mid"], [8, "ציוד", "mid"], [10, "לו\"ז שבועי", "mid"], [9, "קופה קטנה", "lo"], [14, "ימי הולדת ואנשים חשובים", "lo"], [15, "רשתות חברתיות", "lo"], [17, "מעטפות", "mid"], [18, "הכנות להגעה + פקל שדה תעופה", "lo"], [19, "סידור הדרייב", "lo"], [20, "דו\"ח שבוע + סיכום הגעה", "lo"], [22, "מאפייה", "lo"], [23, "מסעדת ג׳אפסר", "lo"]];
-window.PERSON_COLORS = { 'בן': '#1F6FD0', 'יותם': '#0E9C86', 'דורון': '#E07A1F', 'קרן': '#B8408A' };
+window.PERSON_COLORS = { 'בן': '#6941C6', 'יותם': '#0E7490', 'דורון': '#8B5A2B', 'קרן': '#B42370' };
 function updateResp(){
   const FIXED = {};   // everyone starts at 0
   const pts = Object.assign({}, FIXED), cnt = {}; let unset = 0, max = 0;
@@ -4073,8 +4146,8 @@ function renderQs(){
     const topics = [...new Set(mine.map(([, x]) => x.topic || 'כללי'))];
     const body = topics.map(tp => `<div class="qs-topic"><h4>${esc(tp)}</h4>${mine.filter(([, x]) => (x.topic || 'כללי') === tp).map(([id, x]) => `
       <div class="qs-row ${x.done ? 'done' : ''}" data-qid="${esc(id)}">
-        <label class="qs-chk"><input type="checkbox" class="qs-done"${x.done ? ' checked' : ''}><span></span></label>
-        <div class="qs-main"><div class="qs-q">${esc(x.q)}</div><input class="qs-a" type="text" placeholder="תשובה…" value="${esc(x.a || '')}"></div>
+        <label class="qs-chk"><input type="checkbox" class="qs-done" aria-label="השאלה נסגרה"${x.done ? ' checked' : ''}><span></span></label>
+        <div class="qs-main"><div class="qs-q">${esc(x.q)}</div><input class="qs-a" type="text" aria-label="תשובה" placeholder="תשובה…" value="${esc(x.a || '')}"></div>
         <button type="button" class="qs-del" aria-label="מחיקת השאלה" title="מחיקה">×</button>
       </div>`).join('')}</div>`).join('') || '<div class="qs-empty">אין עדיין שאלות</div>';
     const dl = `qs-dl-${aud}`;
@@ -4839,7 +4912,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   function drawLens(p){
     const mob = W < 760;
     const s0 = mob ? (W * .88) / 680 : Math.min(W * .44 / 680, H * .5 / 330);
-    const cx0 = mob ? W / 2 : W * .33, cy0 = mob ? H * .36 : H * .5;
+    const cx0 = mob ? W / 2 : W * .33, cy0 = mob ? H * .27 : H * .5;
     const sEnd = Math.max((H / 2) / 78, (W / 2) / 240) * 1.25;
     const z = ease(seg(p, .04, .86));
     const s = s0 * Math.pow(sEnd / s0, z);
@@ -5242,4 +5315,28 @@ setMode(startMode);
 
 </script>
 
+<script id="v3js">
+/* v3: hide a task's deadline when it only repeats its group's meeting */
+(function(){
+  function mark(){
+    document.querySelectorAll('select.dl-sel').forEach(sl => {
+      const cat = (sl.closest('section.cat') || {}).dataset; const meet = cat && cat.cat && cat.cat.startsWith('m:') ? cat.cat.slice(2) : '';
+      const pick = sl.closest('.dlpick'); if (!pick) return;
+      pick.classList.toggle('same', !!sl.value && (sl.value === sl.dataset.gdl || sl.value === meet));
+    });
+  }
+  let t = 0; const later = () => { clearTimeout(t); t = setTimeout(mark, 60); };
+  new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+  document.addEventListener('change', e => { if (e.target.matches && e.target.matches('select.dl-sel')) later(); });
+  later();
+  /* phones: while the top bar is still on screen the hero stage runs past the fold; lift the hero text so it stays visible */
+  const st = document.querySelector('#f-s1 .f-stage'), tx = document.getElementById('f-heroTxt');
+  if (st && tx){
+    let raf = 0;
+    const lift = () => { raf = 0; const r = st.getBoundingClientRect(); tx.style.setProperty('--heroLift', Math.max(0, Math.round(r.bottom - innerHeight)) + 'px'); };
+    const req = () => { if (!raf) raf = requestAnimationFrame(lift); };
+    addEventListener('scroll', req, { passive: true }); addEventListener('resize', req); req();
+  }
+})();
+</script>
 </body></html>
