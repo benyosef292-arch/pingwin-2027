@@ -2043,6 +2043,21 @@ html,body{overflow-x:clip}
 }
 </style>
 <style id="winter">
+/* work plan: one row of stages, scrolled sideways, names pinned */
+.plan-wrap{overflow:visible!important}
+.pl-scroll{overflow-x:auto;padding-bottom:10px;overscroll-behavior-x:contain}
+.pl-scroll:focus-visible{outline:2px solid var(--run-blue,#1858C4);outline-offset:4px}
+#planGrid .pl-grid{display:grid!important;grid-template-columns:112px repeat(var(--n),208px)!important;min-width:max-content!important;gap:8px!important}
+#planGrid .pl-list{display:none!important}
+#planGrid .pl-corner,#planGrid .pl-who{position:sticky;inset-inline-start:0;z-index:2}
+#planGrid .pl-corner{background:var(--snow,#F1F4F6)}
+#planGrid .pl-who{background:color-mix(in srgb,var(--pc,#5B7B8C) 9%,#fff)!important;box-shadow:-8px 0 12px -10px rgba(28,44,55,.35)}
+.pl-grp-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:4px 4px 6px;border-bottom:2px solid var(--slate,#1C2C37)}
+.pl-grp-h b{font:700 18px var(--fd);color:var(--slate,#1C2C37)}
+.pl-grp-h span{font-size:13px;color:var(--muted,#5F7280)}
+.pl-grp-h + .pl-grp-h{border-bottom-color:var(--run-red,#C62A30)}
+.pl-hint{margin:0 0 10px;font-size:13.5px;color:var(--muted,#5F7280)}
+@media (max-width:760px){#planGrid .pl-grid{grid-template-columns:84px repeat(var(--n),180px)!important}#planGrid .pl-who b{font-size:13px}}
 .cal-add{border:0;background:var(--run-blue,#1858C4);color:#fff;border-radius:999px;padding:7px 15px;font:600 13px var(--fd);cursor:pointer;white-space:nowrap}
 .cal-add:hover{background:#134AA6}
 .ci-del{display:block;margin-top:6px;border:0;background:transparent;padding:0;font:600 12px var(--fd);color:var(--run-red,#C62A30);cursor:pointer;text-decoration:underline}
@@ -4165,7 +4180,7 @@ function renderPlan(){
   const chip = (r, p) => `<span class="pl-chip ${r.done ? 'done' : ''}" ${PC[p] ? `style="--pc:${PC[p]}"` : ""} data-who="${esc(p)}" title="${esc(r.t)}">${r.done ? '✓ ' : ''}${esc(r.t)}${r.tag ? `<em>${esc(r.tag)}</em>` : ''}</span>`;
   const ms = (k, i, list) => { const d = list.filter(r => r.done).length, full = list.length && d === list.length;
     return `<div class="pl-ms ${full ? 'full' : ''}" style="--f:${list.length ? d / list.length : 0}"><span class="pl-dot">${full ? '✓' : i}</span><b>${esc(dlLabel(k))}</b><em>${d}/${list.length}</em><i class="pl-mb"><i></i></i></div>`; };
-  function block(cols, n0){
+  function block(cols, n0, groups){
     const rs = rows.filter(r => cols.includes(r.dl));
     const ppl = ['בן', 'יותם', 'דורון', 'קרן', 'כולם', 'פתוח'].filter(p => ['בן', 'יותם', 'דורון', 'קרן'].includes(p) || rs.some(r => r.who === p));
     const head = cols.map((k, i) => ms(k, n0 + i, rs.filter(r => r.dl === k))).join('');
@@ -4173,10 +4188,9 @@ function renderPlan(){
     const list = cols.map((k, i) => { const l = rs.filter(r => r.dl === k);
       const grps = ppl.map(p => { const x = l.filter(r => r.who === p); return x.length ? `<div class="pl-grp" ${PC[p] ? `style="--pc:${PC[p]}"` : ''}><b>${esc(pname(p))}</b><div>${x.map(r => chip(r, p)).join('')}</div></div>` : ''; }).join('');
       return `<div class="pl-stage">${ms(k, n0 + i, l)}${grps || '<p class="pl-empty">אין משימות בשלב הזה</p>'}</div>`; }).join('');
-    return `<div class="pl-grid" style="--n:${cols.length}"><div class="pl-corner"></div>${head}${body}</div><div class="pl-list">${list}</div>`;
+    return `<div class="pl-grid" style="--n:${cols.length}"><div class="pl-corner pl-g0"></div>${groups.map(g => `<div class="pl-grp-h" style="grid-column:span ${g[1]}"><b>${g[0]}</b><span>${g[2]}</span></div>`).join('')}<div class="pl-corner"></div>${head}${body}</div>`;
   }
-  host.innerHTML = `<h3 class="pl-sec">לפני היציאה <span>בארץ, עד הטיסה ב־26.11</span></h3>` + block(cols1, 1)
-    + `<h3 class="pl-sec">שבוע ההכנה באתר <span>26.11–04.12, הלקוחות מגיעים ב־05.12</span></h3>` + block(cols2, cols1.length + 1);
+  host.innerHTML = `<p class="pl-hint">גוללים שמאלה כדי לראות את כל השלבים, עד שבוע ההכנה באתר.</p><div class="pl-scroll" tabindex="0" aria-label="תוכנית העבודה, גלילה לצדדים">` + block(cols1.concat(cols2), 1, [['לפני היציאה', cols1.length, 'בארץ, עד הטיסה ב־26.11'], ['שבוע ההכנה באתר', cols2.length, '26.11–04.12, הלקוחות מגיעים ב־05.12']]) + `</div>`;
 }
 { const _s3 = splitRender; splitRender = function(){ _s3.apply(this, arguments); try { renderPlan(); } catch(e){} }; }
 renderPlan();
