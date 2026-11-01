@@ -1,4 +1,69 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style><style id="wk">
+/* עבודה שוטפת: week board, days across, one row per task type */
+#view-wk{--wk-recap:#E7EEFB;--wk-fun:#FCEFE2}
+body:not(.pg-owner) .wk-own{display:none!important}
+.wk-top{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:8px}
+.wk-h{font-size:clamp(22px,2.4vw,30px);font-weight:700;color:var(--slate);margin:0}
+.wk-sub{color:var(--muted);font-size:13px;margin:2px 0 0}
+.wk-tools{display:flex;gap:8px;flex-wrap:wrap}
+.wk-btn{font:inherit;cursor:pointer;border-radius:6px;min-height:38px;padding:0 14px;background:var(--panel);color:var(--slate);border:1px solid var(--hair)}
+.wk-btn.wk-pri{background:var(--slate);color:#fff;border-color:var(--slate);font-weight:600}
+.wk-btn.wk-q{border:none;background:none;color:var(--run-blue)}
+.wk-btn.wk-del{border-color:var(--run-red);color:var(--run-red)}
+#view-wk button:focus-visible,#view-wk input:focus-visible,.wk-c:focus-visible,#wkSheet :focus-visible{outline:2px solid var(--run-blue);outline-offset:2px}
+.wk-hint{font-size:13px;color:var(--muted);margin:0 0 12px}
+.wk-board{overflow-x:auto;border:1px solid var(--hair);border-radius:10px;background:var(--panel)}
+.wk-grid{display:grid;grid-template-columns:96px repeat(7,minmax(138px,1fr));min-width:1062px}
+.wk-colh{padding:10px 12px;border-bottom:1px solid var(--hair);border-inline-start:1px solid var(--hair);font-weight:700;font-size:16px;color:var(--slate)}
+.wk-colh.today{box-shadow:inset 0 -3px 0 var(--marker)}
+.wk-corner{border-inline-start:none;position:sticky;right:0;background:var(--panel);z-index:2}
+.wk-lane{padding:12px 10px;border-bottom:1px solid var(--hair);font-weight:700;font-size:13px;position:sticky;right:0;background:var(--panel);z-index:2;display:flex;flex-direction:column;gap:4px;color:var(--slate)}
+.wk-lane small{font-weight:500;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.wk-cell{border-inline-start:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:8px;display:flex;flex-direction:column;gap:8px;min-width:0;min-height:72px}
+.wk-cell.over{background:var(--wk-recap)}
+.wk-empty{color:var(--muted);font-size:13px;text-align:center;padding:8px 4px}
+.wk-c{border:1px solid var(--hair);border-radius:6px;padding:8px 10px;background:var(--panel);text-align:start;color:var(--slate)}
+body.pg-owner .wk-c{cursor:grab}
+.wk-c.recap{background:var(--wk-recap)}
+.wk-c.fun{background:var(--wk-fun)}
+.wk-c.dragging{opacity:.45}
+.wk-c.isdone{border-color:var(--run-green)}
+.wk-c.isdone .wk-t{text-decoration:line-through;color:var(--run-green)}
+.wk-row{display:flex;gap:8px;align-items:flex-start}
+.wk-row>.wk-x{flex:none;padding-top:1px}
+.wk-b{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.wk-time{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--run-blue)}
+.wk-time.none{color:var(--muted);font-weight:500}
+.wk-t{font-weight:600;font-size:14px;line-height:1.35}
+.wk-items{font-size:12px;color:var(--muted);line-height:1.45}
+.wk-who{align-self:flex-start;font-size:12px;font-weight:600;border-radius:999px;padding:0 8px;background:#EEF2F5}
+.wk-dn,.wk-cf{accent-color:var(--run-green);width:18px;height:18px;margin:0;cursor:pointer}
+.wk-prog{font-size:12px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.wk-prog.full{color:var(--run-green);font-weight:600}
+.wk-rh,.wk-rr{display:grid;grid-template-columns:28px 28px minmax(0,1fr);gap:4px;align-items:center}
+.wk-rh{font-size:11px;color:var(--muted);font-weight:600;margin-top:4px}
+.wk-rh span{text-align:center}
+.wk-rr{font-size:13px;min-height:28px}
+.wk-rr .wk-cf{justify-self:center}
+.wk-rr.nocl .nm{color:var(--muted);text-decoration:line-through}
+.wk-sb{width:22px;height:22px;padding:0;border:1.5px solid var(--muted);border-radius:4px;background:var(--panel);color:#fff;font-size:13px;font-weight:700;line-height:1;display:grid;place-items:center;justify-self:center;cursor:pointer}
+.wk-sb.s1{background:var(--run-green);border-color:var(--run-green)}
+.wk-sb.s2{background:var(--run-red);border-color:var(--run-red)}
+#wkScrim{position:fixed;inset:0;background:rgba(10,20,28,.45);z-index:90}
+#wkSheet{position:fixed;z-index:91;top:0;bottom:0;left:0;width:min(420px,100%);background:var(--panel);border-right:1px solid var(--hair);box-shadow:0 0 40px rgba(0,0,0,.25);padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));overflow-y:auto;display:flex;flex-direction:column;gap:14px;direction:rtl;color:var(--slate)}
+#wkSheet[hidden],#wkScrim[hidden]{display:none}
+#wkSheet h3{font-size:20px;margin:0}
+.wk-f{display:flex;flex-direction:column;gap:4px}
+.wk-f label{font-size:13px;font-weight:600}
+.wk-f input,.wk-f select,.wk-f textarea{font:inherit;padding:8px 10px;border:1px solid var(--hair);border-radius:6px;background:var(--snow);color:var(--slate);min-height:40px}
+.wk-f textarea{min-height:90px;resize:vertical}
+.wk-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wk-days{display:flex;flex-wrap:wrap;gap:6px}
+.wk-days button{font:inherit;cursor:pointer;border-radius:6px;min-height:36px;border:1px solid var(--hair);background:var(--panel);color:var(--slate);min-width:52px}
+.wk-days button[aria-pressed="true"]{background:var(--slate);color:#fff;border-color:var(--slate);font-weight:600}
+.wk-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+</style>
+</head><body>
 <title>פינגווין וולטורנס 2027</title>
 <script>/* Standalone site: team data is shared through a Google Sheet (Apps Script web app). */
 (function () {
@@ -2445,6 +2510,7 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
   <button class="tab" role="tab" data-view="p1" aria-selected="false">לפני היציאה <span class="pill" id="tabP1">0/0</span></button>
   <button class="tab" role="tab" data-view="p2" aria-selected="false">שבוע ההכנה באתר <span class="pill" id="tabP2">0/0</span></button>
   <button class="tab" role="tab" data-view="p3" aria-selected="false">ציוד מהארץ <span class="pill" id="tabP3">0/0</span></button>
+  <button class="tab" role="tab" data-view="wk" aria-selected="false">עבודה שוטפת</button>
   <button class="tab" role="tab" data-view="qs" aria-selected="false">שאלות פתוחות <span class="pill" id="tabQs">0</span></button>
   <button class="tab" role="tab" data-view="sup" aria-selected="false">ספקים <span class="pill" id="tabSup">0</span></button>
   <button class="tab" role="tab" data-view="sum" aria-selected="false">סיכומים שבועיים</button>
@@ -3059,6 +3125,19 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
     <div class="vhead"><div class="vhead-main"><h2>מיילים לספקים</h2><p>לכל ספק יש טיוטת מייל מוכנה לקראת שבוע ההכנה. פותחים את המייל, שולחים, ומעדכנים כאן מה ענו ומתי הפגישה, כדי שכולם ידעו. הטיוטה נחתמת בשם של מי שבחר "מי אני".</p></div>
       <div class="vhead-side"><div class="vnum"><b id="supLeft">0</b><span id="supTot">עוד לא נשלחו</span></div><div class="bar"><i id="supBar" style="width:0%"></i></div></div></div>
     <div class="sup-grid" id="supGrid"></div>
+  </section>
+
+  <section class="view" id="view-wk" role="tabpanel" hidden>
+    <div class="wk-top">
+      <div><h2 class="wk-h">עבודה שוטפת</h2><p class="wk-sub">שבוע עונה רגיל</p></div>
+      <div class="wk-tools wk-own">
+        <button class="wk-btn wk-pri" id="wkAdd" type="button">+ משימה</button>
+        <button class="wk-btn" id="wkNew" type="button">שבוע חדש</button>
+        <button class="wk-btn wk-q" id="wkReset" type="button">איפוס</button>
+      </div>
+    </div>
+    <p class="wk-hint"><span class="wk-own">לחיצה: עריכה · גרירה: העברת יום · </span>ריקו: ✓ נשלח, ✕ אין לקוחות</p>
+    <div class="wk-board"><div class="wk-grid" id="wkGrid"></div></div>
   </section>
 
   <section class="view" id="view-sum" role="tabpanel" hidden>
@@ -4468,7 +4547,7 @@ document.addEventListener('keydown', e => {
 (function(){
   const chip = document.getElementById('syncChip'), txt = document.getElementById('syncTxt');
   const setChip = (st, label) => { chip.dataset.s = st; txt.textContent = label; };
-  const DOCS = { checks: KEY, voices: TKEY.voices, hw: TKEY.hw, sums: TKEY.sums, wform: TKEY.wform, order: ORDER_KEY, resp: TKEY.resp, owners: OWN_KEY, dl: DL_KEY, custom: CUSTOM_KEY, qs: QS_KEY, sup: SUP_KEY };
+  const DOCS = { checks: KEY, voices: TKEY.voices, hw: TKEY.hw, sums: TKEY.sums, wform: TKEY.wform, order: ORDER_KEY, resp: TKEY.resp, owners: OWN_KEY, dl: DL_KEY, custom: CUSTOM_KEY, qs: QS_KEY, sup: SUP_KEY, weekly: "penguin-weekly" };
   const readLocal = k => { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch(e){ return {}; } };
   const writeLocal = (k, o) => { try { localStorage.setItem(k, JSON.stringify(o)); } catch(e){} };
   let db = null, readOnly = false;
@@ -4493,6 +4572,8 @@ document.addEventListener('keydown', e => {
       renderQs();
     } else if (name === 'sup'){
       renderSup();
+    } else if (name === 'weekly'){
+      if (window.renderWk) window.renderWk();
     } else {
       Object.keys(items).forEach(id => {
         const el = document.getElementById(id);
@@ -5561,7 +5642,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   document.body.appendChild(qf);
   const qin = qf.querySelector('input'), qlist = qf.querySelector('.qf-list');
   let res = [], sel = 0, lastFocus = null;
-  const TABS = [['overview', 'סקירה'], ['p1', 'לפני היציאה'], ['p2', 'שבוע ההכנה באתר'], ['p3', 'ציוד מהארץ'], ['plan', 'תוכנית עבודה'], ['qs', 'שאלות פתוחות'], ['sup', 'ספקים'], ['sum', 'סיכומים שבועיים'], ['contacts', 'אנשי קשר'], ['team', 'הצוות שלנו']];
+  const TABS = [['overview', 'סקירה'], ['p1', 'לפני היציאה'], ['p2', 'שבוע ההכנה באתר'], ['p3', 'ציוד מהארץ'], ['wk', 'עבודה שוטפת'], ['plan', 'תוכנית עבודה'], ['qs', 'שאלות פתוחות'], ['sup', 'ספקים'], ['sum', 'סיכומים שבועיים'], ['contacts', 'אנשי קשר'], ['team', 'הצוות שלנו']];
   const hl = (s, q) => { const i = s.toLowerCase().indexOf(q); return i < 0 ? E(s) : E(s.slice(0, i)) + '<mark>' + E(s.slice(i, i + q.length)) + '</mark>' + E(s.slice(i + q.length)); };
   function contacts(){
     return [...document.querySelectorAll('#ctBody .ct')].map(c => ({ name: (c.querySelector('b, h4, .ct-n')?.textContent || c.textContent).trim().split('\n')[0], text: c.textContent.replace(/\s+/g, ' ').trim(), el: c }));
@@ -5648,6 +5729,168 @@ setMode(startMode);
     const req = () => { if (!raf) raf = requestAnimationFrame(lift); };
     addEventListener('scroll', req, { passive: true }); addEventListener('resize', req); req();
   }
+})();
+</script>
+<div id="wkScrim" hidden></div>
+<aside id="wkSheet" hidden aria-label="עריכת משימה">
+  <h3 id="wkSheetT">עריכת משימה</h3>
+  <div class="wk-f"><label for="wkTitle">משימה</label><input id="wkTitle" type="text"></div>
+  <div class="wk-f"><label>יום</label><div class="wk-days" id="wkDays"></div></div>
+  <div class="wk-2">
+    <div class="wk-f"><label for="wkFrom">משעה</label><input id="wkFrom" type="time"></div>
+    <div class="wk-f"><label for="wkTo">עד שעה</label><input id="wkTo" type="time"></div>
+  </div>
+  <div class="wk-f"><label for="wkWho">אחראי</label>
+    <select id="wkWho"><option value="">לא נקבע</option><option>בן</option><option>יותם</option><option>דורון</option><option>קרן</option><option>כולם</option></select></div>
+  <div class="wk-f"><label for="wkLaneSel">קטגוריה</label>
+    <select id="wkLaneSel"><option value="cl">לו״ז עם הלקוחות</option><option value="tech">משימה טכנית</option><option value="wa">הודעת וואטצאפ</option></select></div>
+  <div class="wk-f"><label for="wkItems">פירוט (שורה לכל פריט)</label><textarea id="wkItems"></textarea></div>
+  <div class="wk-f"><label for="wkKind">סוג</label>
+    <select id="wkKind"><option value="task">שוטף</option><option value="recap">ריקו</option><option value="fun">צוות</option></select></div>
+  <div class="wk-acts">
+    <button class="wk-btn wk-pri" id="wkSave" type="button">שמירה</button>
+    <button class="wk-btn" id="wkCancel" type="button">ביטול</button>
+    <button class="wk-btn wk-del" id="wkDel" type="button">מחיקה</button>
+  </div>
+</aside>
+<script id="wkjs">
+/* עבודה שוטפת: weekly routine board. Shared doc "weekly" (penguin-weekly). Ticks for everyone, editing for Ben. */
+(function(){
+const WK_KEY = "penguin-weekly";
+const DAYS = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+const WHO = {"בן":"#6941C6","יותם":"#0E7490","דורון":"#8B5A2B","קרן":"#B42370","כולם":"#475966"};
+const LANES = [{id:"cl",n:"לו״ז עם הלקוחות"},{id:"tech",n:"משימות טכניות"},{id:"wa",n:"הודעות וואטצאפ"}];
+const SEED = [
+ {d:0,t:"סגירת קופה קטנה"},
+ {d:0,t:"דוח סיכום הגעה ועזיבה"},
+ {d:0,t:"גלישת היכרות",lane:"cl"},
+ {d:1,t:"ריקו מלונות",k:"recap",items:["פליין סוד","מונטנה","לה שבאל בלאן","קשמיר","אוקסליס","שרפה","פשמינה","לה בלקון","פירנהייט","קואינור","טור הוטל","הוטל טרה וולה","הוטל דה וואלטורנס","פיצרוי"]},
+ {d:1,t:"ריקו הדרכות",k:"recap",items:["סקי קול","ESF לה מנואיר"]},
+ {d:1,t:"ריקו מאפייה",k:"recap",items:["מאפייה"]},
+ {d:1,t:"ריקו ארוחות",k:"recap",items:["ארוחות"]},
+ {d:1,t:"ריקו ציוד",k:"recap",items:["ספורט 2000 אסקיאדור","סקי סט","קשמיר ציוד","אוקסליס ציוד"]},
+ {d:1,t:"הטענת סקיפסים"},
+ {d:1,t:"רשימות אוטובוס והעברת פרטי אוטובוסים לספק"},
+ {d:2,t:"יום כיף לצוות",k:"fun"},
+ {d:3,t:"וידוא ריקו"},
+ {d:3,t:"סגירת מעטפות"},
+ {d:3,t:"הדפסות",items:["וואוצ׳רים סקי סט","ספורט 2000","הדרכות"],note:"בסוף היום"},
+ {d:4,t:"יום כיף צוות",k:"fun"},
+ {d:4,t:"פולידוס",lane:"cl"},
+ {d:4,t:"פתק ושוקולד לפצועים / לקוחות VIP",note:"אם יש"},
+ {d:5,t:"שלטים לאוטובוס: מספרים ושם האתר"},
+ {d:5,t:"הדפסת רשימות אוטובוס"},
+ {d:5,t:"בקבוקי מים ושוקולדים"},
+ {d:5,t:"באפים"},
+ {d:5,t:"מעטפות"},
+ {d:5,t:"דגל טיפה"},
+ {d:6,t:"צ׳ק אין במלונות",lane:"cl"},
+ {d:2,t:"סבב ברים / באולינג",lane:"cl"}
+].map((x,i)=>({id:"s"+i,d:x.d,t:x.t,k:x.k||"task",lane:x.lane||"tech",items:x.items||[],note:x.note||"",from:"",to:"",who:"",o:i}));
+const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
+const S = () => { const s = tstore(WK_KEY); return Array.isArray(s.tasks) ? s : fresh(); };
+const put = s => tsave(WK_KEY, s);
+const E = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const $ = id => document.getElementById(id);
+const sorted = (s,d,l) => s.tasks.filter(x => x.d === d && (l == null || (x.lane || "tech") === l)).sort((a,b) => {
+  if (a.from && b.from) return a.from.localeCompare(b.from) || a.o - b.o;
+  if (a.from) return -1; if (b.from) return 1; return a.o - b.o; });
+
+function card(s,x){
+  const time = x.from ? `<span class="wk-time">${E(x.from)}${x.to ? "–" + E(x.to) : ""}</span>` : (x.note ? `<span class="wk-time none">${E(x.note)}</span>` : "");
+  const who = x.who ? `<span class="wk-who" style="color:${WHO[x.who] || "inherit"}">${E(x.who)}</span>` : "";
+  let body = "";
+  if (x.k === "recap"){
+    const its = x.items.length ? x.items : [x.t]; let sent = 0, conf = 0, need = 0, h = "";
+    its.forEach(it => { const ck = x.id + "|" + it, st = s.sent[ck] || 0, c = !!s.conf[ck];
+      if (st !== 2){ need++; if (st === 1) sent++; if (c) conf++; }
+      const lbl = st === 1 ? "נשלח" : st === 2 ? "אין לקוחות השבוע" : "לא נשלח";
+      h += `<div class="wk-rr ${st === 2 ? "nocl" : ""}"><button type="button" class="wk-sb s${st}" data-sent="${E(ck)}" aria-label="${E(it)}: ${lbl}" title="${lbl}">${st === 1 ? "✓" : st === 2 ? "✕" : ""}</button><input type="checkbox" class="wk-cf" data-conf="${E(ck)}" ${c ? "checked" : ""} ${st === 2 ? "disabled" : ""} aria-label="${E(it)}: הספק אישר"><span class="nm">${E(it)}</span></div>`; });
+    body = `<span class="wk-prog ${need && conf === need ? "full" : ""}">נשלח ${sent}/${need} · אושר ${conf}/${need}</span><div class="wk-x"><div class="wk-rh"><span>נשלח</span><span>אושר</span><span></span></div>${h}</div>`;
+  } else if (x.items.length) body = `<div class="wk-items">${x.items.map(E).join(" · ")}</div>`;
+  const dn = x.k !== "recap" && !!s.checks[x.id];
+  const box = x.k === "recap" ? "" : `<span class="wk-x"><input type="checkbox" class="wk-dn" data-done="${x.id}" ${dn ? "checked" : ""} aria-label="${E(x.t)} בוצע"></span>`;
+  const cls = x.k === "recap" ? "recap" : x.k === "fun" ? "fun" : "";
+  return `<div class="wk-c ${cls} ${dn ? "isdone" : ""}" draggable="${PG_OWNER}" ${PG_OWNER ? 'tabindex="0" role="button"' : ""} data-id="${x.id}"><div class="wk-row">${box}<div class="wk-b">${time}<span class="wk-t">${E(x.t)}</span>${body}${who}</div></div></div>`;
+}
+function renderWk(){
+  const g = $("wkGrid"); if (!g) return;
+  const s = S(), today = new Date().getDay();
+  let h = '<div class="wk-colh wk-corner"></div>' + DAYS.map((n,d) => `<div class="wk-colh ${d === today ? "today" : ""}">${n}</div>`).join("");
+  LANES.forEach(L => {
+    const all = s.tasks.filter(x => (x.lane || "tech") === L.id && x.k !== "recap"), dn = all.filter(x => s.checks[x.id]).length;
+    h += `<div class="wk-lane">${L.n}<small>${all.length ? dn + "/" + all.length : ""}</small></div>`;
+    DAYS.forEach((n,d) => { const ts = sorted(s,d,L.id);
+      h += `<div class="wk-cell" data-day="${d}" data-lane="${L.id}">${ts.length ? ts.map(x => card(s,x)).join("") : '<div class="wk-empty">—</div>'}</div>`; });
+  });
+  g.innerHTML = h;
+}
+window.renderWk = renderWk;
+
+const grid = $("wkGrid");
+grid.addEventListener("change", e => { const t = e.target, s = S();
+  if (t.dataset.conf){ if (t.checked) s.conf[t.dataset.conf] = 1; else delete s.conf[t.dataset.conf]; }
+  else if (t.dataset.done){ if (t.checked) s.checks[t.dataset.done] = 1; else delete s.checks[t.dataset.done]; }
+  else return;
+  put(s); renderWk(); });
+grid.addEventListener("click", e => {
+  const b = e.target.closest("[data-sent]");
+  if (b){ const s = S(), k = b.dataset.sent, n = ((s.sent[k] || 0) + 1) % 3;
+    if (n) s.sent[k] = n; else delete s.sent[k]; if (n === 2) delete s.conf[k];
+    put(s); renderWk(); const nb = grid.querySelector(`[data-sent="${CSS.escape(k)}"]`); if (nb) nb.focus(); return; }
+  if (e.target.closest(".wk-x")) return;
+  const c = e.target.closest(".wk-c"); if (c && PG_OWNER) openSheet(c.dataset.id);
+});
+grid.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("wk-c") && PG_OWNER){ e.preventDefault(); openSheet(e.target.dataset.id); } });
+let dragId = null;
+grid.addEventListener("dragstart", e => { const c = e.target.closest && e.target.closest(".wk-c"); if (!c || !PG_OWNER) return; dragId = c.dataset.id; c.classList.add("dragging"); try { e.dataTransfer.setData("text/plain", dragId); } catch(_){} });
+grid.addEventListener("dragend", () => { dragId = null; grid.querySelectorAll(".over").forEach(x => x.classList.remove("over")); renderWk(); });
+grid.addEventListener("dragover", e => { const d = e.target.closest(".wk-cell"); if (!d || !dragId) return; e.preventDefault();
+  grid.querySelectorAll(".over").forEach(x => x !== d && x.classList.remove("over")); d.classList.add("over"); });
+grid.addEventListener("drop", e => { const d = e.target.closest(".wk-cell"); if (!d || !dragId) return; e.preventDefault();
+  const s = S(), x = s.tasks.find(t => t.id === dragId); if (!x) return;
+  const nd = +d.dataset.day, ln = d.dataset.lane, on = e.target.closest(".wk-c");
+  const list = sorted(s,nd,ln).filter(t => t.id !== x.id);
+  let i = on ? list.findIndex(t => t.id === on.dataset.id) : list.length; if (i < 0) i = list.length;
+  list.splice(i, 0, x); x.d = nd; x.lane = ln; list.forEach((t,j) => t.o = j); put(s); renderWk(); });
+
+/* edit sheet (Ben only) */
+let cur = null, curDay = 0;
+$("wkDays").innerHTML = DAYS.map((n,i) => `<button type="button" data-d="${i}" aria-pressed="false">${n}</button>`).join("");
+$("wkDays").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; curDay = +b.dataset.d; markDay(); });
+const markDay = () => $("wkDays").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.d === curDay));
+function openSheet(id){
+  if (!PG_OWNER) return;
+  const s = S(); cur = id || null;
+  const x = (id && s.tasks.find(t => t.id === id)) || {t:"",d:1,from:"",to:"",who:"",items:[],k:"task",lane:"tech"};
+  $("wkSheetT").textContent = id ? "עריכת משימה" : "משימה חדשה";
+  $("wkTitle").value = x.t; $("wkFrom").value = x.from; $("wkTo").value = x.to; $("wkWho").value = x.who;
+  $("wkLaneSel").value = x.lane || "tech"; $("wkItems").value = x.items.join("\n"); $("wkKind").value = x.k;
+  $("wkDel").hidden = !id; curDay = x.d; markDay();
+  $("wkScrim").hidden = false; $("wkSheet").hidden = false; $("wkTitle").focus();
+}
+const closeSheet = () => { $("wkScrim").hidden = true; $("wkSheet").hidden = true; cur = null; };
+$("wkCancel").onclick = closeSheet; $("wkScrim").onclick = closeSheet;
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("wkSheet").hidden) closeSheet(); });
+$("wkSave").onclick = () => {
+  const t = $("wkTitle").value.trim(); if (!t){ $("wkTitle").focus(); return; }
+  const s = S(); let x = cur && s.tasks.find(q => q.id === cur);
+  if (!x){ x = {id:"n" + (s.n++), k:"task", note:"", o:999}; s.tasks.push(x); }
+  if (x.d !== curDay) x.o = 999;
+  Object.assign(x, {t, d:curDay, from:$("wkFrom").value, to:$("wkTo").value, who:$("wkWho").value, lane:$("wkLaneSel").value, k:$("wkKind").value,
+    items:$("wkItems").value.split("\n").map(v => v.trim()).filter(Boolean)});
+  sorted(s,x.d).forEach((q,i) => q.o = i); put(s); closeSheet(); renderWk();
+};
+$("wkDel").onclick = async () => { if (!cur) return; if (!(await askConfirm("למחוק את המשימה?"))) return;
+  const s = S(); s.tasks = s.tasks.filter(t => t.id !== cur); put(s); closeSheet(); renderWk(); };
+$("wkAdd").onclick = () => openSheet(null);
+$("wkNew").onclick = async () => { if (!(await askConfirm("שבוע חדש: לנקות את כל הסימונים?"))) return;
+  const s = S(); s.checks = {}; s.sent = {}; s.conf = {}; put(s); renderWk(); toast("הסימונים נוקו"); };
+$("wkReset").onclick = async () => { if (!(await askConfirm("לאפס את כל הלוח לטיוטה המקורית?"))) return; put(fresh()); renderWk(); };
+
+document.querySelectorAll('[data-view="wk"]').forEach(b => b.addEventListener("click", renderWk));
+(window.claude && claude.use ? claude.use("user") : Promise.resolve(null)).then(() => setTimeout(renderWk, 50)).catch(() => {});
+renderWk();
 })();
 </script>
 </body></html>
