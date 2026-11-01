@@ -2043,6 +2043,53 @@ html,body{overflow-x:clip}
 }
 </style>
 <style id="winter">
+.cal-add{border:0;background:var(--run-blue,#1858C4);color:#fff;border-radius:999px;padding:7px 15px;font:600 13px var(--fd);cursor:pointer;white-space:nowrap}
+.cal-add:hover{background:#134AA6}
+.ci-del{display:block;margin-top:6px;border:0;background:transparent;padding:0;font:600 12px var(--fd);color:var(--run-red,#C62A30);cursor:pointer;text-decoration:underline}
+.cadd{position:fixed;inset:0;z-index:210;background:rgba(28,44,55,.42);display:flex;justify-content:center;align-items:flex-start;padding:10vh 16px 16px;overflow:auto}
+.cadd[hidden]{display:none}
+.cadd-box{width:min(520px,100%);background:#fff;border-radius:12px;padding:22px 22px 18px;box-shadow:0 30px 70px -20px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:12px}
+.cadd-box h3{margin:0 0 2px;font:700 22px var(--fd);color:var(--slate,#1C2C37)}
+.cadd-box label{display:flex;flex-direction:column;gap:5px;font:600 13px var(--fd);color:var(--slate,#1C2C37);flex:1;min-width:0}
+.cadd-box label i{font-style:normal;font-weight:400;color:var(--muted,#5F7280)}
+.cadd-box input,.cadd-box select{font:400 15px var(--fd);color:var(--slate,#1C2C37);border:1px solid var(--hair,#D3DCE2);border-radius:6px;padding:9px 10px;background:#fff;min-width:0;width:100%}
+.cadd-box input:focus,.cadd-box select:focus{outline:2px solid var(--run-blue,#1858C4);outline-offset:0;border-color:transparent}
+.cadd-row{display:flex;gap:10px}
+.cadd-msg{margin:0;min-height:1em;font-size:13.5px;color:var(--muted,#5F7280)}
+.cadd-msg.err{color:var(--run-red,#C62A30);font-weight:600}
+.cadd-act{display:flex;gap:8px}
+.cadd-act button{border:1px solid var(--hair,#D3DCE2);background:#fff;border-radius:6px;padding:9px 16px;font:600 14px var(--fd);color:var(--slate,#1C2C37);cursor:pointer}
+.cadd-act .pri{background:var(--run-blue,#1858C4);border-color:var(--run-blue,#1858C4);color:#fff}
+.cadd-act .pri:disabled{opacity:.6}
+@media (max-width:760px){.cal-r{flex-wrap:wrap}.cadd{padding-top:4vh}.cadd-row{flex-direction:column}}
+.cal-r{display:flex;align-items:center;gap:8px}
+.cal-mode{display:inline-flex;border:1px solid var(--hair,#D3DCE2);border-radius:999px;padding:2px;background:#fff}
+.cal-mode button{border:0;background:transparent;border-radius:999px;padding:5px 13px;font:600 13px var(--fd);color:var(--muted,#5F7280);cursor:pointer}
+.cal-mode button[aria-pressed="true"]{background:var(--slate,#1C2C37);color:#fff}
+.cal.is-wk .cal-dow{display:none}
+.cal-grid.wk .cal-c{min-height:240px;gap:8px;padding:8px 7px}
+.cal-grid.wk .cn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;font-size:15px}
+.cal-grid.wk .cn i{font-style:normal;font-size:11.5px;font-weight:600;color:var(--muted,#5F7280)}
+.cal-grid.wk .cal-c.today .cn{border-radius:8px;padding:2px 8px}
+.cal-grid.wk .cal-c.today .cn i{color:#fff}
+.we{display:block;border-inline-start:3px solid var(--c);background:color-mix(in srgb,var(--c) 10%,#fff);border-radius:4px;padding:5px 7px;text-align:start}
+.we b{display:block;font-size:12.5px;font-weight:600;line-height:1.3;color:var(--slate,#1C2C37)}
+.we small{display:block;font-size:11px;line-height:1.3;color:var(--muted,#5F7280);margin-top:2px}
+.we-none{font-size:11.5px;color:#9AA8B2;padding:0 4px}
+.cal-grid.wk .cal-c.past .we{opacity:.6}
+@media (max-width:760px){
+  .cal-top{flex-wrap:wrap}
+  .cal-grid.wk{grid-template-columns:1fr}
+  .cal-grid.wk .cal-c{min-height:0;flex-direction:row;align-items:flex-start;gap:12px}
+  .cal-grid.wk .cn{min-width:56px}
+  .cal-grid.wk .chips{flex:1}
+  .cal-grid.wk .dots{display:none!important}
+  .cal-grid.wk .ce{display:none}
+  .cal-grid.wk .chips{display:flex!important}
+}
+.pl-sec{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:30px 0 12px;font:700 21px/1.2 var(--fd);color:var(--slate,#1C2C37)}
+.pl-sec:first-child{margin-top:4px}
+.pl-sec span{font-size:14px;font-weight:400;color:var(--muted)}
 /* ================= piste-map design system: run colors carry meaning, sign plates for headers ================= */
 :root{
   --snow:#F1F4F6; --slate:#1C2C37; --slate2:#2B3E4B; --run-blue:#1858C4; --run-red:#C62A30; --run-green:#1F8A55; --marker:#EE8418;
@@ -2824,7 +2871,7 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
       <div class="cal" id="cal">
         <div class="cal-top">
           <div class="cal-nav"><button type="button" class="cal-b" id="calPrev" aria-label="החודש הקודם">‹</button><h3 id="calTitle"></h3><button type="button" class="cal-b" id="calNext" aria-label="החודש הבא">›</button></div>
-          <button type="button" class="cal-today" id="calToday">היום</button>
+          <div class="cal-r"><div class="cal-mode" role="group" aria-label="תצוגת לוח השנה"><button type="button" data-cm="month" aria-pressed="true">חודש</button><button type="button" data-cm="week" aria-pressed="false">שבוע</button></div><button type="button" class="cal-today" id="calToday">היום</button><button type="button" class="cal-add" id="calAdd">+ הוספה ללו״ז</button></div>
         </div>
         <div class="cal-dow"><span>א׳</span><span>ב׳</span><span>ג׳</span><span>ד׳</span><span>ה׳</span><span>ו׳</span><span>ש׳</span></div>
         <div class="cal-grid" id="calGrid"></div>
@@ -2948,7 +2995,7 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
   <section class="view" id="view-p2" role="tabpanel" hidden></section>
   <section class="view" id="view-p3" role="tabpanel" hidden></section>
   <section class="view" id="view-plan" role="tabpanel" hidden>
-    <div class="vhead"><div class="vhead-main"><h2>תוכנית עבודה עד היציאה</h2><p>מי עושה מה, ועד איזו ישיבה. כל עמודה היא שלב, כל שורה היא אחד מאיתנו. מתעדכן לבד לפי הסימונים, האחראים והיעדים בלוח.</p></div>
+    <div class="vhead"><div class="vhead-main"><h2>תוכנית עבודה עד הלקוחות</h2><p>מי עושה מה, ועד איזו ישיבה. כל עמודה היא שלב, כל שורה היא אחד מאיתנו. מתעדכן לבד לפי הסימונים, האחראים והיעדים בלוח.</p></div>
       <div class="vhead-side"><div class="vnum"><b id="planDone">0</b><span id="planTot">מתוך 0 הושלמו</span></div><div class="bar"><i id="planBar" style="width:0%"></i></div></div></div>
     <div class="plan-wrap"><div id="planGrid"></div></div>
   </section>
@@ -4102,25 +4149,34 @@ paintOwners();
 function renderPlan(){
   const host = document.getElementById('planGrid'); if (!host) return;
   const ov = dlOv(), own = tstore(OWN_KEY), PC = window.PERSON_COLORS || {};
+  const PREP = ["ימים 1–3 בהכנה", "ימים 4–6 בהכנה", "יום לפני הגעת הלקוחות"];
   const rows = [];
-  (DATA.israel || []).forEach(g => g.tasks.forEach(t => { const id = `p1|${g.cat}|${t.t}`; rows.push({ id, t: t.label || t.t, dl: ov[id] || g.dl, who: own[id] || SPLIT_DEFAULT[id] || 'פתוח', done: isDone(id), tag: t.tag || '' }); }));
-  const cols = ["21.10.26", "בבית", "ישיבת צוות 3", "פגישה 2", "11.11.26"];
-  rows.forEach(r => { if (!cols.includes(r.dl)) cols.push(r.dl); });
-  const ppl = ['בן', 'יותם', 'דורון', 'קרן', 'כולם', 'פתוח'].filter(p => p !== 'פתוח' || rows.some(r => r.who === 'פתוח'));
+  const add = (key, ph) => (DATA[key] || []).forEach(g => g.tasks.forEach(t => { const id = `${ph}|${g.cat}|${t.t}`; rows.push({ id, t: t.label || t.t, dl: ov[id] || g.dl, who: own[id] || SPLIT_DEFAULT[id] || (ph === 'p2' ? 'כולם' : 'פתוח'), done: isDone(id), tag: t.tag || '' }); }));
+  add('israel', 'p1'); add('onsite', 'p2');
+  const cols1 = ["21.10.26", "בבית", "ישיבת צוות 3", "פגישה 2", "11.11.26"];
+  rows.forEach(r => { if (!PREP.includes(r.dl) && !cols1.includes(r.dl)) cols1.push(r.dl); });
+  const cols2 = PREP.slice();
+  rows.forEach(r => { if (!cols1.includes(r.dl) && !cols2.includes(r.dl)) cols2.push(r.dl); });
   const done = rows.filter(r => r.done).length;
   const a = document.getElementById('planDone'); if (a) a.textContent = done;
   const b = document.getElementById('planTot'); if (b) b.textContent = 'מתוך ' + rows.length + ' הושלמו';
   const c = document.getElementById('planBar'); if (c) c.style.width = (rows.length ? done / rows.length * 100 : 0) + '%';
   const pname = p => p === 'כולם' ? 'כולם ביחד' : (p === 'פתוח' ? 'לא משובץ' : p);
-  const head = cols.map((k, i) => { const list = rows.filter(r => r.dl === k), d = list.filter(r => r.done).length, full = list.length && d === list.length;
-    return `<div class="pl-ms ${full ? 'full' : ''}" style="--f:${list.length ? d / list.length : 0}"><span class="pl-dot">${full ? '✓' : i + 1}</span><b>${esc(dlLabel(k))}</b><em>${d}/${list.length}</em><i class="pl-mb"><i></i></i></div>`; }).join('');
-  const body = ppl.map(p => `<div class="pl-who" ${PC[p] ? `style="--pc:${PC[p]}"` : ""} data-who="${esc(p)}"><b>${esc(pname(p))}</b><span>${rows.filter(r => r.who === p && !r.done).length} פתוחות</span></div>` + cols.map(k => {
-      const list = rows.filter(r => r.who === p && r.dl === k);
-      return `<div class="pl-cell">${list.map(r => `<span class="pl-chip ${r.done ? 'done' : ''}" ${PC[p] ? `style="--pc:${PC[p]}"` : ""} data-who="${esc(p)}" title="${esc(r.t)}">${r.done ? '✓ ' : ''}${esc(r.t)}${r.tag ? `<em>${esc(r.tag)}</em>` : ''}</span>`).join('')}</div>`;
-    }).join('')).join('');
-  host.innerHTML = `<div class="pl-grid" style="--n:${cols.length}"><div class="pl-corner"></div>${head}${body}</div>` + `<div class="pl-list">${cols.map((k, i) => { const list = rows.filter(r => r.dl === k), d = list.filter(r => r.done).length, full = list.length && d === list.length;
-    const grps = ppl.map(p => { const l = list.filter(r => r.who === p); return l.length ? `<div class="pl-grp" ${PC[p] ? `style="--pc:${PC[p]}"` : ''}><b>${esc(pname(p))}</b><div>${l.map(r => `<span class="pl-chip ${r.done ? 'done' : ''}" ${PC[p] ? `style="--pc:${PC[p]}"` : ''} data-who="${esc(p)}">${r.done ? '✓ ' : ''}${esc(r.t)}${r.tag ? `<em>${esc(r.tag)}</em>` : ''}</span>`).join('')}</div></div>` : ''; }).join('');
-    return `<div class="pl-stage"><div class="pl-ms ${full ? 'full' : ''}" style="--f:${list.length ? d / list.length : 0}"><span class="pl-dot">${full ? '✓' : i + 1}</span><b>${esc(dlLabel(k))}</b><em>${d}/${list.length}</em><i class="pl-mb"><i></i></i></div>${grps || '<p class="pl-empty">אין משימות בשלב הזה</p>'}</div>`; }).join('')}</div>`;
+  const chip = (r, p) => `<span class="pl-chip ${r.done ? 'done' : ''}" ${PC[p] ? `style="--pc:${PC[p]}"` : ""} data-who="${esc(p)}" title="${esc(r.t)}">${r.done ? '✓ ' : ''}${esc(r.t)}${r.tag ? `<em>${esc(r.tag)}</em>` : ''}</span>`;
+  const ms = (k, i, list) => { const d = list.filter(r => r.done).length, full = list.length && d === list.length;
+    return `<div class="pl-ms ${full ? 'full' : ''}" style="--f:${list.length ? d / list.length : 0}"><span class="pl-dot">${full ? '✓' : i}</span><b>${esc(dlLabel(k))}</b><em>${d}/${list.length}</em><i class="pl-mb"><i></i></i></div>`; };
+  function block(cols, n0){
+    const rs = rows.filter(r => cols.includes(r.dl));
+    const ppl = ['בן', 'יותם', 'דורון', 'קרן', 'כולם', 'פתוח'].filter(p => ['בן', 'יותם', 'דורון', 'קרן'].includes(p) || rs.some(r => r.who === p));
+    const head = cols.map((k, i) => ms(k, n0 + i, rs.filter(r => r.dl === k))).join('');
+    const body = ppl.map(p => `<div class="pl-who" ${PC[p] ? `style="--pc:${PC[p]}"` : ""} data-who="${esc(p)}"><b>${esc(pname(p))}</b><span>${rs.filter(r => r.who === p && !r.done).length} פתוחות</span></div>` + cols.map(k => `<div class="pl-cell">${rs.filter(r => r.who === p && r.dl === k).map(r => chip(r, p)).join('')}</div>`).join('')).join('');
+    const list = cols.map((k, i) => { const l = rs.filter(r => r.dl === k);
+      const grps = ppl.map(p => { const x = l.filter(r => r.who === p); return x.length ? `<div class="pl-grp" ${PC[p] ? `style="--pc:${PC[p]}"` : ''}><b>${esc(pname(p))}</b><div>${x.map(r => chip(r, p)).join('')}</div></div>` : ''; }).join('');
+      return `<div class="pl-stage">${ms(k, n0 + i, l)}${grps || '<p class="pl-empty">אין משימות בשלב הזה</p>'}</div>`; }).join('');
+    return `<div class="pl-grid" style="--n:${cols.length}"><div class="pl-corner"></div>${head}${body}</div><div class="pl-list">${list}</div>`;
+  }
+  host.innerHTML = `<h3 class="pl-sec">לפני היציאה <span>בארץ, עד הטיסה ב־26.11</span></h3>` + block(cols1, 1)
+    + `<h3 class="pl-sec">שבוע ההכנה באתר <span>26.11–04.12, הלקוחות מגיעים ב־05.12</span></h3>` + block(cols2, cols1.length + 1);
 }
 { const _s3 = splitRender; splitRender = function(){ _s3.apply(this, arguments); try { renderPlan(); } catch(e){} }; }
 renderPlan();
@@ -4760,7 +4816,32 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const on = d => EV.filter(x => x.S <= d && d <= x.E).sort((a, b) => (a.range - b.range) || (a.S - b.S));
   const status = x => x.E < today ? 'past' : x.S <= today ? 'now' : 'soon';
 
+  let mode = 'month'; try { if (localStorage.getItem('penguin-calmode') === 'week') mode = 'week'; } catch(e){}
+  const wkStart = d => { const x = new Date(d); x.setDate(x.getDate() - x.getDay()); return x; };
+  function renderWeek(){
+    const st = wkStart(sel), en = new Date(st); en.setDate(st.getDate() + 6);
+    document.getElementById('calTitle').textContent = st.getMonth() === en.getMonth()
+      ? `${st.getDate()}–${en.getDate()} ב${MONTHS[st.getMonth()]} ${st.getFullYear()}`
+      : `${st.getDate()} ב${MONTHS[st.getMonth()]} – ${en.getDate()} ב${MONTHS[en.getMonth()]}`;
+    let h = '';
+    for (let i = 0; i < 7; i++){
+      const d = new Date(st); d.setDate(st.getDate() + i);
+      const ev = on(d), k = key(d), cls = ['cal-c'];
+      if (+d === +today) cls.push('today'); else if (d < today) cls.push('past');
+      if (+d === +sel) cls.push('sel');
+      const items = ev.map(x => `<span class="we${x.range ? ' rg' : ''}" style="--c:${TYPES[x.type].c}"><b>${esc(x.t)}</b>${x.tm ? `<small>${esc(x.tm)}</small>` : ''}${x.range ? `<small><bdi dir="ltr">${fmt(x.S)}–${fmt(x.E)}</bdi></small>` : (x.d ? `<small>${esc(x.d)}</small>` : '')}</span>`).join('');
+      h += `<button type="button" class="${cls.join(' ')}" data-k="${k}" aria-label="יום ${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}${ev.length ? ', ' + ev.length + ' אירועים' : ''}"><span class="cn"><i>${DAYS[d.getDay()]}</i>${d.getDate()}.${d.getMonth() + 1}</span><span class="chips">${items || '<span class="we-none">אין אירועים</span>'}</span></button>`;
+    }
+    grid.innerHTML = h;
+    renderDay(); renderUp();
+  }
   function render(){
+    grid.classList.toggle('wk', mode === 'week');
+    grid.closest('.cal').classList.toggle('is-wk', mode === 'week');
+    document.querySelectorAll('[data-cm]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cm === mode)));
+    document.getElementById('calPrev').setAttribute('aria-label', mode === 'week' ? 'השבוע הקודם' : 'החודש הקודם');
+    document.getElementById('calNext').setAttribute('aria-label', mode === 'week' ? 'השבוע הבא' : 'החודש הבא');
+    if (mode === 'week') return renderWeek();
     document.getElementById('calTitle').textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
     const first = new Date(view.getFullYear(), view.getMonth(), 1);
     const start = new Date(first); start.setDate(1 - first.getDay());
@@ -4792,7 +4873,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     if (st === 'now') tag = `<em class="now">${x.range ? 'עכשיו' : 'היום'}</em>`;
     else if (st === 'soon'){ const n = Math.round((x.S - today) / 864e5); tag = `<em>${n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'}</em>`; }
     else tag = '<em class="done">✓ עבר</em>';
-    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small><bdi dir="ltr">${when}</bdi>${x.tm ? ' · ' + esc(x.tm) : ''}${big && x.d ? ' · ' + esc(x.d) : ''}</small></div>${tag}</div>`;
+    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small><bdi dir="ltr">${when}</bdi>${x.tm ? ' · ' + esc(x.tm) : ''}${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.site && x.id ? `<button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה מהלו״ז</button>` : ''}</div>${tag}</div>`;
   }
   function renderDay(){
     const ev = on(sel);
@@ -4813,11 +4894,62 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     }
   }
   document.getElementById('calLegend').innerHTML = Object.keys(TYPES).filter(t => t !== 'other').map(t => `<span><i style="background:${TYPES[t].c}"></i>${TYPES[t].n}</span>`).join('');
-  grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
-  document.getElementById('calPrev').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
-  document.getElementById('calNext').addEventListener('click', () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
+  grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (mode === 'month' && sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
+  document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
+  document.getElementById('calNext').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() + 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
+  document.querySelectorAll('[data-cm]').forEach(b => b.addEventListener('click', () => { mode = b.dataset.cm; try { localStorage.setItem('penguin-calmode', mode); } catch(e){} if (mode === 'month') view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); }));
   document.getElementById('calToday').addEventListener('click', () => { view = new Date(today.getFullYear(), today.getMonth(), 1); sel = new Date(today); render(); });
   render();
+
+  /* add to the schedule: writes a real event into the team's Google Calendar through the sheet script */
+  const dlg = document.createElement('div'); dlg.className = 'cadd'; dlg.hidden = true;
+  dlg.innerHTML = `<form class="cadd-box" role="dialog" aria-modal="true" aria-labelledby="caddH" novalidate>
+    <h3 id="caddH">הוספה ללו״ז</h3>
+    <label>מה<input name="t" required maxlength="120" placeholder="למשל: פגישה עם חנות הציוד" autocomplete="off"></label>
+    <div class="cadd-row"><label>תאריך<input name="s" type="date" required></label><label>עד תאריך <i>(לא חובה)</i><input name="e" type="date"></label></div>
+    <div class="cadd-row"><label>שעה <i>(לא חובה)</i><input name="tm" type="time"></label><label>לפי שעון<select name="zone"><option value="Asia/Jerusalem">ישראל</option><option value="Europe/Paris">צרפת</option></select></label></div>
+    <label>סוג<select name="type">${Object.keys(TYPES).filter(k => k !== 'season' && k !== 'vac').map(k => `<option value="${k}">${TYPES[k].n}</option>`).join('')}</select></label>
+    <label>הערה <i>(לא חובה)</i><input name="d" maxlength="300" autocomplete="off"></label>
+    <p class="cadd-msg" role="status"></p>
+    <div class="cadd-act"><button type="submit" class="pri">הוספה ללו״ז</button><button type="button" data-x>ביטול</button></div>
+  </form>`;
+  document.body.appendChild(dlg);
+  const fm = dlg.querySelector('form'), msg = dlg.querySelector('.cadd-msg');
+  const creds = () => { let tk = '', key = ''; try { tk = localStorage.getItem('penguin-team-key') || ''; key = localStorage.getItem('penguin-owner-key') || ''; } catch(e){} return { tk, key }; };
+  let back = null;
+  function openAdd(){
+    back = document.activeElement; fm.reset(); msg.textContent = ''; msg.className = 'cadd-msg';
+    fm.s.value = key(sel); dlg.hidden = false; fm.t.focus();
+  }
+  function closeAdd(){ dlg.hidden = true; if (back) back.focus(); }
+  const ERR = { team_only: 'אפשר להוסיף רק מהקישור של הצוות. פתחו את האתר מהקישור ששלחתי בוואטצאפ.', unknown_doc: 'עוד לא עדכנו את הסקריפט של הגיליון. בן צריך להדביק את הקוד החדש ולפרסם גרסה.', bad_event: 'חסרים שם או תאריך.', not_site_event: 'אפשר למחוק רק אירועים שנוספו מהאתר.' };
+  fm.addEventListener('submit', e => {
+    e.preventDefault();
+    const ev = { t: fm.t.value.trim(), s: fm.s.value, e: fm.e.value, tm: fm.tm.value, zone: fm.zone.value, type: fm.type.value, d: fm.d.value.trim() };
+    if (!ev.t){ msg.textContent = 'כתבו מה האירוע.'; msg.className = 'cadd-msg err'; fm.t.focus(); return; }
+    if (!ev.s){ msg.textContent = 'בחרו תאריך.'; msg.className = 'cadd-msg err'; fm.s.focus(); return; }
+    if (ev.e && ev.e < ev.s){ msg.textContent = 'תאריך הסיום לפני תאריך ההתחלה.'; msg.className = 'cadd-msg err'; fm.e.focus(); return; }
+    const btn = fm.querySelector('.pri'); btn.disabled = true; msg.textContent = 'מוסיף…'; msg.className = 'cadd-msg';
+    fetch(window.PENGUIN_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ a: 'addEvent', ev }, creds())) })
+      .then(r => r.json()).then(j => {
+        btn.disabled = false;
+        if (!j || !j.ok){ msg.textContent = ERR[j && j.error] || 'לא נוסף. בדקו את החיבור ונסו שוב.'; msg.className = 'cadd-msg err'; return; }
+        const tmTxt = ev.tm && !ev.e ? ev.tm + (ev.zone === 'Europe/Paris' ? ' צרפת' : '') : '';
+        EV.push(norm({ id: j.id, t: ev.t, s: ev.s, e: ev.tm ? ev.s : (ev.e || ev.s), type: ev.type, d: ev.d, tm: tmTxt, site: true }));
+        sel = parse(ev.s); view = new Date(sel.getFullYear(), sel.getMonth(), 1);
+        closeAdd(); render(); setTimeout(load, 1500);
+      }).catch(() => { btn.disabled = false; msg.textContent = 'לא נוסף. בדקו את החיבור ונסו שוב.'; msg.className = 'cadd-msg err'; });
+  });
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-x]')) closeAdd(); });
+  dlg.addEventListener('keydown', e => { if (e.key === 'Escape'){ e.stopPropagation(); closeAdd(); } });
+  document.getElementById('calAdd').addEventListener('click', openAdd);
+  document.getElementById('calDay').addEventListener('click', e => {
+    const b = e.target.closest('[data-del]'); if (!b) return;
+    const x = EV.find(v => v.id === b.dataset.del); if (!x) return;
+    const go2 = () => fetch(window.PENGUIN_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ a: 'delEvent', id: x.id }, creds())) })
+      .then(r => r.json()).then(j => { if (j && j.ok){ EV = EV.filter(v => v !== x); render(); setTimeout(load, 1500); } else alert(ERR[j && j.error] || 'לא נמחק. נסו שוב.'); }).catch(() => alert('לא נמחק. בדקו את החיבור ונסו שוב.'));
+    (typeof askConfirm === 'function' ? askConfirm(`למחוק את "${x.t}" מהלו״ז של הצוות?`) : Promise.resolve(confirm(`למחוק את "${x.t}"?`))).then(ok => { if (ok) go2(); });
+  });
 
   /* live: the team's Google Calendar through the sheet script */
   function load(){
