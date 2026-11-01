@@ -4983,7 +4983,9 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
   const norm = x => { const o = Object.assign({}, x); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; return o; };
 
-  let EV = SEED.map(norm), calId = '';
+  /* only meetings and key days: long periods (season weeks, vacances, prep) are not shown unless added from the site */
+  const keep = x => !x.range || x.site;
+  let EV = SEED.map(norm).filter(keep), calId = '';
   const now = new Date(); let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   let view = new Date(today.getFullYear(), today.getMonth(), 1), sel = new Date(today);
 
@@ -5067,7 +5069,8 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
       document.getElementById('heroNextD').textContent = fmt(nx.S) + ' · יום ' + DAYS[nx.S.getDay()] + (isT ? '' : ' · ' + (n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'));
     }
   }
-  document.getElementById('calLegend').innerHTML = Object.keys(TYPES).filter(t => t !== 'other').map(t => `<span><i style="background:${TYPES[t].c}"></i>${TYPES[t].n}</span>`).join('');
+  const legend = () => { document.getElementById('calLegend').innerHTML = Object.keys(TYPES).filter(t => t !== 'other' && EV.some(x => x.type === t)).map(t => `<span><i style="background:${TYPES[t].c}"></i>${TYPES[t].n}</span>`).join(''); };
+  legend();
   grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (mode === 'month' && sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
   document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
   document.getElementById('calNext').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() + 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
@@ -5130,7 +5133,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     if (!window.PENGUIN_API) return;
     fetch(window.PENGUIN_API + '?a=cal&t=' + Date.now()).then(r => r.json()).then(j => {
       if (!j || !j.ok || !Array.isArray(j.events) || !j.events.length) return;
-      EV = j.events.map(norm); calId = j.calId || '';
+      EV = j.events.map(norm).filter(keep); calId = j.calId || ''; legend();
       const a = document.getElementById('calLink');
       if (calId){ a.href = 'https://calendar.google.com/calendar/u/0/r?cid=' + encodeURIComponent(calId); a.hidden = false; }
       render();
