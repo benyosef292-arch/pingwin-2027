@@ -2043,6 +2043,34 @@ html,body{overflow-x:clip}
 }
 </style>
 <style id="winter">
+/* suppliers tracker */
+.sup-grid{display:grid;gap:22px}
+.sup-grp h3{font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--muted);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--hair)}
+.sup-row{display:grid;grid-template-columns:minmax(170px,1.1fr) minmax(0,3fr) auto;gap:10px 16px;align-items:center;background:var(--panel,#fff);border:1px solid var(--hair);border-inline-start:4px solid #C9D3DA;border-radius:10px;padding:12px 14px;margin-bottom:8px}
+.sup-row.st-sent{border-inline-start-color:var(--run-blue)}
+.sup-row.st-ans{border-inline-start-color:var(--marker)}
+.sup-row.st-meet,.sup-row.st-done{border-inline-start-color:var(--run-green)}
+.sup-row.st-done{opacity:.72}
+.sup-id b{display:block;font-family:var(--fd);font-size:15px;color:var(--slate)}
+.sup-id em{display:inline-block;font-style:normal;font-size:11px;font-weight:600;color:#8A4B0B;background:#FDEBD8;border-radius:999px;padding:1px 8px;margin-top:3px}
+.sup-id small{display:block;font-size:12px;color:var(--muted);margin-top:3px;overflow-wrap:anywhere}
+.sup-f{display:grid;grid-template-columns:130px 100px 120px minmax(120px,1fr);gap:8px}
+.sup-f label{display:grid;gap:2px;min-width:0}
+.sup-f label span{font-size:11px;color:var(--muted)}
+.sup-f select,.sup-f input{font:inherit;font-size:13px;height:34px;border:1px solid var(--hair);border-radius:8px;padding:0 8px;background:#fff;color:var(--slate);min-width:0;width:100%}
+.sup-f select:focus,.sup-f input:focus{outline:2px solid var(--run-blue);outline-offset:-1px}
+.sup-a{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.sup-b{font:inherit;font-size:13px;font-weight:600;height:34px;display:inline-flex;align-items:center;padding:0 12px;border-radius:8px;border:1px solid var(--hair);background:#fff;color:var(--slate);cursor:pointer;text-decoration:none;white-space:nowrap}
+.sup-b.pri{background:var(--run-blue);border-color:var(--run-blue);color:#fff}
+.sup-b:hover{filter:brightness(.96)}
+.sup-miss{font-size:12px;color:var(--run-red);align-self:center}
+.sup-d{grid-column:1/-1}
+.sup-d summary{font-size:12px;color:var(--run-blue);cursor:pointer;overflow-wrap:anywhere}
+.sup-grid,.sup-grp,.sup-row,.sup-row > *{min-width:0}
+.sup-id small.sup-m{text-align:right;overflow-wrap:anywhere;margin-top:1px}
+.sup-d pre{white-space:pre-wrap;font:13px/1.55 'IBM Plex Sans',system-ui,sans-serif;background:#F6F8FA;border:1px solid var(--hair);border-radius:8px;padding:12px 14px;margin:8px 0 0;text-align:left;color:var(--slate)}
+@media (max-width:980px){.sup-row{grid-template-columns:1fr}.sup-a{justify-content:flex-start}}
+@media (max-width:560px){.sup-f{grid-template-columns:1fr 1fr}.sup-f label.w{grid-column:1/-1}}
 /* work plan: one row of stages, scrolled sideways, names pinned */
 .plan-wrap{overflow:visible!important}
 .pl-scroll{overflow-x:auto;padding-bottom:10px;overscroll-behavior-x:contain}
@@ -2418,6 +2446,7 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
   <button class="tab" role="tab" data-view="p2" aria-selected="false">שבוע ההכנה באתר <span class="pill" id="tabP2">0/0</span></button>
   <button class="tab" role="tab" data-view="p3" aria-selected="false">ציוד מהארץ <span class="pill" id="tabP3">0/0</span></button>
   <button class="tab" role="tab" data-view="qs" aria-selected="false">שאלות פתוחות <span class="pill" id="tabQs">0</span></button>
+  <button class="tab" role="tab" data-view="sup" aria-selected="false">ספקים <span class="pill" id="tabSup">0</span></button>
   <button class="tab" role="tab" data-view="sum" aria-selected="false">סיכומים שבועיים</button>
   <button class="tab" role="tab" data-view="contacts" aria-selected="false">אנשי קשר</button>
   <button class="tab" role="tab" data-view="team" aria-selected="false">הצוות שלנו</button>
@@ -3024,6 +3053,12 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
     <div class="vhead"><div class="vhead-main"><h2>שאלות פתוחות</h2><p>שאלות שצריך לברר מול הספקים ומול סמדר. מסמנים כשיש תשובה וכותבים אותה בשורה, כדי שכולם ידעו.</p></div>
       <div class="vhead-side"><div class="vnum"><b id="qsOpen">0</b><span id="qsTot">פתוחות</span></div><div class="bar"><i id="qsBar" style="width:0%"></i></div></div></div>
     <div class="qs-grid" id="qsGrid"></div>
+  </section>
+
+  <section class="view" id="view-sup" role="tabpanel" hidden>
+    <div class="vhead"><div class="vhead-main"><h2>מיילים לספקים</h2><p>לכל ספק יש טיוטת מייל מוכנה לקראת שבוע ההכנה. פותחים את המייל, שולחים, ומעדכנים כאן מה ענו ומתי הפגישה, כדי שכולם ידעו. הטיוטה נחתמת בשם של מי שבחר "מי אני".</p></div>
+      <div class="vhead-side"><div class="vnum"><b id="supLeft">0</b><span id="supTot">עוד לא נשלחו</span></div><div class="bar"><i id="supBar" style="width:0%"></i></div></div></div>
+    <div class="sup-grid" id="supGrid"></div>
   </section>
 
   <section class="view" id="view-sum" role="tabpanel" hidden>
@@ -4250,6 +4285,129 @@ document.addEventListener('click', async e => {
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.closest && e.target.closest('.qs-add')) { e.preventDefault(); e.target.closest('.qs-add').querySelector('.qs-addb').click(); } });
 renderQs();
 
+/* ================= suppliers: emails before the prep week ================= */
+const SUP_KEY = "penguin-sup";
+const SUP_ST = [["", "טרם נשלח"], ["sent", "נשלח"], ["ans", "ענו"], ["meet", "נקבעה פגישה"], ["done", "סגור"]];
+const SUP_EN = { "בן": "Ben", "יותם": "Yotam", "דורון": "Doron", "קרן": "Keren" };
+/* contact details come from the private contacts list at runtime, matched by role or name */
+const SUPS = [
+  ["ציוד", [
+    { id: "eskiador", n: "Sport 2000 · Eskiador", t: "shop", hi: "Yoann", m: c => /ESKIADOR/i.test(c.r) },
+    { id: "intersport", n: "Intersport", t: "shop", late: 1, hi: "", m: c => /INTERSPORT/i.test(c.r + ' ' + c.n) },
+    { id: "sp-kashmir", n: "Sport 2000 · Kashmir", t: "shop", hi: "Dominique", m: c => /חנות קשמיר/.test(c.r) },
+    { id: "sp-oxalys", n: "Sport 2000 · Oxalys", t: "shop", hi: "Dominique", m: c => /חנות אוקסליס/.test(c.r) },
+    { id: "skiset", n: "Skiset", t: "shop", late: 1, hi: "Christophe", m: c => /SKISET/i.test(c.r) }]],
+  ["מלונות", [
+    { id: "h-kashmir", n: "Kashmir", t: "hotel", hi: "", m: c => /^Kashmir/i.test(c.n) },
+    { id: "h-oxalys", n: "Oxalys", t: "hotel", hi: "", m: c => /Oxalys Residence/i.test(c.n) },
+    { id: "h-pleinsud", n: "Plein Sud", t: "hotel", hi: "Mallory", m: c => /Plein Sud/i.test(c.n) },
+    { id: "h-montana", n: "Montana", t: "hotel", hi: "Lucie", m: c => /Residence Montana/i.test(c.n) },
+    { id: "h-cheval", n: "Cheval Blanc", t: "hotel", hi: "", m: c => /Cheval Blanc/i.test(c.n) }]],
+  ["הדרכות", [{ id: "skicool", n: "Skicool", t: "school", hi: "Chloe", m: c => /SKICOOL/i.test(c.r) }]],
+  ["ארוחות", [{ id: "meals", n: "פטריק · המסעדות", t: "meals", hi: "Patrick", m: c => /מנהל המסעדות/.test(c.r) }]],
+  ["מאפייה", [{ id: "bakery", n: "המאפייה", t: "bakery", wa: 1, hi: "Stéphane", m: c => /המאפייה/.test(c.r) }]],
+  ["מרכז ספורט וספא", [{ id: "spa", n: "מרכז הספורט והספא", t: "spa", hi: "Laetitia", m: c => /מרכז הספורט/.test(c.r) }]]
+];
+const SUP_TOPIC = {
+  shop: "We would like to arrange ski and snowboard rental for our guests this season. Before the first group arrives, we would like to go over rental prices and packages, how to book, fitting for groups on arrival day, pick-up and return times, and a contact person for the season.",
+  hotel: "Before our first group arrives, we would like to go over check-in times and key collection, the rooming list (its format and when you need it), a spot for our welcome desk on arrival day, and a contact person for the season.",
+  school: "We would like to plan ski and snowboard lessons for our guests. We would like to go over lesson types, group sizes and levels, schedules and meeting points, booking and payment, and lessons for our Hanukkah week.",
+  meals: "We would like to plan meals for our groups this season: menus, meal times, reservations and prices, starting with our Hanukkah week.",
+  spa: "We would like to set up a short call about access for our guests to the sports centre and spa: prices, opening hours and how to book."
+};
+const SUP_SUBJ = { shop: "equipment rental for the season", hotel: "preparing for our guests' arrival", school: "ski lessons for the season", meals: "group meals for the season", spa: "a call about the sports centre and spa" };
+function supMe(){ let m = ''; try { m = localStorage.getItem('penguin-me') || ''; } catch(e){} return SUP_EN[m] || 'Ben'; }
+function supContact(s){ const all = window.TEAM_CONTACTS || []; return all.find(c => { try { return s.m(c); } catch(e){ return false; } }) || null; }
+function supDraft(s){
+  const me = supMe(), hi = s.hi ? 'Hello ' + s.hi + ',' : 'Hello,';
+  if (s.wa) return { subj: '', body: `${hi} this is ${me} from the Penguin team in Val Thorens. We arrive on 26 November and our first guests come on 5 December. Could we meet during our prep week (27 November to 4 December) to set up our bread and pastry orders for the season? Thank you!` };
+  const meet = s.late
+    ? "Could we meet after our Hanukkah week, between 13 and 19 December? Please let me know a day and time that suits you."
+    : (s.t === 'spa' ? "Could we have the call during our prep week, between 27 November and 4 December? Please let me know a day and time that suits you."
+      : "Could we meet during our prep week, between 27 November and 4 December? Please let me know a day and time that suits you.");
+  const body = `${hi}
+
+My name is ${me}, and I am part of the Penguin team in Val Thorens for the 2026/27 winter season. Our team arrives in Val Thorens on 26 November, and we will spend 27 November to 4 December preparing before our first guests arrive.
+
+Our season dates:
+- Hanukkah week: 5 to 12 December 2026
+- 2 January to 6 February 2027
+- 6 March to 3 April 2027
+
+${SUP_TOPIC[s.t]}
+
+${meet}
+
+Best regards,
+${me}
+Penguin team, Val Thorens 2026/27`;
+  return { subj: 'Penguin Val Thorens 2026/27: ' + SUP_SUBJ[s.t], body };
+}
+let supPending = false;
+function renderSup(){
+  const host = document.getElementById('supGrid'); if (!host) return;
+  if (host.contains(document.activeElement) && document.activeElement.matches('input, select')) { supPending = true; return; }
+  supPending = false;
+  const st = tstore(SUP_KEY), all = SUPS.flatMap(g => g[1]);
+  const left = all.filter(s => !(st[s.id] && st[s.id].st)).length, closed = all.filter(s => st[s.id] && /meet|done/.test(st[s.id].st)).length;
+  const pill = document.getElementById('tabSup'); if (pill) pill.textContent = left;
+  const o = document.getElementById('supLeft'); if (o) o.textContent = left;
+  const t = document.getElementById('supTot'); if (t) t.textContent = 'עוד לא נשלחו, מתוך ' + all.length;
+  const bar = document.getElementById('supBar'); if (bar) bar.style.width = (closed / all.length * 100) + '%';
+  const people = ['בן', 'יותם', 'דורון', 'קרן'], loaded = !!(window.TEAM_CONTACTS && window.TEAM_CONTACTS.length);
+  host.innerHTML = SUPS.map(([grp, list]) => `<section class="sup-grp"><h3>${esc(grp)}</h3>${list.map(s => {
+    const x = st[s.id] || {}, c = supContact(s), d = supDraft(s);
+    const ph = c && (c.p || []).find(p => p.w) || (c && (c.p || [])[0]);
+    let act, who;
+    if (s.wa) {
+      who = c ? esc(c.n) + (ph ? ' · ' + esc(ph.v) : '') : '';
+      act = ph ? `<a class="sup-b pri" target="_blank" rel="noopener" href="https://wa.me/${esc(ph.t.replace(/\D/g, ''))}?text=${encodeURIComponent(d.body)}">פתיחה בוואטצאפ</a>` : '';
+    } else {
+      who = c ? esc(s.t === 'hotel' ? c.r : c.n) + (c.m ? '</small><small class="sup-m" dir="ltr">' + esc(c.m) : '') : '';
+      act = c && c.m ? `<a class="sup-b pri" href="mailto:${esc(c.m)}?subject=${encodeURIComponent(d.subj)}&body=${encodeURIComponent(d.body)}">פתיחת מייל</a>` : '';
+    }
+    if (!act) act = loaded ? '<span class="sup-miss">אין מייל ברשימה, צריך להשיג</span>' : '';
+    if (!who) who = loaded ? 'אין איש קשר ברשימה' : (window.TEAM_CONTACTS_ERR ? 'פרטי הקשר פתוחים רק בקישור הצוות' : 'טוען פרטי קשר…');
+    return `<article class="sup-row st-${x.st || 'new'}" data-sid="${s.id}">
+      <div class="sup-id"><b>${esc(s.n)}</b>${s.late ? '<em>אחרי חנוכה</em>' : ''}<small>${who}</small></div>
+      <div class="sup-f">
+        <label><span>סטטוס</span><select class="sup-st">${SUP_ST.map(([v, l]) => `<option value="${v}"${(x.st || '') === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
+        <label><span>מי מטפל</span><select class="sup-who"><option value="">—</option>${people.map(p => `<option${x.who === p ? ' selected' : ''}>${p}</option>`).join('')}</select></label>
+        <label><span>פגישה</span><input class="sup-when" type="text" placeholder="יום ושעה" value="${esc(x.when || '')}"></label>
+        <label class="w"><span>הערה</span><input class="sup-note" type="text" placeholder="מה ענו, מה חסר…" value="${esc(x.note || '')}"></label>
+      </div>
+      <div class="sup-a">${act}<button type="button" class="sup-b sup-copy">העתקת הטקסט</button></div>
+      <details class="sup-d"><summary>הטקסט${d.subj ? ' · ' + esc(d.subj) : ''}</summary><pre dir="ltr">${esc(d.body)}</pre></details>
+    </article>`;
+  }).join('')}</section>`).join('');
+}
+function supSave(id, k, v){ const st = tstore(SUP_KEY); st[id] = Object.assign({}, st[id], { [k]: v }); tsave(SUP_KEY, st); }
+document.addEventListener('change', e => {
+  const t = e.target; if (!t.closest || !t.closest('#view-sup')) return;
+  const row = t.closest('.sup-row'); if (!row) return;
+  const k = t.classList.contains('sup-st') ? 'st' : t.classList.contains('sup-who') ? 'who' : t.classList.contains('sup-when') ? 'when' : t.classList.contains('sup-note') ? 'note' : '';
+  if (!k) return;
+  supSave(row.dataset.sid, k, t.value.trim());
+  if (k === 'st') { t.blur(); supPending = false; renderSup(); }
+});
+document.addEventListener('focusout', e => { if (supPending && e.target.closest && e.target.closest('#view-sup')) setTimeout(() => { if (supPending) renderSup(); }, 50); });
+document.addEventListener('click', e => {
+  const t = e.target; if (!t.closest || !t.closest('#view-sup')) return;
+  const row = t.closest('.sup-row'); if (!row) return;
+  const s = SUPS.flatMap(g => g[1]).find(x => x.id === row.dataset.sid); if (!s) return;
+  if (t.closest('.sup-copy')) {
+    const d = supDraft(s), txt = (d.subj ? 'Subject: ' + d.subj + '\n\n' : '') + d.body;
+    (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => toast('הטקסט הועתק'), () => toast('לא הצלחתי להעתיק, פתחו את "הטקסט" והעתיקו ידנית'));
+    return;
+  }
+  if (t.closest('a.sup-b.pri')) {
+    const st = tstore(SUP_KEY);
+    if (!(st[s.id] && st[s.id].st)) setTimeout(() => { supSave(s.id, 'st', 'sent'); if (!(st[s.id] && st[s.id].who)) { let m = ''; try { m = localStorage.getItem('penguin-me') || ''; } catch(e){} if (m) supSave(s.id, 'who', m); } renderSup(); toast('סומן כנשלח. אם לא שלחתם, מחזירים בסטטוס'); }, 400);
+  }
+});
+document.addEventListener('contacts-ready', renderSup);
+renderSup();
+
 /* ================= add / delete tasks (owner) ================= */
 function rebuildBoard(){
   mergeCustom(); fillAllTasks();
@@ -4310,7 +4468,7 @@ document.addEventListener('keydown', e => {
 (function(){
   const chip = document.getElementById('syncChip'), txt = document.getElementById('syncTxt');
   const setChip = (st, label) => { chip.dataset.s = st; txt.textContent = label; };
-  const DOCS = { checks: KEY, voices: TKEY.voices, hw: TKEY.hw, sums: TKEY.sums, wform: TKEY.wform, order: ORDER_KEY, resp: TKEY.resp, owners: OWN_KEY, dl: DL_KEY, custom: CUSTOM_KEY, qs: QS_KEY };
+  const DOCS = { checks: KEY, voices: TKEY.voices, hw: TKEY.hw, sums: TKEY.sums, wform: TKEY.wform, order: ORDER_KEY, resp: TKEY.resp, owners: OWN_KEY, dl: DL_KEY, custom: CUSTOM_KEY, qs: QS_KEY, sup: SUP_KEY };
   const readLocal = k => { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch(e){ return {}; } };
   const writeLocal = (k, o) => { try { localStorage.setItem(k, JSON.stringify(o)); } catch(e){} };
   let db = null, readOnly = false;
@@ -4333,6 +4491,8 @@ document.addEventListener('keydown', e => {
       rebuildBoard();
     } else if (name === 'qs'){
       renderQs();
+    } else if (name === 'sup'){
+      renderSup();
     } else {
       Object.keys(items).forEach(id => {
         const el = document.getElementById(id);
@@ -5017,8 +5177,8 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   if (busy || ALL.length) return; busy = true;
   fetch(window.PENGUIN_API + '?a=contacts' + (window.PENGUIN_AUTH ? window.PENGUIN_AUTH() : '') + '&t=' + Date.now()).then(r => r.json()).then(j => {
     busy = false;
-    if (!j || !j.ok){ body.innerHTML = '<p class="ct-msg">' + (j && j.error === 'team_only' ? 'אנשי הקשר פתוחים רק לצוות. פתחו את האתר דרך קישור הצוות שבן שלח.' : 'אנשי הקשר עוד לא זמינים. נסו שוב בעוד רגע.') + '</p>'; return; }
-    ALL = j.contacts || [];
+    if (!j || !j.ok){ window.TEAM_CONTACTS_ERR = 1; document.dispatchEvent(new Event('contacts-ready')); body.innerHTML = '<p class="ct-msg">' + (j && j.error === 'team_only' ? 'אנשי הקשר פתוחים רק לצוות. פתחו את האתר דרך קישור הצוות שבן שלח.' : 'אנשי הקשר עוד לא זמינים. נסו שוב בעוד רגע.') + '</p>'; return; }
+    ALL = j.contacts || []; window.TEAM_CONTACTS = ALL; document.dispatchEvent(new Event('contacts-ready'));
     document.getElementById('ctCount').textContent = ALL.length;
     chips(); render();
   }).catch(() => { busy = false; body.innerHTML = '<p class="ct-msg">אנשי הקשר עוד לא זמינים. נסו שוב בעוד רגע.</p>'; });
@@ -5368,7 +5528,8 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const ICON = {
     plan: '<path d="M4 6h16M4 12h16M4 18h10"/>', qs: '<circle cx="12" cy="12" r="8"/><path d="M9.8 9.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5M12 16.4v.1"/>',
     sum: '<path d="M7 4h10v16H7z"/><path d="M10 9h4M10 13h4"/>', contacts: '<circle cx="12" cy="9" r="3.4"/><path d="M5.5 19c1-3.2 3.6-4.6 6.5-4.6s5.5 1.4 6.5 4.6"/>',
-    team: '<path d="M12 4l8 6.5V20H4v-9.5z"/>'
+    team: '<path d="M12 4l8 6.5V20H4v-9.5z"/>',
+    sup: '<path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/>'
   };
   function plates(){
     document.querySelectorAll('.view .vhead').forEach(v => {
@@ -5397,7 +5558,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   document.body.appendChild(qf);
   const qin = qf.querySelector('input'), qlist = qf.querySelector('.qf-list');
   let res = [], sel = 0, lastFocus = null;
-  const TABS = [['overview', 'סקירה'], ['p1', 'לפני היציאה'], ['p2', 'שבוע ההכנה באתר'], ['p3', 'ציוד מהארץ'], ['plan', 'תוכנית עבודה'], ['qs', 'שאלות פתוחות'], ['sum', 'סיכומים שבועיים'], ['contacts', 'אנשי קשר'], ['team', 'הצוות שלנו']];
+  const TABS = [['overview', 'סקירה'], ['p1', 'לפני היציאה'], ['p2', 'שבוע ההכנה באתר'], ['p3', 'ציוד מהארץ'], ['plan', 'תוכנית עבודה'], ['qs', 'שאלות פתוחות'], ['sup', 'ספקים'], ['sum', 'סיכומים שבועיים'], ['contacts', 'אנשי קשר'], ['team', 'הצוות שלנו']];
   const hl = (s, q) => { const i = s.toLowerCase().indexOf(q); return i < 0 ? E(s) : E(s.slice(0, i)) + '<mark>' + E(s.slice(i, i + q.length)) + '</mark>' + E(s.slice(i + q.length)); };
   function contacts(){
     return [...document.querySelectorAll('#ctBody .ct')].map(c => ({ name: (c.querySelector('b, h4, .ct-n')?.textContent || c.textContent).trim().split('\n')[0], text: c.textContent.replace(/\s+/g, ' ').trim(), el: c }));
