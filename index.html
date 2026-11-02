@@ -4474,11 +4474,13 @@ function supEff(s, x){
   if (!o.who) o.who = supOwner(s);
   if (m && m.out && !o.st) o.st = 'sent';
   if (m && m.turn === 'us' && (!o.st || o.st === 'sent')) o.st = 'ans';
+  if (m && m.meet && (!o.st || o.st === 'sent' || o.st === 'ans')) { o.st = 'meet'; if (!o.when) o.when = m.meet; }
   return o;
 }
 const dm = d => { const p = String(d || '').split('-'); return p.length === 3 ? (+p[2]) + '.' + (+p[1]) : ''; };
 function supMailLine(s){
   const m = supMail(s); if (!m) return '';
+  if (m.meet) return `<small class="sup-ml">📅 נקבעה פגישה · ${esc(m.meet)} · ביומן</small>`;
   if (m.turn === 'us') return `<small class="sup-ml us">✉ ענו ${dm(m.in)} · תורנו לענות</small>`;
   if (m.out) return `<small class="sup-ml">✉ נשלח ${dm(m.out)} · מחכים לתשובה</small>`;
   return '';
