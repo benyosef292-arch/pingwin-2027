@@ -7,11 +7,8 @@ Not based on UXKIN examples (the UXKIN connection was not available); based on t
 ## 2.11.26 face lift (UI UX Pro Max, "Productivity Tool")
 Style: Flat Design + Minimalism. No shadows (except the search dialog), 8px panel radius, 150ms transitions.
 Type: Noto Sans Hebrew ("Hebrew Modern" pairing), IBM Plex Sans Hebrew as fallback. Frank Ruhl Libre stays for scene titles.
-Tokens now (in `style#facelift`, last in the page, they override the table below):
-`--slate` #134E4A text + top bar · `--snow` #F0FDFA page · `--hair` #CDEBE5 borders · `--run-blue` #0F766E primary/links/active
-(name kept for compatibility) · `--primary-fill` #0D9488 bars · `--tint2` #E6F7F3 pills · `--muted` #475569 ·
-`--marker` #EA580C today (`--marker-ink` #C2410C) · `--run-red` #DC2626 due · `--run-green` #15803D done only.
-All phase signs use the primary teal, not run colors. People colors unchanged. Photo scenes unchanged.
+Colors: unchanged (the table below). Ben preferred the original palette over the skill's teal.
+All phase signs use run-blue, not one run color each. People colors unchanged. Photo scenes unchanged.
 
 ## Color
 

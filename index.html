@@ -6085,12 +6085,13 @@ select.own[data-who="כולם"]{background:none!important;border-color:transpare
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700&display=swap">
 <style id="facelift">
 /* ================= Face lift 2.11.26 · UI UX Pro Max ("Productivity Tool"):
-   Flat Design + Minimalism, teal primary + orange accent, Hebrew Modern type (Noto Sans Hebrew), 150ms motion, no shadows ================= */
+   Flat Design + Minimalism, original colors kept, Hebrew Modern type (Noto Sans Hebrew), 150ms motion, no shadows ================= */
 :root{
-  --slate:#134E4A; --snow:#F0FDFA; --panel:#FFFFFF; --hair:#CDEBE5; --line:#CDEBE5; --line2:#B7E2DA;
-  --run-blue:#0F766E; --primary-fill:#0D9488; --tint:#CCFBF1; --tint2:#E6F7F3;
-  --muted:#475569; --marker:#EA580C; --marker-ink:#C2410C;
-  --run-red:#DC2626; --run-green:#15803D;
+  /* colors: the site's own palette (Ben 2.11.26: keep the original colors) */
+  --slate:#1C2C37; --snow:#F1F4F6; --panel:#FFFFFF; --hair:#D3DCE2; --line:#D3DCE2; --line2:#C3CED6;
+  --run-blue:#1858C4; --primary-fill:#1858C4; --tint:#E3ECFA; --tint2:#EEF2F5;
+  --muted:#536572; --marker:#EE8418; --marker-ink:#A4520A;
+  --run-red:#C62A30; --run-green:#1F8A55;
   --fd:"Noto Sans Hebrew","IBM Plex Sans Hebrew","Assistant",-apple-system,"Arial Hebrew",sans-serif;
   --fb:"Noto Sans Hebrew","IBM Plex Sans Hebrew","Assistant",-apple-system,"Arial Hebrew",sans-serif;
   --r:8px;
@@ -6138,7 +6139,7 @@ input,select,textarea{accent-color:var(--run-green)}
 .view select,.view input[type="text"],.view input:not([type]),.view textarea{border-color:var(--hair);border-radius:6px}
 
 /* weekly board */
-#view-wk{--wk-recap:#E6F7F3;--wk-fun:#FFF1E6}
+#view-wk{--wk-recap:#E7EEFB;--wk-fun:#FCEFE2}
 .wk-colh.today{box-shadow:inset 0 -3px 0 var(--marker)!important}
 .wk-c.isdone{border-color:var(--run-green)!important}
 .wk-sb.s1{background:var(--run-green)!important;border-color:var(--run-green)!important}
@@ -6148,7 +6149,7 @@ input,select,textarea{accent-color:var(--run-green)}
 .qf-it .k{background:var(--run-blue)!important}
 
 /* older token set used by summaries, plan, roles */
-:root{--navy:#134E4A;--navy2:#115E59;--blue:#0F766E;--ink:#134E4A;--sh:none}
+:root{--navy:#1C2C37;--navy2:#24394A;--blue:#1858C4;--ink:#1C2C37;--sh:none}
 .mk{--mk:var(--run-blue)!important}
 .wf-word{background:var(--run-blue)!important;border-color:var(--run-blue)!important}
 .wf-no{display:none!important}
