@@ -56,3 +56,10 @@ Only the scroll scenes move, and only when scrolled. Everything else moves only 
 ## Never
 Eyebrow labels with dots, `01/02/03` on things that aren't a sequence, cartoon skiers, a separate story
 mode, frosted cards, falling snow, gold accents.
+
+## Polish 2.11.26 (UI UX Pro Max review, `style#polish`)
+- Tabs never clip the first tab; all 11 fit from 1320px, below that they scroll with an edge fade.
+- Text floor 12px for chips, counters and field labels.
+- Checkboxes: one box everywhere (tasks, open questions), 20px (24px on touch), border #7A8B98 (3.5:1).
+- Calendar event colors darkened for white text ≥4.5:1: ספקים #A35F00, לקוחות #C0392B, שבועות העונה #0B7A71, ואקאנס #66727E.
+- Footer is one line, no empty dark band. One focus ring: 2px run-blue.
