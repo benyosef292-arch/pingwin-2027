@@ -2125,6 +2125,27 @@ html,body{overflow-x:clip}
 }
 </style>
 <style id="winter">
+/* daily mail summary on the home screen */
+.mx{max-width:1180px;margin:18px auto 26px;padding:0 16px}
+.mx-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.mx-h h2{font-family:var(--fd);font-size:20px;font-weight:700;color:var(--slate);margin:0}
+.mx-h small{font-size:12px;color:var(--muted)}
+.mx-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.mx-card{background:var(--panel,#fff);border:1px solid var(--hair);border-top:4px solid var(--pc,#C9D3DA);border-radius:10px;padding:10px 12px;min-width:0}
+.mx-card h3{font-family:var(--fd);font-size:15px;margin:0 0 6px;color:var(--pc,var(--slate))}
+.mx-card ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.mx-card li{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--slate);min-width:0}
+.mx-card li b{font-weight:600;overflow-wrap:anywhere}
+.mx-card li span{white-space:nowrap;font-size:12px;color:var(--muted)}
+.mx-card li.us span{color:var(--run-red);font-weight:600}
+.mx-card li.out span{color:var(--run-blue)}
+.mx-card li.none span{color:#8A4B0B}
+.mx-card li.msg{display:block}
+.mx-card li.msg small{display:block;font-size:12px;color:var(--muted)}
+.mx-card.alert{--pc:var(--run-red)}
+.mx-empty{font-size:13px;color:var(--muted)}
+.sup-id small.sup-ml{color:var(--run-blue);font-weight:600}
+.sup-id small.sup-ml.us{color:var(--run-red)}
 /* suppliers tracker */
 .sup-grid{display:grid;gap:22px}
 .sup-grp h3{font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--muted);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--hair)}
@@ -2916,6 +2937,7 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
 
   <!-- ===== OVERVIEW ===== -->
   <section class="view" id="view-overview" role="tabpanel">
+    <div class="mx" id="mailBox" hidden></div>
     <div class="hero" hidden>
       <div class="hero-photo" style="background-image:var(--bg7)"></div>
       <div class="hero-veil"></div>
@@ -4391,20 +4413,20 @@ const SUP_EN = { "בן": "Ben", "יותם": "Yotam", "דורון": "Doron", "ק�
 /* contact details come from the private contacts list at runtime, matched by role or name */
 const SUPS = [
   ["ציוד", [
-    { id: "eskiador", n: "Sport 2000 · Eskiador", t: "shop", hi: "Yoann", m: c => /ESKIADOR/i.test(c.r) },
-    { id: "intersport", n: "Intersport", t: "shop", late: 1, hi: "", m: c => /INTERSPORT/i.test(c.r + ' ' + c.n) },
-    { id: "sp-kashmir", n: "Sport 2000 · Kashmir", t: "shop", hi: "Dominique", m: c => /חנות קשמיר/.test(c.r) },
-    { id: "sp-oxalys", n: "Sport 2000 · Oxalys", t: "shop", hi: "Dominique", m: c => /חנות אוקסליס/.test(c.r) },
-    { id: "skiset", n: "Skiset", t: "shop", late: 1, hi: "Christophe", m: c => /SKISET/i.test(c.r) }]],
+    { id: "eskiador", area: 8, n: "Sport 2000 · Eskiador", t: "shop", hi: "Yoann", m: c => /ESKIADOR/i.test(c.r) },
+    { id: "intersport", area: 8, n: "Intersport", t: "shop", late: 1, hi: "", m: c => /INTERSPORT/i.test(c.r + ' ' + c.n) },
+    { id: "sp-kashmir", area: 8, n: "Sport 2000 · Kashmir", t: "shop", hi: "Dominique", m: c => /חנות קשמיר/.test(c.r) },
+    { id: "sp-oxalys", area: 8, n: "Sport 2000 · Oxalys", t: "shop", hi: "Dominique", m: c => /חנות אוקסליס/.test(c.r) },
+    { id: "skiset", area: 8, n: "Skiset", t: "shop", late: 1, hi: "Christophe", m: c => /SKISET/i.test(c.r) }]],
   ["מלונות", [
-    { id: "h-kashmir", n: "Kashmir", t: "hotel", hi: "", m: c => /^Kashmir/i.test(c.n) },
-    { id: "h-oxalys", n: "Oxalys", t: "hotel", hi: "", m: c => /Oxalys Residence/i.test(c.n) },
-    { id: "h-pleinsud", n: "Plein Sud", t: "hotel", hi: "Mallory", m: c => /Plein Sud/i.test(c.n) },
-    { id: "h-montana", n: "Montana", t: "hotel", hi: "Lucie", m: c => /Residence Montana/i.test(c.n) },
-    { id: "h-cheval", n: "Cheval Blanc", t: "hotel", hi: "", m: c => /Cheval Blanc/i.test(c.n) }]],
-  ["הדרכות", [{ id: "skicool", n: "Skicool", t: "school", hi: "Chloe", m: c => /SKICOOL/i.test(c.r) }]],
-  ["ארוחות", [{ id: "meals", n: "פטריק · המסעדות", t: "meals", hi: "Patrick", m: c => /מנהל המסעדות/.test(c.r) }]],
-  ["מאפייה", [{ id: "bakery", n: "המאפייה", t: "bakery", wa: 1, hi: "Stéphane", m: c => /המאפייה/.test(c.r) }]],
+    { id: "h-kashmir", area: 5, n: "Kashmir", t: "hotel", hi: "", m: c => /^Kashmir/i.test(c.n) },
+    { id: "h-oxalys", area: 6, n: "Oxalys", t: "hotel", hi: "", m: c => /Oxalys Residence/i.test(c.n) },
+    { id: "h-pleinsud", area: 2, n: "Plein Sud", t: "hotel", hi: "Mallory", m: c => /Plein Sud/i.test(c.n) },
+    { id: "h-montana", area: 4, n: "Montana", t: "hotel", hi: "Lucie", m: c => /Residence Montana/i.test(c.n) },
+    { id: "h-cheval", area: 3, n: "Cheval Blanc", t: "hotel", hi: "", m: c => /Cheval Blanc/i.test(c.n) }]],
+  ["הדרכות", [{ id: "skicool", area: 7, n: "Skicool", t: "school", hi: "Chloe", m: c => /SKICOOL/i.test(c.r) }]],
+  ["ארוחות", [{ id: "meals", area: 23, n: "פטריק · המסעדות", t: "meals", hi: "Patrick", m: c => /מנהל המסעדות/.test(c.r) }]],
+  ["מאפייה", [{ id: "bakery", area: 22, n: "המאפייה", t: "bakery", wa: 1, hi: "Stéphane", m: c => /המאפייה/.test(c.r) }]],
   ["מרכז ספורט וספא", [{ id: "spa", n: "מרכז הספורט והספא", t: "spa", hi: "Laetitia", m: c => /מרכז הספורט/.test(c.r) }]]
 ];
 const SUP_TOPIC = {
@@ -4442,12 +4464,29 @@ ${me}
 Penguin team, Val Thorens 2026/27`;
   return { subj: 'Penguin Val Thorens 2026/27: ' + SUP_SUBJ[s.t], body };
 }
+/* mail: who owns each supplier (from the roles board) and what the inbox says */
+function supOwner(s){ if (!s.area) return ''; let r = {}; try { r = tstore(TKEY.resp) || {}; } catch(e){} return r['rw-' + s.area] || ''; }
+function supMail(s){ return (window.MAIL && window.MAIL.sup && window.MAIL.sup[s.id]) || null; }
+function supEff(s, x){
+  const m = supMail(s), o = Object.assign({}, x);
+  if (!o.who) o.who = supOwner(s);
+  if (m && m.out && !o.st) o.st = 'sent';
+  if (m && m.turn === 'us' && (!o.st || o.st === 'sent')) o.st = 'ans';
+  return o;
+}
+const dm = d => { const p = String(d || '').split('-'); return p.length === 3 ? (+p[2]) + '.' + (+p[1]) : ''; };
+function supMailLine(s){
+  const m = supMail(s); if (!m) return '';
+  if (m.turn === 'us') return `<small class="sup-ml us">✉ ענו ${dm(m.in)} · תורנו לענות</small>`;
+  if (m.out) return `<small class="sup-ml">✉ נשלח ${dm(m.out)} · מחכים לתשובה</small>`;
+  return '';
+}
 let supPending = false;
 function renderSup(){
   const host = document.getElementById('supGrid'); if (!host) return;
   if (host.contains(document.activeElement) && document.activeElement.matches('input, select')) { supPending = true; return; }
   supPending = false;
-  const st = tstore(SUP_KEY), all = SUPS.flatMap(g => g[1]);
+  const st0 = tstore(SUP_KEY), all = SUPS.flatMap(g => g[1]), st = {}; all.forEach(s => { st[s.id] = supEff(s, st0[s.id] || {}); });
   const left = all.filter(s => !(st[s.id] && st[s.id].st)).length, closed = all.filter(s => st[s.id] && /meet|done/.test(st[s.id].st)).length;
   const pill = document.getElementById('tabSup'); if (pill) pill.textContent = left;
   const o = document.getElementById('supLeft'); if (o) o.textContent = left;
@@ -4455,7 +4494,7 @@ function renderSup(){
   const bar = document.getElementById('supBar'); if (bar) bar.style.width = (closed / all.length * 100) + '%';
   const people = ['בן', 'יותם', 'דורון', 'קרן'], loaded = !!(window.TEAM_CONTACTS && window.TEAM_CONTACTS.length);
   host.innerHTML = SUPS.map(([grp, list]) => `<section class="sup-grp"><h3>${esc(grp)}</h3>${list.map(s => {
-    const x = st[s.id] || {}, c = supContact(s), d = supDraft(s);
+    const x = supEff(s, st[s.id] || {}), c = supContact(s), d = supDraft(s), ml = supMailLine(s);
     const ph = c && (c.p || []).find(p => p.w) || (c && (c.p || [])[0]);
     let act, who;
     if (s.wa) {
@@ -4468,7 +4507,7 @@ function renderSup(){
     if (!act) act = loaded ? '<span class="sup-miss">אין מייל ברשימה, צריך להשיג</span>' : '';
     if (!who) who = loaded ? 'אין איש קשר ברשימה' : (window.TEAM_CONTACTS_ERR ? 'פרטי הקשר פתוחים רק בקישור הצוות' : 'טוען פרטי קשר…');
     return `<article class="sup-row st-${x.st || 'new'}" data-sid="${s.id}">
-      <div class="sup-id"><b>${esc(s.n)}</b>${s.late ? '<em>אחרי חנוכה</em>' : ''}<small>${who}</small></div>
+      <div class="sup-id"><b>${esc(s.n)}</b>${s.late ? '<em>אחרי חנוכה</em>' : ''}<small>${who}</small>${ml}</div>
       <div class="sup-f">
         <label><span>סטטוס</span><select class="sup-st">${SUP_ST.map(([v, l]) => `<option value="${v}"${(x.st || '') === v ? ' selected' : ''}>${l}</option>`).join('')}</select></label>
         <label><span>מי מטפל</span><select class="sup-who"><option value="">—</option>${people.map(p => `<option${x.who === p ? ' selected' : ''}>${p}</option>`).join('')}</select></label>
@@ -4506,6 +4545,57 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('contacts-ready', renderSup);
 renderSup();
+
+/* ================= daily mail summary (encrypted file, opened with the team key) ================= */
+(function(){
+  const b64 = x => Uint8Array.from(atob(x), c => c.charCodeAt(0));
+  async function dec(o, pass){
+    const km = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+    const k = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: b64(o.salt), iterations: o.it, hash: 'SHA-256' }, km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+    return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(o.iv) }, k, b64(o.ct))));
+  }
+  const E = x => String(x == null ? '' : x).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const PEOPLE = ['בן', 'יותם', 'דורון', 'קרן'];
+  function render(){
+    const box = document.getElementById('mailBox'), M = window.MAIL; if (!box || !M) return;
+    const PC = window.PERSON_COLORS || {}, by = {}; PEOPLE.concat('ללא אחראי').forEach(p => by[p] = []);
+    let st0 = {}; try { st0 = tstore(SUP_KEY) || {}; } catch(e){}
+    SUPS.flatMap(g => g[1]).forEach(s => {
+      const x = supEff(s, st0[s.id] || {}), m = supMail(s) || {};
+      if (/meet|done/.test(x.st || '')) return;
+      let cls, txt;
+      if (m.turn === 'us') { cls = 'us'; txt = 'ענו ' + dm(m.in) + ' · לענות'; }
+      else if (x.st === 'ans') { cls = 'us'; txt = 'ענו · לקבוע'; }
+      else if (m.out || x.st === 'sent') { cls = 'out'; txt = m.out ? 'נשלח ' + dm(m.out) + ' · מחכים' : 'נשלח · מחכים'; }
+      else { cls = 'none'; txt = s.late ? 'אחרי חנוכה' : s.wa ? 'לשלוח בוואטצאפ' : 'עוד לא נשלח'; }
+      (by[x.who] || by['ללא אחראי']).push(`<li class="${cls}"><b>${E(s.n)}</b><span>${E(txt)}</span></li>`);
+    });
+    const ord = { us: 0, none: 1, out: 2 };
+    const card = (p, rows) => `<div class="mx-card" style="--pc:${PC[p] || '#5F7280'}"><h3>${E(p)}</h3><ul>${rows.sort((a, b) => ord[a.match(/class="(\w+)"/)[1]] - ord[b.match(/class="(\w+)"/)[1]]).join('')}</ul></div>`;
+    const msg = it => `<li class="msg"><b>${E(it.who || '')}${it.subj ? ' · ' + E(it.subj) : ''}</b><small>${E(dm(it.d))}${it.what ? ' · ' + E(it.what) : ''}</small></li>`;
+    const at = M.at ? new Date(M.at) : null;
+    let html = `<div class="mx-h"><h2>סיכום בוקר מהמייל</h2><small>${at ? 'עודכן ' + at.toLocaleDateString('he-IL', { day: 'numeric', month: 'numeric' }) + ' ' + at.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' }) : ''}</small></div><div class="mx-grid">`;
+    if ((M.us || []).length) html += `<div class="mx-card alert"><h3>ממתין לתשובה שלנו</h3><ul>${M.us.map(msg).join('')}</ul></div>`;
+    PEOPLE.forEach(p => { if (by[p].length) html += card(p, by[p]); });
+    if (by['ללא אחראי'].length) html += card('ללא אחראי', by['ללא אחראי']);
+    if ((M.new || []).length) html += `<div class="mx-card"><h3>חדש בתיבה</h3><ul>${M.new.map(msg).join('')}</ul></div>`;
+    box.innerHTML = html + '</div>'; box.hidden = false;
+  }
+  window.renderMailBox = render;
+  async function load(){
+    let tk = ''; try { tk = localStorage.getItem('penguin-team-key') || ''; } catch(e){}
+    if (!tk || !(window.crypto && crypto.subtle)) return;
+    try {
+      const r = await fetch('mail.enc.json?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) return;
+      window.MAIL = await dec(await r.json(), tk);
+    } catch(e){ return; }
+    render(); if (typeof renderSup === 'function') renderSup();
+  }
+  document.addEventListener('contacts-ready', render);
+  window.addEventListener('storage', render);
+  setInterval(render, 20000);
+  load();
+})();
 
 /* ================= add / delete tasks (owner) ================= */
 function rebuildBoard(){
