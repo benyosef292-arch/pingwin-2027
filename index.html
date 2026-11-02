@@ -2,6 +2,7 @@
 /* עבודה שוטפת: week board, days across, one row per task type */
 #view-wk{--wk-recap:#E7EEFB;--wk-fun:#FCEFE2}
 body:not(.pg-owner) .wk-own{display:none!important}
+#noTeamBar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:center;gap:12px;padding:8px 16px;background:#FFF4E5;color:#7A3E00;border-bottom:1px solid #F5C58A;font-size:14px;line-height:1.4}#noTeamBar button{background:none;border:0;font-size:20px;line-height:1;color:inherit;cursor:pointer;padding:0 4px}
 .wk-top{display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:8px}
 .wk-h{font-size:clamp(22px,2.4vw,30px);font-weight:700;color:var(--slate);margin:0}
 .wk-sub{color:var(--muted);font-size:13px;margin:2px 0 0}
@@ -82,8 +83,20 @@ body.pg-owner .wk-c{cursor:grab}
     return '&tk=' + encodeURIComponent(tk) + '&key=' + encodeURIComponent(key());
   };
   function key() { try { return localStorage.getItem(KEYK) || ''; } catch (e) { return ''; } }
+  function tkey() { try { return localStorage.getItem('penguin-team-key') || ''; } catch (e) { return ''; } }
+  /* opened without the team link: say so, since contacts and editing need it */
+  function noTeamBar(show) {
+    var b = document.getElementById('noTeamBar');
+    if (!show) { if (b) b.remove(); return; }
+    if (b || !document.body) return;
+    try { if (sessionStorage.getItem('penguin-noteam-x')) return; } catch (e) {}
+    b = document.createElement('div'); b.id = 'noTeamBar'; b.setAttribute('role', 'status');
+    b.innerHTML = '<span>פתחו מהקישור של הצוות שבן שלח בוואטצאפ, כדי לראות אנשי קשר ולערוך.</span><button type="button" aria-label="סגירה">×</button>';
+    b.querySelector('button').onclick = function () { b.remove(); try { sessionStorage.setItem('penguin-noteam-x', '1'); } catch (e) {} };
+    document.body.prepend(b);
+  }
 
-  var remote = {}, subs = {}, loaded = false, ownerOk = false, inflight = null;
+  var remote = {}, subs = {}, loaded = false, ownerOk = false, teamOk = false, inflight = null;
   var meta = { hasPendingWrites: false, fromCache: false };
   function nameOf(path) { return path.split('/')[1]; }
   function snapFor(path) {
@@ -95,12 +108,13 @@ body.pg-owner .wk-c{cursor:grab}
 
   function poll() {
     if (inflight) return inflight;
-    inflight = fetch(API + '?key=' + encodeURIComponent(key()) + '&t=' + Date.now())
+    inflight = fetch(API + '?t=' + Date.now() + window.PENGUIN_AUTH())
       .then(function (r) { return r.json(); })
       .then(function (j) {
         inflight = null;
         if (!j || !j.ok) throw new Error('bad_response');
-        ownerOk = !!j.owner;
+        ownerOk = !!j.owner; teamOk = !!j.team;
+        noTeamBar(!ownerOk && !teamOk);
         var changed = {};
         Object.keys(j.docs || {}).forEach(function (n) {
           if (!remote[n] || JSON.stringify(remote[n].items) !== JSON.stringify(j.docs[n].items)) { remote[n] = j.docs[n]; changed[n] = 1; }
@@ -134,7 +148,7 @@ body.pg-owner .wk-c{cursor:grab}
         Object.keys(items).forEach(function (k) { if (JSON.stringify(items[k]) !== JSON.stringify(base[k])) { set[k] = items[k]; n++; } });
         Object.keys(base).forEach(function (k) { if (!(k in items)) { del.push(k); n++; } });
         if (!n && remote[name]) return Promise.resolve();
-        return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ doc: name, set: set, del: del, key: key() }) })
+        return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ doc: name, set: set, del: del, key: key(), tk: tkey() }) })
           .then(function (r) { return r.json(); })
           .then(function (j) {
             if (!j || !j.ok) { var er = new Error((j && j.error) || 'save_failed'); er.code = (j && j.error) || 'save_failed'; throw er; }
@@ -146,7 +160,10 @@ body.pg-owner .wk-c{cursor:grab}
   }
 
   var db = { doc: doc };
-  var user = { isOwner: function () { return key() ? poll().then(function () { return ownerOk; }) : Promise.resolve(false); } };
+  var user = {
+    isOwner: function () { return key() ? poll().then(function () { return ownerOk; }) : Promise.resolve(false); },
+    canEdit: function () { return (key() || tkey()) ? poll().then(function () { return ownerOk || teamOk; }) : Promise.resolve(false); }
+  };
   var downloads = {
     save: function (o) {
       var blob = o.data instanceof Blob ? o.data : new Blob([o.data], { type: 'application/octet-stream' });
@@ -859,7 +876,7 @@ body{direction:rtl}
 .alt li span{min-width:0}
 .alt li b{color:var(--navy);font-weight:800}
 .dlpick{display:inline-flex;align-items:center;gap:5px;margin-top:5px;font-size:11px;color:#8AA3B0;cursor:pointer}.dlpick span{font-weight:800}.dlpick select{font:700 11px var(--fb);color:var(--muted);background:transparent;border:1px dashed var(--line2);border-radius:6px;padding:1px 4px;cursor:pointer}.dlpick.set span{color:var(--amber-ink)}.dlpick.set select{color:var(--amber-ink);background:#FFF8EC;border:1px solid #F0DCB8}
-body:not(.pg-owner) .grip,body:not(.pg-owner) #spReset,body:not(.pg-owner) #restoreBtn,body:not(.pg-owner) #resetBtn{display:none!important}body:not(.pg-owner) .dlpick:not(.set){display:none}select.sp-sel:disabled,select.sp-dl:disabled,select.dl-sel:disabled{cursor:default;opacity:1;appearance:none;-webkit-appearance:none}
+body:not(.pg-edit) .grip,body:not(.pg-owner) #spReset,body:not(.pg-owner) #restoreBtn,body:not(.pg-owner) #resetBtn{display:none!important}body:not(.pg-owner) .dlpick:not(.set){display:none}select.sp-sel:disabled,select.sp-dl:disabled,select.dl-sel:disabled{cursor:default;opacity:1;appearance:none;-webkit-appearance:none}
 select.own{appearance:none;-webkit-appearance:none;cursor:pointer;font-family:var(--fb);padding-inline-end:20px;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:left 9px center,left 5px center;background-size:4px 4px;background-repeat:no-repeat}
 select.own::before{display:none}
 .own{display:inline-flex;align-items:center;gap:5px;margin-top:5px;margin-inline-end:8px;font-size:11px;font-weight:800;line-height:1.5;padding:0 9px;border-radius:999px;color:var(--pc,#5B7B8C);background:color-mix(in srgb,var(--pc,#5B7B8C) 11%,#fff);border:1px solid color-mix(in srgb,var(--pc,#5B7B8C) 38%,#fff)}
@@ -868,7 +885,7 @@ select.own::before{display:none}
 .own[data-who="פתוח"]{color:var(--amber-ink);background:#FFF8EC;border:1px dashed #E9CE9A}
 .task input:checked ~ .tx .own{opacity:.55}
 .cat-add{display:none;padding:2px 12px 12px}
-body.pg-owner .cat-add{display:block}
+body.pg-edit .cat-add{display:block}
 .add-btn{width:100%;border:1.5px dashed var(--line2);background:transparent;color:var(--blue);font:700 13px var(--fb);border-radius:10px;padding:8px;cursor:pointer;transition:background .15s,border-color .15s}
 .add-btn:hover{background:#F2F9FE;border-color:var(--cyan)}
 .add-form{display:flex;flex-direction:column;gap:7px;background:#F7FBFE;border:1px solid var(--line);border-radius:10px;padding:10px}
@@ -878,7 +895,7 @@ body.pg-owner .cat-add{display:block}
 .af-save{background:var(--navy);color:#fff;border:0;border-radius:8px;padding:6px 16px;font:700 13px var(--fb);cursor:pointer}
 .af-cancel{background:transparent;color:var(--muted);border:1px solid var(--line2);border-radius:8px;padding:6px 14px;font:700 13px var(--fb);cursor:pointer}
 .task-del{display:none;flex:0 0 auto;align-self:flex-start;width:24px;height:24px;margin-top:1px;border:0;border-radius:6px;background:transparent;color:#A63229;font:700 16px/1 var(--fb);cursor:pointer;opacity:.55}
-body.pg-owner .task-del{display:block}
+body.pg-edit .task-del{display:block}
 .task-del:hover{opacity:1;background:#FEF2F2}
 .qs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
 @media (max-width:860px){.qs-grid{grid-template-columns:minmax(0,1fr)}}
@@ -3277,13 +3294,16 @@ const DL_NOTE = {"21.10.26":"השבוע","בבית":"כל אחד לפי השיב
 const dlOv = () => { try { return JSON.parse(localStorage.getItem(DL_KEY) || "{}") || {}; } catch(e){ return {}; } };
 const dlLabel = v => (DL_OPTS.find(o => o[0] === v) || [v, v])[1];
 /* only the artifact owner assigns owners, deadlines and moves tasks */
-var PG_OWNER = false;
+var PG_OWNER = false, PG_EDIT = false;   /* PG_EDIT: team link or owner - owners, order, add/delete tasks */
 function pgLock(root){
-  (root || document).querySelectorAll('select.sp-sel, select.sp-dl, select.dl-sel').forEach(el => { el.disabled = !PG_OWNER; el.title = PG_OWNER ? '' : 'רק בן יכול לשנות'; });
+  (root || document).querySelectorAll('select.sp-sel').forEach(el => { el.disabled = !PG_EDIT; el.title = PG_EDIT ? '' : 'פתחו מקישור הצוות כדי לשנות'; });
+  (root || document).querySelectorAll('select.sp-dl, select.dl-sel').forEach(el => { el.disabled = !PG_OWNER; el.title = PG_OWNER ? '' : 'רק בן יכול לשנות'; });
 }
 (window.claude && claude.use ? claude.use('user') : Promise.resolve(null)).then(async u => {
   PG_OWNER = u ? await u.isOwner().catch(() => false) : false;
+  PG_EDIT = PG_OWNER || (u && u.canEdit ? await u.canEdit().catch(() => false) : false);
   document.body.classList.toggle('pg-owner', PG_OWNER);
+  document.body.classList.toggle('pg-edit', PG_EDIT);
   pgLock();
   if (typeof paintOwners === 'function') try { paintOwners(); } catch(e){}
 }).catch(() => {});
@@ -4114,7 +4134,7 @@ function applyOrderAll(items){
   refreshAll();
 }
 document.addEventListener('pointerdown', e => {
-  const grip = e.target.closest('.grip'); if (!grip || e.button > 0 || !PG_OWNER) return;
+  const grip = e.target.closest('.grip'); if (!grip || e.button > 0 || !PG_EDIT) return;
   e.preventDefault();
   const row = grip.closest('.task'), body0 = row.parentElement, before0 = row.nextElementSibling;
   const view = row.closest('.view'); let body = body0;
@@ -4148,7 +4168,7 @@ document.addEventListener('pointerdown', e => {
   window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up);
 });
 document.addEventListener('keydown', e => {
-  const grip = e.target.closest && e.target.closest('.grip'); if (!grip || !PG_OWNER) return;
+  const grip = e.target.closest && e.target.closest('.grip'); if (!grip || !PG_EDIT) return;
   if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
   e.preventDefault();
   const row = grip.closest('.task'), body = row.parentElement;
@@ -4229,9 +4249,9 @@ document.addEventListener('change', e => {
     return;
   }
   const osel = e.target.closest && e.target.closest('select.own');
-  if (osel) { if (!PG_OWNER) return; const o = tstore(OWN_KEY); o[osel.dataset.id] = osel.value; tsave(OWN_KEY, o); splitRender(); toast('האחראי עודכן'); return; }
+  if (osel) { if (!PG_EDIT) return; const o = tstore(OWN_KEY); o[osel.dataset.id] = osel.value; tsave(OWN_KEY, o); splitRender(); toast('האחראי עודכן'); return; }
   const sel = e.target.closest && e.target.closest('.sp-sel'); if (!sel) return;
-  if (!PG_OWNER) { splitRender(); return; }
+  if (!PG_EDIT) { splitRender(); return; }
   const o = tstore(OWN_KEY); o[sel.dataset.id] = sel.value; tsave(OWN_KEY, o); splitRender(); toast('המשימה עברה ל' + sel.value);
 });
 document.addEventListener('click', e => {
@@ -4255,15 +4275,15 @@ function paintOwners(){
     const id = row.dataset.tid, who = ov[id] || SPLIT_DEFAULT[id] || 'פתוח';
     const tx = row.querySelector('.tx'); if (!tx) return;
     let c = tx.querySelector('.own');
-    const want = PG_OWNER ? 'SELECT' : 'SPAN';
+    const want = PG_EDIT ? 'SELECT' : 'SPAN';
     if (c && c.tagName !== want) { c.remove(); c = null; }
     if (!c) {
       c = document.createElement(want.toLowerCase()); c.className = 'own'; c.dataset.id = id;
-      if (PG_OWNER) { c.setAttribute('aria-label', 'אחראי'); c.innerHTML = SPLIT_OPTS.map(m => `<option value="${esc(m)}">${m === 'כולם' ? 'כולם ביחד' : (m === 'פתוח' ? 'עוד לא משובץ' : esc(m))}</option>`).join(''); }
+      if (PG_EDIT) { c.setAttribute('aria-label', 'אחראי'); c.innerHTML = SPLIT_OPTS.map(m => `<option value="${esc(m)}">${m === 'כולם' ? 'כולם ביחד' : (m === 'פתוח' ? 'עוד לא משובץ' : esc(m))}</option>`).join(''); }
       const lab = tx.querySelector('label'); lab ? lab.after(c) : tx.appendChild(c);
     }
     const txt = who === 'כולם' ? 'כולם ביחד' : (who === 'פתוח' ? 'עוד לא משובץ' : who);
-    if (PG_OWNER) { if (c.value !== who && c !== document.activeElement) c.value = who; }
+    if (PG_EDIT) { if (c.value !== who && c !== document.activeElement) c.value = who; }
     else if (c.textContent !== txt) c.textContent = txt;
     c.dataset.who = who;
     if (PC[who]) c.style.setProperty('--pc', PC[who]); else c.style.removeProperty('--pc');
@@ -4507,14 +4527,14 @@ document.addEventListener('click', async e => {
   const t = e.target;
   const add = t.closest && t.closest('.add-btn');
   if (add) {
-    if (!PG_OWNER) return;
+    if (!PG_EDIT) return;
     const box = add.parentElement;
     box.innerHTML = `<div class="add-form"><input class="af-t" type="text" placeholder="שם המשימה" maxlength="140"><input class="af-d" type="text" placeholder="פירוט (לא חובה)" maxlength="300"><div class="af-b"><button type="button" class="af-save">הוספה</button><button type="button" class="af-cancel">ביטול</button></div></div>`;
     box.querySelector('.af-t').focus(); return;
   }
   if (t.closest && t.closest('.af-cancel')) { const box = t.closest('.cat-add'); box.innerHTML = '<button type="button" class="add-btn">+ הוספת משימה</button>'; return; }
   if (t.closest && t.closest('.af-save')) {
-    if (!PG_OWNER) return;
+    if (!PG_EDIT) return;
     const box = t.closest('.cat-add'), ph = phaseKeyOf(box);
     let cat = t.closest('.cat').dataset.cat, meet = null;
     if (cat.startsWith('m:')) { meet = cat.slice(2); cat = 'הכנה לעונה'; }
@@ -4529,7 +4549,7 @@ document.addEventListener('click', async e => {
   }
   const del = t.closest && t.closest('.task-del');
   if (del) {
-    if (!PG_OWNER) return;
+    if (!PG_EDIT) return;
     e.preventDefault();
     const row = del.closest('.task'), cat = row.closest('.cat').dataset.cat, ph = phaseKeyOf(row), name = row.dataset.t;
     if (!(await askConfirm('למחוק את המשימה "' + name + '"?'))) return;
