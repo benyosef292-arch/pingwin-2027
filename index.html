@@ -3184,6 +3184,7 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
       </div>
     </div>
     <p class="wk-hint"><span class="wk-own">לחיצה: עריכה · גרירה: העברת יום · </span>ריקו: ✓ נשלח, ✕ אין לקוחות</p>
+    <div class="wk-daybar" id="wkDayBar" role="group" aria-label="יום"></div>
     <div class="wk-board"><div class="wk-grid" id="wkGrid"></div></div>
     <div class="wk-proc" aria-label="נהלים">
       <h3>נהלים</h3>
@@ -5956,7 +5957,9 @@ function card(s,x){
 function renderWk(){
   const g = $("wkGrid"); if (!g) return;
   const s = S(), today = new Date().getDay();
-  let h = '<div class="wk-colh wk-corner"></div>' + DAYS.map((n,d) => `<div class="wk-colh ${d === today ? "today" : ""}">${n}</div>`).join("");
+  let h = '<div class="wk-colh wk-corner"></div>' + DAYS.map((n,d) => `<div class="wk-colh ${d === today ? "today" : ""}" data-day="${d}">${n}</div>`).join("");
+  if (g.dataset.show == null) g.dataset.show = String(today);
+  paintDayBar(today, +g.dataset.show);
   LANES.forEach(L => {
     const all = s.tasks.filter(x => (x.lane || "tech") === L.id && x.k !== "recap"), dn = all.filter(x => s.checks[x.id]).length;
     h += `<div class="wk-lane">${L.n}<small>${all.length ? dn + "/" + all.length : ""}</small></div>`;
@@ -5966,6 +5969,14 @@ function renderWk(){
   g.innerHTML = h;
 }
 window.renderWk = renderWk;
+/* phone: one day at a time */
+const SH = ["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","ש׳"];
+function paintDayBar(today, show){
+  const bar = $("wkDayBar"); if (!bar) return;
+  bar.innerHTML = SH.map((n,d) => `<button type="button" data-d="${d}" aria-pressed="${d === show}" class="${d === today ? "today" : ""}" aria-label="${DAYS[d]}">${n}</button>`).join("");
+}
+$("wkDayBar").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return;
+  $("wkGrid").dataset.show = b.dataset.d; renderWk(); });
 
 const grid = $("wkGrid");
 grid.addEventListener("change", e => { const t = e.target, s = S();
@@ -6031,6 +6042,44 @@ $("wkReset").onclick = async () => { if (!(await askConfirm("לאפס את כל 
 document.querySelectorAll('[data-view="wk"]').forEach(b => b.addEventListener("click", renderWk));
 (window.claude && claude.use ? claude.use("user") : Promise.resolve(null)).then(() => setTimeout(renderWk, 50)).catch(() => {});
 renderWk();
+})();
+</script>
+<style id="uxpro">
+/* 2.11.26 UI UX Pro Max pass: less helper text, quiet "everyone" chip, one day per screen on phones, bigger tap targets */
+.rhint,.finfo,.wk-hint,#view-sup .vhead-main p,#view-qs .vhead-main p{display:none!important}
+span.own[data-who="כולם"]{display:none}
+select.own[data-who="כולם"]{background:none!important;border-color:transparent!important;color:var(--muted)!important;font-weight:500}
+.wk-daybar{display:none}
+@media (max-width:700px){
+  .wk-daybar{display:flex;gap:6px;margin:0 0 10px}
+  .wk-daybar button{flex:1;min-height:44px;font:inherit;font-weight:600;border:1px solid var(--hair);border-radius:6px;background:var(--panel);color:var(--slate);cursor:pointer;padding:0}
+  .wk-daybar button.today{box-shadow:inset 0 -3px 0 var(--marker)}
+  .wk-daybar button[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
+  .wk-daybar button:focus-visible{outline:2px solid var(--run-blue);outline-offset:2px}
+  .wk-board{overflow-x:visible}
+  .wk-grid{min-width:0;grid-template-columns:88px minmax(0,1fr)}
+  .wk-grid[data-show="0"] [data-day]:not([data-day="0"]){display:none}.wk-grid[data-show="1"] [data-day]:not([data-day="1"]){display:none}.wk-grid[data-show="2"] [data-day]:not([data-day="2"]){display:none}.wk-grid[data-show="3"] [data-day]:not([data-day="3"]){display:none}.wk-grid[data-show="4"] [data-day]:not([data-day="4"]){display:none}.wk-grid[data-show="5"] [data-day]:not([data-day="5"]){display:none}.wk-grid[data-show="6"] [data-day]:not([data-day="6"]){display:none}
+  .wk-rh,.wk-rr{grid-template-columns:40px 40px minmax(0,1fr)}
+  .wk-rr{min-height:44px}
+}
+@media (pointer:coarse){
+  .task .box{width:24px;height:24px}
+  .wk-dn,.wk-cf,.qs-done{width:24px;height:24px}
+  .wk-sb{width:30px;height:30px}
+  .wk-row>.wk-x{padding:0}
+  .wk-x{position:relative}
+}
+</style>
+<script id="uxprojs">
+/* deep link: #tab in the address opens that tab, and switching tabs updates it */
+(function(){
+  const has = v => v && document.querySelector('.tab[data-view="' + v + '"]');
+  const _go = go;
+  go = function(view){ _go.apply(this, arguments);
+    if (has(view) && location.hash !== '#' + view) try { history.replaceState(null, '', location.pathname + location.search + '#' + view); } catch(e){} };
+  const open = () => { const v = decodeURIComponent(location.hash.slice(1)); if (has(v)) _go(v); };
+  window.addEventListener('hashchange', open);
+  open();
 })();
 </script>
 </body></html>
