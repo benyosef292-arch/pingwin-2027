@@ -5167,12 +5167,12 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const grid = document.getElementById('calGrid'); if (!grid) return;
   const TYPES = {
     team:     { n: 'ישיבות צוות',  c: '#6B4FBB' },
-    supplier: { n: 'פגישות ספקים', c: '#C27400' },
+    supplier: { n: 'פגישות ספקים', c: '#A35F00' },
     flight:   { n: 'טיסות',        c: '#0B5C8C' },
     work:     { n: 'עבודה והכנה',  c: '#3A78C2' },
-    clients:  { n: 'לקוחות',       c: '#D2483C' },
-    season:   { n: 'שבועות העונה', c: '#0E8A80' },
-    vac:      { n: 'ואקאנס',       c: '#8A97A3' },
+    clients:  { n: 'לקוחות',       c: '#C0392B' },
+    season:   { n: 'שבועות העונה', c: '#0B7A71' },
+    vac:      { n: 'ואקאנס',       c: '#66727E' },
     other:    { n: 'אחר',          c: '#5B6B78' }
   };
   /* used until the team's Google Calendar answers; s/e are inclusive dates */
@@ -6082,4 +6082,131 @@ select.own[data-who="כולם"]{background:none!important;border-color:transpare
   open();
 })();
 </script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;500;600;700&display=swap">
+<style id="facelift">
+/* ================= Face lift 2.11.26 · UI UX Pro Max ("Productivity Tool"):
+   Flat Design + Minimalism, original colors kept, Hebrew Modern type (Noto Sans Hebrew), 150ms motion, no shadows ================= */
+:root{
+  /* colors: the site's own palette (Ben 2.11.26: keep the original colors) */
+  --slate:#1C2C37; --snow:#F1F4F6; --panel:#FFFFFF; --hair:#D3DCE2; --line:#D3DCE2; --line2:#C3CED6;
+  --run-blue:#1858C4; --primary-fill:#1858C4; --tint:#E3ECFA; --tint2:#EEF2F5;
+  --muted:#536572; --marker:#EE8418; --marker-ink:#A4520A;
+  --run-red:#C62A30; --run-green:#1F8A55;
+  --fd:"Noto Sans Hebrew","IBM Plex Sans Hebrew","Assistant",-apple-system,"Arial Hebrew",sans-serif;
+  --fb:"Noto Sans Hebrew","IBM Plex Sans Hebrew","Assistant",-apple-system,"Arial Hebrew",sans-serif;
+  --r:8px;
+}
+body:not(.deck-mode){background:var(--snow)!important}
+body:not(.deck-mode)::before{display:none!important}
+
+/* top bar + tabs */
+.topbar{background:var(--slate)!important}
+.tabs{border-bottom:1px solid var(--hair)!important}
+.tab{transition:color .15s,border-color .15s}
+.tab:hover{color:var(--slate)}
+.tab[aria-selected="true"]{border-bottom-color:var(--run-blue)!important}
+.tab .pill{background:var(--tint2)!important;color:var(--slate)!important}
+.tab[aria-selected="true"] .pill{background:var(--run-blue)!important;color:#fff!important}
+
+/* flat panels: border, 8px radius, no shadow */
+.view .vhead,.view .toolbar,.cat,.wk-board,.wk-pc,.wk-c,.sup-card,.qs-col,.ct-g,.pl-card{box-shadow:none!important}
+.view .vhead,.view .toolbar,.cat,.wk-board,.wk-pc{border-radius:var(--r)!important;border-color:var(--hair)!important}
+.view .vhead{padding-block:20px!important}
+.view .vhead h2{font-weight:700!important;letter-spacing:0!important}
+.view .vhead .bar i{background:var(--primary-fill)!important}
+.view .vhead .ticks{display:none!important}
+.view .vhead:has(.ticks) .bar{display:block!important}
+.cat-head{background:var(--panel)!important}
+.cat .dot{background:var(--run-blue)!important}
+.cat-dl{background:var(--snow)!important}
+.cat-count{background:var(--tint2)!important;color:var(--slate)!important;border-color:transparent!important}
+
+/* task rows */
+.task{transition:background-color .15s}
+.task:hover{background:var(--snow)!important}
+.box{border-color:#94A3B8!important;transition:background-color .15s,border-color .15s}
+.task input:checked + .box{background:var(--run-green)!important;border-color:var(--run-green)!important}
+.switch input:checked + .track{background:var(--run-blue)!important}
+.search input{border-color:var(--hair)!important;border-radius:var(--r)!important}
+.search input:focus{border-color:var(--run-blue)!important;outline:2px solid var(--tint);outline-offset:0}
+.add-btn{color:var(--run-blue)!important}
+
+/* buttons and fields */
+.wk-btn.wk-pri,.btn-pri,button.pri{background:var(--run-blue)!important;border-color:var(--run-blue)!important;color:#fff!important}
+.wk-btn.wk-q{color:var(--run-blue)!important}
+:focus-visible{outline-color:var(--run-blue)!important}
+input,select,textarea{accent-color:var(--run-green)}
+.view select,.view input[type="text"],.view input:not([type]),.view textarea{border-color:var(--hair);border-radius:6px}
+
+/* weekly board */
+#view-wk{--wk-recap:#E7EEFB;--wk-fun:#FCEFE2}
+.wk-colh.today{box-shadow:inset 0 -3px 0 var(--marker)!important}
+.wk-c.isdone{border-color:var(--run-green)!important}
+.wk-sb.s1{background:var(--run-green)!important;border-color:var(--run-green)!important}
+
+/* search dialog keeps its one shadow */
+.qf-it[aria-selected="true"]{background:var(--tint2)!important}
+.qf-it .k{background:var(--run-blue)!important}
+
+/* older token set used by summaries, plan, roles */
+:root{--navy:#1C2C37;--navy2:#24394A;--blue:#1858C4;--ink:#1C2C37;--sh:none}
+.mk{--mk:var(--run-blue)!important}
+.wf-word{background:var(--run-blue)!important;border-color:var(--run-blue)!important}
+.wf-no{display:none!important}
+.wf-t th{background:var(--snow)!important}
+.wf-chip,.wf-sec,.tm-card{box-shadow:none!important}
+.wf-in,.wf-hotel,.wf-rl{background:#fff!important}
+.open-list li,.se,.dlrow,.add-form,.grip{background:var(--snow)!important}
+.grip{color:#64748B!important}
+.sp-note,.rw,.sp-eff.e1{background:var(--tint2)!important;border-color:var(--hair)!important;color:var(--slate)!important}
+.tm-card{border-top-color:var(--primary-fill)!important;border-radius:var(--r)!important;border-color:var(--hair)!important}
+.cfm-row button.go{background:var(--run-blue)!important;border-color:var(--run-blue)!important}
+.cfm-row button{color:var(--slate)!important;border-color:var(--hair)!important}
+@media (prefers-reduced-motion:reduce){.tab,.task,.box{transition:none!important}}
+</style>
+<style id="polish">
+/* ================= Polish 2.11.26 · UI UX Pro Max review (Minimalism & Swiss, dense dashboard).
+   Same colors. Fixes from the audit: clipped tabs, text under 12px, weak checkbox borders,
+   small targets, tall empty footer ================= */
+
+/* tabs: the first tab ("סקירה") was cut off; all 11 now fit from 1320px and scroll safely below that */
+.tabs{justify-content:flex-start!important;padding-inline:12px!important;scroll-padding-inline:12px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs>.tab:first-child{margin-inline-start:auto}
+.tabs>.tab:last-child{margin-inline-end:auto}
+.tab{padding-inline:11px!important;min-height:44px}
+@media (max-width:1320px){
+  .tabs{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 32px);mask-image:linear-gradient(to left,transparent 0,#000 32px)}
+}
+
+/* text floor 12px (chips, counters, labels) */
+.tab .pill,.ce,.own,.ttag,.cat-count,.cat-dl i,.cat-dl span,.pl-chip em,.pl-who span,.wk-rh span,
+.sup-f label span,.sup-id em,.wf-chip span,.tq,#view-team small,.qf-btn kbd,.dlpick span,.qs-head i,
+#view-overview .ci em,#view-overview .hi em,#view-overview .ssn-today span,#view-overview li .n{font-size:12px!important}
+.own{line-height:1.6!important}
+
+/* checkboxes: border 3.5:1 on white (was 2.6:1) */
+.box,.wk-sb{border-color:#7A8B98!important}
+.box{width:20px;height:20px}
+.wk-dn,.wk-cf{width:20px;height:20px}
+/* open questions: same box as task rows (was a faint 1.6:1 border, no tick) */
+.qs-chk span{width:20px!important;height:20px!important;border:1.5px solid #7A8B98!important;border-radius:5px!important;display:grid!important;place-items:center;color:#fff;font-size:13px;font-weight:700;line-height:1}
+.qs-chk input:checked + span{background:var(--run-green)!important;border-color:var(--run-green)!important;box-shadow:none!important}
+.qs-chk input:checked + span::after{content:"✓"}
+.qs-chk input:focus-visible + span{outline:2px solid var(--run-blue);outline-offset:2px}
+@media (pointer:coarse){.qs-chk span{width:24px!important;height:24px!important}}
+.task{cursor:pointer}
+
+/* fields: one height */
+.search input{min-height:40px}
+.dl-sel{min-height:30px;border-radius:6px}
+
+/* footer: one quiet line, no empty band */
+footer.src{min-height:0!important;margin-top:48px!important;padding-top:20px!important}
+footer.src .src-in{padding-bottom:20px!important}
+footer.src b{font-size:16px!important}
+
+/* focus: same ring everywhere */
+:focus-visible{outline:2px solid var(--run-blue)!important;outline-offset:2px}
+</style>
 </body></html>
