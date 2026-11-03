@@ -65,5 +65,5 @@ mode, frosted cards, falling snow, gold accents.
 - Footer is one line, no empty dark band. One focus ring: 2px run-blue.
 
 ## Warehouse tab 3.11.26 (`style#inv`, doc `inv`)
-- One row per item: name, quantity (− / + when it is a plain number), note, owner site ("שלנו" or another site).
+- One row per item: name, quantity (− / + when it is a plain number), note. Owner site is fixed in the seed (no picker, Ben 3.11).
 - Items of other sites: orange edge/select, and a handover card per site at the top with a tick on the right.
