@@ -5428,7 +5428,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     <label>מה<input name="t" required maxlength="120" placeholder="למשל: פגישה עם חנות הציוד" autocomplete="off"></label>
     <fieldset class="cadd-f"><legend>תאריך</legend>${dsel('s', false)}</fieldset>
     <fieldset class="cadd-f"><legend>עד תאריך <i>(לא חובה)</i></legend>${dsel('e', true)}</fieldset>
-    <div class="cadd-row"><fieldset class="cadd-f"><legend>שעה <i>(לא חובה)</i></legend><div class="cadd-dt" dir="ltr"><select name="th" aria-label="שעה"><option value="">--</option>${opts(24, 0, 1)}</select><span>:</span><select name="tmi" aria-label="דקות"><option value="">--</option>${opts(12, 0, 5)}</select></div></fieldset><label>לפי שעון<select name="zone"><option value="Asia/Jerusalem">ישראל</option><option value="Europe/Paris">צרפת</option></select></label></div>
+    <div class="cadd-row"><fieldset class="cadd-f"><legend>שעה <i>(לא חובה)</i></legend><div class="cadd-dt"><select name="th" aria-label="שעה"><option value="">שעה</option>${opts(24, 0, 1)}</select><select name="tmi" aria-label="דקות"><option value="">דקות</option>${opts(12, 0, 5)}</select></div></fieldset><label>לפי שעון<select name="zone"><option value="Asia/Jerusalem">ישראל</option><option value="Europe/Paris">צרפת</option></select></label></div>
     <label>סוג<select name="type">${Object.keys(TYPES).filter(k => k !== 'season' && k !== 'vac').map(k => `<option value="${k}">${TYPES[k].n}</option>`).join('')}</select></label>
     <label>הערה <i>(לא חובה)</i><input name="d" maxlength="300" autocomplete="off"></label>
     <p class="cadd-msg" role="status"></p>
