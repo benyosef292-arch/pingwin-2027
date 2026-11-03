@@ -1569,7 +1569,7 @@ body:not(.deck-mode){background:#F4F7FA}
 .cal{padding:20px 20px 16px}
 .cal-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
 .cal-nav{display:flex;align-items:center;gap:10px}
-.cal-nav h3{font-size:22px;font-weight:900;color:#0B2A3C;min-width:150px;text-align:center}
+.cal-nav h3{font-size:22px;font-weight:900;color:#0B2A3C;width:190px;flex:none;white-space:nowrap;text-align:center;font-variant-numeric:tabular-nums}
 .cal-b{width:36px;height:36px;border-radius:50%;border:1px solid #DCE6EE;background:#fff;font-size:20px;line-height:1;color:#0B2A3C;cursor:pointer}
 .cal-b:hover,.cal-today:hover{background:#F0F6FA}
 .cal-today{border:1px solid #DCE6EE;background:#fff;border-radius:999px;padding:7px 16px;font:inherit;font-weight:800;font-size:13px;color:#0B5C8C;cursor:pointer}
@@ -1723,7 +1723,7 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
   .cal-c{min-height:52px;padding:4px 3px;border-radius:9px}
   .cal-c .chips{display:none}
   .dots{display:flex}
-  .cal-nav h3{font-size:18px;min-width:110px}
+  .cal-nav h3{font-size:18px;width:150px}
   .roles{grid-template-columns:1fr}
   .view .vhead{min-height:200px;padding:22px 20px;border-radius:18px}
   footer.src .src-in{padding:0 16px 26px}
@@ -2199,7 +2199,15 @@ html,body{overflow-x:clip}
 @media (max-width:760px){#planGrid .pl-grid{grid-template-columns:84px repeat(var(--n),180px)!important}#planGrid .pl-who b{font-size:13px}}
 .cal-add{border:0;background:var(--run-blue,#1858C4);color:#fff;border-radius:999px;padding:7px 15px;font:600 13px var(--fd);cursor:pointer;white-space:nowrap}
 .cal-add:hover{background:#134AA6}
-.ci-del{display:block;margin-top:6px;border:0;background:transparent;padding:0;font:600 12px var(--fd);color:var(--run-red,#C62A30);cursor:pointer;text-decoration:underline}
+.ci-acts{display:flex;gap:14px;margin-top:6px}
+.ci-del,.ci-ed{border:0;background:transparent;padding:0;font:600 12px var(--fd);color:var(--run-red,#C62A30);cursor:pointer;text-decoration:underline}
+.ci-ed{color:var(--run-blue,#1858C4)}
+.cadd-f{border:0;margin:0;padding:0;min-width:0;flex:1;display:flex;flex-direction:column;gap:5px}
+.cadd-f legend{padding:0;margin-bottom:5px;font:600 13px var(--fd);color:var(--slate,#1C2C37)}
+.cadd-f legend i{font-style:normal;font-weight:400;color:var(--muted,#5F7280)}
+.cadd-dt{display:flex;gap:6px;align-items:center}
+.cadd-dt span{font-weight:700}
+.cadd-box .cadd-dt select{flex:1;width:auto}
 .cadd{position:fixed;inset:0;z-index:210;background:rgba(28,44,55,.42);display:flex;justify-content:center;align-items:flex-start;padding:10vh 16px 16px;overflow:auto}
 .cadd[hidden]{display:none}
 .cadd-box{width:min(520px,100%);background:#fff;border-radius:12px;padding:22px 22px 18px;box-shadow:0 30px 70px -20px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:12px}
@@ -5329,9 +5337,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const wkStart = d => { const x = new Date(d); x.setDate(x.getDate() - x.getDay()); return x; };
   function renderWeek(){
     const st = wkStart(sel), en = new Date(st); en.setDate(st.getDate() + 6);
-    document.getElementById('calTitle').textContent = st.getMonth() === en.getMonth()
-      ? `${st.getDate()}–${en.getDate()} ב${MONTHS[st.getMonth()]} ${st.getFullYear()}`
-      : `${st.getDate()} ב${MONTHS[st.getMonth()]} – ${en.getDate()} ב${MONTHS[en.getMonth()]}`;
+    document.getElementById('calTitle').innerHTML = `<bdi dir="ltr">${st.getDate()}.${st.getMonth() + 1} – ${en.getDate()}.${en.getMonth() + 1}</bdi>`;
     let h = '';
     for (let i = 0; i < 7; i++){
       const d = new Date(st); d.setDate(st.getDate() + i);
@@ -5382,7 +5388,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     if (st === 'now') tag = `<em class="now">${x.range ? 'עכשיו' : 'היום'}</em>`;
     else if (st === 'soon'){ const n = Math.round((x.S - today) / 864e5); tag = `<em>${n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'}</em>`; }
     else tag = '<em class="done">✓ עבר</em>';
-    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small><bdi dir="ltr">${when}</bdi>${x.tm ? ' · ' + esc(x.tm) : ''}${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.site && x.id ? `<button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה מהלו״ז</button>` : ''}</div>${tag}</div>`;
+    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small><bdi dir="ltr">${when}</bdi>${x.tm ? ' · ' + esc(x.tm) : ''}${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_OWNER) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button>${x.site ? `<button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button>` : ''}</span>` : ''}</div>${tag}</div>`;
   }
   function renderDay(){
     const ev = on(sel);
@@ -5412,12 +5418,17 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   render();
 
   /* add to the schedule: writes a real event into the team's Google Calendar through the sheet script */
+  const pd2 = n => String(n).padStart(2, '0');
+  const opts = (n, from, step) => Array.from({ length: n }, (_, i) => `<option value="${pd2(from + i * step)}">${pd2(from + i * step)}</option>`).join('');
+  const YRS = [today.getFullYear(), today.getFullYear() + 1];
+  const dsel = (n, opt) => `<div class="cadd-dt"><select name="${n}d" aria-label="יום">${opt ? '<option value="">יום</option>' : ''}${opts(31, 1, 1)}</select><select name="${n}m" aria-label="חודש">${opt ? '<option value="">חודש</option>' : ''}${MONTHS.map((m, i) => `<option value="${pd2(i + 1)}">${m}</option>`).join('')}</select><select name="${n}y" aria-label="שנה">${opt ? '<option value="">שנה</option>' : ''}${YRS.map(y => `<option>${y}</option>`).join('')}</select></div>`;
   const dlg = document.createElement('div'); dlg.className = 'cadd'; dlg.hidden = true;
   dlg.innerHTML = `<form class="cadd-box" role="dialog" aria-modal="true" aria-labelledby="caddH" novalidate>
     <h3 id="caddH">הוספה ללו״ז</h3>
     <label>מה<input name="t" required maxlength="120" placeholder="למשל: פגישה עם חנות הציוד" autocomplete="off"></label>
-    <div class="cadd-row"><label>תאריך<input name="s" type="date" required></label><label>עד תאריך <i>(לא חובה)</i><input name="e" type="date"></label></div>
-    <div class="cadd-row"><label>שעה <i>(לא חובה)</i><input name="tm" type="time"></label><label>לפי שעון<select name="zone"><option value="Asia/Jerusalem">ישראל</option><option value="Europe/Paris">צרפת</option></select></label></div>
+    <fieldset class="cadd-f"><legend>תאריך</legend>${dsel('s', false)}</fieldset>
+    <fieldset class="cadd-f"><legend>עד תאריך <i>(לא חובה)</i></legend>${dsel('e', true)}</fieldset>
+    <div class="cadd-row"><fieldset class="cadd-f"><legend>שעה <i>(לא חובה)</i></legend><div class="cadd-dt" dir="ltr"><select name="th" aria-label="שעה"><option value="">--</option>${opts(24, 0, 1)}</select><span>:</span><select name="tmi" aria-label="דקות"><option value="">--</option>${opts(12, 0, 5)}</select></div></fieldset><label>לפי שעון<select name="zone"><option value="Asia/Jerusalem">ישראל</option><option value="Europe/Paris">צרפת</option></select></label></div>
     <label>סוג<select name="type">${Object.keys(TYPES).filter(k => k !== 'season' && k !== 'vac').map(k => `<option value="${k}">${TYPES[k].n}</option>`).join('')}</select></label>
     <label>הערה <i>(לא חובה)</i><input name="d" maxlength="300" autocomplete="off"></label>
     <p class="cadd-msg" role="status"></p>
@@ -5426,34 +5437,54 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   document.body.appendChild(dlg);
   const fm = dlg.querySelector('form'), msg = dlg.querySelector('.cadd-msg');
   const creds = () => { let tk = '', key = ''; try { tk = localStorage.getItem('penguin-team-key') || ''; key = localStorage.getItem('penguin-owner-key') || ''; } catch(e){} return { tk, key }; };
-  let back = null;
-  function openAdd(){
+  let back = null, editing = null;
+  const setD = (n, v) => { const [y, m, d] = v ? v.split('-') : ['', '', '']; if (y && !YRS.includes(+y)) fm[n + 'y'].insertAdjacentHTML('beforeend', `<option>${y}</option>`); fm[n + 'y'].value = y; fm[n + 'm'].value = m; fm[n + 'd'].value = d; };
+  const getD = n => { const y = fm[n + 'y'].value, m = fm[n + 'm'].value, d = fm[n + 'd'].value; if (!y && !m && !d) return ''; if (!y || !m || !d) return 'bad'; const x = new Date(+y, +m - 1, +d); return x.getMonth() === +m - 1 ? `${y}-${m}-${d}` : 'bad'; };
+  function openAdd(x){
     back = document.activeElement; fm.reset(); msg.textContent = ''; msg.className = 'cadd-msg';
-    fm.s.value = key(sel); dlg.hidden = false; fm.t.focus();
+    editing = x && x.id ? x : null;
+    fm.type.querySelectorAll('[data-tmp]').forEach(o => o.remove());
+    dlg.querySelector('#caddH').textContent = editing ? 'עריכת אירוע' : 'הוספה ללו״ז';
+    fm.querySelector('.pri').textContent = editing ? 'שמירה' : 'הוספה ללו״ז';
+    if (editing){
+      fm.t.value = x.t; setD('s', x.s); setD('e', x.range ? x.e : ''); if (!fm.type.querySelector(`[value="${x.type}"]`)) fm.type.insertAdjacentHTML('beforeend', `<option value="${x.type}" data-tmp>${TYPES[x.type].n}</option>`); fm.type.value = x.type; fm.d.value = x.d || '';
+      const hm = (x.tm || '').match(/(\d{2}):(\d{2})/);
+      if (hm){ fm.th.value = hm[1]; fm.tmi.value = hm[2]; if (!fm.tmi.value) fm.tmi.insertAdjacentHTML('beforeend', `<option>${hm[2]}</option>`), fm.tmi.value = hm[2]; fm.zone.value = /צרפת/.test(x.tm) ? 'Europe/Paris' : 'Asia/Jerusalem'; }
+    } else setD('s', key(sel));
+    dlg.hidden = false; fm.t.focus();
   }
   function closeAdd(){ dlg.hidden = true; if (back) back.focus(); }
   const ERR = { team_only: 'אפשר להוסיף רק מהקישור של הצוות. פתחו את האתר מהקישור ששלחתי בוואטצאפ.', unknown_doc: 'עוד לא עדכנו את הסקריפט של הגיליון. בן צריך להדביק את הקוד החדש ולפרסם גרסה.', bad_event: 'חסרים שם או תאריך.', not_site_event: 'אפשר למחוק רק אירועים שנוספו מהאתר.' };
   fm.addEventListener('submit', e => {
     e.preventDefault();
-    const ev = { t: fm.t.value.trim(), s: fm.s.value, e: fm.e.value, tm: fm.tm.value, zone: fm.zone.value, type: fm.type.value, d: fm.d.value.trim() };
-    if (!ev.t){ msg.textContent = 'כתבו מה האירוע.'; msg.className = 'cadd-msg err'; fm.t.focus(); return; }
-    if (!ev.s){ msg.textContent = 'בחרו תאריך.'; msg.className = 'cadd-msg err'; fm.s.focus(); return; }
-    if (ev.e && ev.e < ev.s){ msg.textContent = 'תאריך הסיום לפני תאריך ההתחלה.'; msg.className = 'cadd-msg err'; fm.e.focus(); return; }
-    const btn = fm.querySelector('.pri'); btn.disabled = true; msg.textContent = 'מוסיף…'; msg.className = 'cadd-msg';
-    fetch(window.PENGUIN_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ a: 'addEvent', ev }, creds())) })
+    const bad = (t, el) => { msg.textContent = t; msg.className = 'cadd-msg err'; el.focus(); };
+    const s0 = getD('s'), e0 = getD('e'), th = fm.th.value, tmi = fm.tmi.value;
+    if (!fm.t.value.trim()) return bad('כתבו מה האירוע.', fm.t);
+    if (!s0 || s0 === 'bad') return bad('תאריך לא תקין.', fm.sd);
+    if (e0 === 'bad') return bad('תאריך הסיום לא תקין.', fm.ed);
+    if (e0 && e0 < s0) return bad('תאריך הסיום לפני תאריך ההתחלה.', fm.ed);
+    if (!th !== !tmi) return bad('בחרו שעה ודקות.', th ? fm.tmi : fm.th);
+    const ev = { t: fm.t.value.trim(), s: s0, e: e0 === s0 ? '' : e0, tm: th ? th + ':' + tmi : '', zone: fm.zone.value, type: fm.type.value, d: fm.d.value.trim() };
+    if (ev.tm && ev.e) return bad('שעה אפשר רק לאירוע של יום אחד.', fm.th);
+    const btn = fm.querySelector('.pri'); btn.disabled = true; msg.textContent = editing ? 'שומר…' : 'מוסיף…'; msg.className = 'cadd-msg';
+    const was = editing;
+    fetch(window.PENGUIN_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign(was ? { a: 'editEvent', id: was.id, ev } : { a: 'addEvent', ev }, creds())) })
       .then(r => r.json()).then(j => {
         btn.disabled = false;
-        if (!j || !j.ok){ msg.textContent = ERR[j && j.error] || 'לא נוסף. בדקו את החיבור ונסו שוב.'; msg.className = 'cadd-msg err'; return; }
-        const tmTxt = ev.tm && !ev.e ? ev.tm + (ev.zone === 'Europe/Paris' ? ' צרפת' : '') : '';
-        EV.push(norm({ id: j.id, t: ev.t, s: ev.s, e: ev.tm ? ev.s : (ev.e || ev.s), type: ev.type, d: ev.d, tm: tmTxt, site: true }));
+        if (!j || !j.ok){ msg.textContent = ERR[j && j.error] || (was ? 'לא נשמר. בדקו את החיבור ונסו שוב.' : 'לא נוסף. בדקו את החיבור ונסו שוב.'); msg.className = 'cadd-msg err'; return; }
+        const tmTxt = ev.tm ? ev.tm + (ev.zone === 'Europe/Paris' ? ' צרפת' : '') : '';
+        if (was) EV = EV.filter(v => v !== was);
+        EV.push(norm({ id: j.id || (was && was.id), t: ev.t, s: ev.s, e: ev.tm ? ev.s : (ev.e || ev.s), type: ev.type, d: ev.d, tm: tmTxt, site: was ? was.site : true }));
         sel = parse(ev.s); view = new Date(sel.getFullYear(), sel.getMonth(), 1);
         closeAdd(); render(); setTimeout(load, 1500);
       }).catch(() => { btn.disabled = false; msg.textContent = 'לא נוסף. בדקו את החיבור ונסו שוב.'; msg.className = 'cadd-msg err'; });
   });
   dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-x]')) closeAdd(); });
   dlg.addEventListener('keydown', e => { if (e.key === 'Escape'){ e.stopPropagation(); closeAdd(); } });
-  document.getElementById('calAdd').addEventListener('click', openAdd);
+  document.getElementById('calAdd').addEventListener('click', () => openAdd());
   document.getElementById('calDay').addEventListener('click', e => {
+    const ed = e.target.closest('[data-edit]');
+    if (ed){ const x = EV.find(v => v.id === ed.dataset.edit); if (x) openAdd(x); return; }
     const b = e.target.closest('[data-del]'); if (!b) return;
     const x = EV.find(v => v.id === b.dataset.del); if (!x) return;
     const go2 = () => fetch(window.PENGUIN_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ a: 'delEvent', id: x.id }, creds())) })
