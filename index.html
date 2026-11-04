@@ -4610,6 +4610,10 @@ const INV_SEED = (() => {
   ];
   const o = {}; let i = 0;
   L.forEach(([cat, rows]) => rows.forEach(([n, q, note, site]) => { i++; o['i' + String(i).padStart(2, '0')] = { cat, n, q: q === undefined ? '' : String(q), note: note || '', site: site || '', at: i }; }));
+  /* required stock for Val Thorens + Les Menuires, from the company sheet "ציוד לפי אתר – עונת סקי 2027" (4.11.26) */
+  const NEED = { "מעטפות": 616, "פתקי / כרטיסיות פורים שמח": 170, "פתקי / כרטיסיות יום הולדת שמח": 84, "פתקי החלמה מהירה": 173, "פתקי חנוכה": 123, "דגל פינגווין": 6, "דגלי טיפה": 1, "פולדרים": 4, "חנוכייה + נרות חנוכה": 3 };
+  Object.values(o).forEach(x => { if (!x.site && NEED[x.n]) x.need = NEED[x.n]; });
+  o.n01 = { cat: "מיתוג ודגלים", n: "דגל נציג", q: "0", note: "", site: "", need: 4, at: 12.5 };
   return o;
 })();
 let invFilter = 'all', invPending = false, invEditWas = null;
@@ -4621,6 +4625,8 @@ function invAll(){
 }
 function invSave(id, patch){ const st = tstore(INV_KEY); st[id] = Object.assign({}, st[id], patch); tsave(INV_KEY, st); }
 const invNum = q => /^\d+$/.test(String(q || '').trim());
+const invHave = q => { const m = String(q || '').replace(/,/g, '').match(/\d+/); return m ? +m[0] : NaN; };
+const invShort = x => x.need && !x.site ? (isNaN(invHave(x.q)) ? null : Math.max(0, x.need - invHave(x.q))) : 0;
 const invSites = all => [...new Set(INV_SITES.concat(Object.values(all).map(x => x.site).filter(Boolean)))];
 function invDate(t){ if (!t) return ''; const d = new Date(t); return d.getDate() + '.' + (d.getMonth() + 1); }
 function renderInv(){
@@ -4639,13 +4645,16 @@ function renderInv(){
   document.getElementById('invBar').style.width = (others.length ? (others.length - left) / others.length * 100 : 0) + '%';
   const f = document.getElementById('invF');
   f.innerHTML = [['all', 'הכל'], ['ours', 'שלנו'], ['others', 'אתרים אחרים']].map(([v, l]) => `<button type="button" data-f="${v}" aria-pressed="${invFilter === v}">${l}</button>`).join('');
+  /* to complete: required stock (company sheet) minus what is in the warehouse */
+  const sh = ids.filter(id => all[id].need && !all[id].site && invShort(all[id]) !== 0 && hit(all[id]));
+  const shHtml = sh.length && invFilter !== 'others' ? `<section class="inv-need"><h3>להשלים</h3><div class="inv-nl">${sh.map(id => { const x = all[id], m = invShort(x); return `<div class="inv-ni"><b>${esc(x.n)}</b><span>${m === null ? 'צריך ' + x.need + ' · לספור' : 'חסר <em>' + m + '</em> · יש ' + invHave(x.q) + ' מתוך ' + x.need}</span></div>`; }).join('')}</div></section>` : '';
   /* handover: items of other sites, one card per site */
   const hs = invFilter === 'ours' ? [] : sites.map(s => [s, others.filter(id => all[id].site === s && hit(all[id]))]).filter(([, l]) => l.length);
-  hand.innerHTML = hs.length ? `<section class="inv-hand"><h3>להעביר לאתרים אחרים</h3><div class="inv-hg">${hs.map(([s, l]) => `<div class="inv-hc"><div class="inv-hh"><b>${esc(s)}</b><i>${l.filter(id => all[id].ho).length}/${l.length}</i></div>${l.map(id => { const x = all[id]; return `
+  hand.innerHTML = shHtml + (hs.length ? `<section class="inv-hand"><h3>להעביר לאתרים אחרים</h3><div class="inv-hg">${hs.map(([s, l]) => `<div class="inv-hc"><div class="inv-hh"><b>${esc(s)}</b><i>${l.filter(id => all[id].ho).length}/${l.length}</i></div>${l.map(id => { const x = all[id]; return `
     <div class="inv-hr${x.ho ? ' done' : ''}" data-iid="${esc(id)}">
       <label class="qs-chk"><input type="checkbox" class="inv-ho" aria-label="הועבר"${x.ho ? ' checked' : ''}${dis}><span></span></label>
       <div class="inv-hm"><div class="inv-hn">${esc(x.n)} <em>${esc(x.q)}</em>${x.ho && x.hoAt ? `<small>הועבר ${invDate(x.hoAt)}</small>` : ''}</div><input type="text" class="inv-hnote" aria-label="למי ומתי" placeholder="למי / מתי…" value="${esc(x.hoNote || '')}"${dis}></div>
-    </div>`; }).join('')}</div>`).join('')}</div></section>` : '';
+    </div>`; }).join('')}</div>`).join('')}</div></section>` : '');
   /* stock by category */
   const cats = [...INV_CATS.map(c => c[0]), ...new Set(ids.map(id => all[id].cat).filter(c => !INV_CATS.some(k => k[0] === c)))];
   host.innerHTML = cats.map(cat => {
@@ -4654,7 +4663,7 @@ function renderInv(){
     const cn = (INV_CATS.find(c => c[0] === cat) || [])[1];
     return `<section class="inv-cat" data-cat="${esc(cat)}"><div class="inv-ch"><b>${esc(cat)}</b>${cn ? `<span>${esc(cn)}</span>` : ''}<i>${l.length}</i></div>
       ${l.map(id => { const x = all[id]; return `<div class="inv-r${x.site ? ' other' : ''}${x.ho ? ' gone' : ''}" data-iid="${esc(id)}">
-        <div class="inv-n">${esc(x.n)}${x.site ? `<span class="inv-site">${esc(x.site)}${x.ho ? ' · הועבר' : ''}</span>` : ''}</div>
+        <div class="inv-n">${esc(x.n)}${x.need && !x.site ? (s => s ? `<span class="inv-need-c">חסר ${s}</span>` : s === null ? `<span class="inv-need-c ok">צריך ${x.need}</span>` : `<span class="inv-need-c ok">צריך ${x.need} ✓</span>`)(invShort(x)) : ''}${x.site ? `<span class="inv-site">${esc(x.site)}${x.ho ? ' · הועבר' : ''}</span>` : ''}</div>
         <div class="inv-qty">${invNum(x.q) && PG_EDIT ? '<button type="button" class="inv-st" data-d="-1" aria-label="פחות">−</button>' : ''}<input type="text" class="inv-q1" aria-label="כמות" value="${esc(x.q)}" placeholder="—"${dis}>${invNum(x.q) && PG_EDIT ? '<button type="button" class="inv-st" data-d="1" aria-label="יותר">+</button>' : ''}</div>
         <input type="text" class="inv-note" aria-label="הערה" placeholder="הערה" value="${esc(x.note || '')}"${dis}>
         ${PG_EDIT ? '<button type="button" class="inv-del" aria-label="מחיקת פריט" title="מחיקה">×</button>' : ''}
@@ -6399,6 +6408,15 @@ body.pg-edit .inv-q1:hover,body.pg-edit .inv-note:hover{border-color:var(--hair)
 .inv-add input{min-width:0;font:inherit;font-size:13.5px;border:1px solid var(--hair);border-radius:6px;padding:6px 10px;background:var(--panel)}
 .inv-an{flex:1}.inv-aq{flex:0 0 80px}
 .inv-ab{background:var(--slate);color:#fff;border:0;border-radius:6px;padding:0 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.inv-need{margin-bottom:18px}
+.inv-need h3{font-size:15px;font-weight:700;color:var(--slate);margin:0 0 8px}
+.inv-nl{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.inv-ni{background:var(--panel);border:1px solid var(--hair);border-inline-start:4px solid var(--run-red);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:2px}
+.inv-ni b{font-size:14px;font-weight:600;color:var(--slate)}
+.inv-ni span{font-size:13px;color:var(--muted)}
+.inv-ni em{font-style:normal;font-weight:700;color:var(--run-red);font-variant-numeric:tabular-nums}
+.inv-need-c{display:inline-block;margin-inline-start:6px;font-size:12px;font-weight:600;color:var(--run-red);background:#FDECEC;border-radius:999px;padding:0 8px}
+.inv-need-c.ok{color:var(--muted);background:#EEF2F5}
 .inv-none{color:var(--muted)}
 @media (max-width:640px){
   .inv-r{grid-template-columns:minmax(0,1fr) 104px 24px;padding:8px 12px}
