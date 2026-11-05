@@ -2567,7 +2567,6 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
   <button class="tab" role="tab" data-view="p3" aria-selected="false" type="button"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13.5" rx="2"/><path d="M9 7V3.5h6V7M9.5 11v6M14.5 11v6"/></svg><span class="tl">ציוד מהארץ</span> <span class="pill" id="tabP3">0/0</span></button>
   <button class="tab" role="tab" data-view="wk" aria-selected="false" type="button"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="m17 2.5 3 3-3 3"/><path d="M4 11V9.5a4 4 0 0 1 4-4h12"/><path d="m7 21.5-3-3 3-3"/><path d="M20 13v1.5a4 4 0 0 1-4 4H4"/></svg><span class="tl">עבודה שוטפת</span></button>
   <button class="tab" role="tab" data-view="qs" aria-selected="false" type="button"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.3a2.6 2.6 0 1 1 3.6 2.4c-.7.3-1.1.9-1.1 1.6v.7"/><path d="M12 17.2h.01"/></svg><span class="tl">שאלות פתוחות</span> <span class="pill" id="tabQs">0</span></button>
-  <button class="tab" role="tab" data-view="sup" aria-selected="false" type="button"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11.5v10H2.5zM14 9.5h4l3.5 3.5v3.5H14"/><circle cx="6.5" cy="17.5" r="2"/><circle cx="17.5" cy="17.5" r="2"/></svg><span class="tl">ספקים</span> <span class="pill" id="tabSup">0</span></button>
   <button class="tab" role="tab" data-view="inv" aria-selected="false" type="button"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5 12 3.5l8.5 4v9L12 20.5l-8.5-4z"/><path d="M3.5 7.5 12 11.5l8.5-4M12 11.5v9"/></svg><span class="tl">מחסן</span> <span class="pill" id="tabInv">0</span></button>
   <button class="tab" role="tab" data-view="sum" aria-selected="false" type="button"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6.5a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V7.5z"/><path d="M14 3v4.5h4.5M9 12.5h6M9 16.5h6"/></svg><span class="tl">סיכומים שבועיים</span></button>
   <button class="tab" role="tab" data-view="contacts" aria-selected="false" type="button"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.5h3.5l2 5-2.5 1.6a11 11 0 0 0 5.9 5.9l1.6-2.5 5 2V19a1.5 1.5 0 0 1-1.5 1.5A16.5 16.5 0 0 1 3.5 5 1.5 1.5 0 0 1 5 3.5z"/></svg><span class="tl">אנשי קשר</span></button>
@@ -3067,57 +3066,7 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
       </div>
       <ol class="ssn-list" id="ssnList"></ol>
     </section>
-    <div class="fx">
-<!-- 3 · split title + gondola + team -->
-  <section class="f-track" id="f-s3">
-    <div class="f-stage">
-      <div class="f-s3-pano" style="background-image:var(--bg7)"></div>
-      <svg id="f-cable" aria-hidden="true"><line id="f-cableLine" stroke="#21394A" stroke-width="2.2"/><line id="f-cableLine2" stroke="#21394A" stroke-width="1.2" opacity=".5"/></svg>
-      <div class="f-split" aria-hidden="true"><span id="f-wR">מוכנים</span><span id="f-wL">לעלות.</span></div>
-      <svg id="f-gondola" viewBox="0 0 240 320" aria-hidden="true">
-        <defs>
-          <linearGradient id="gdBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0A2E44"/><stop offset=".35" stop-color="#145A80"/><stop offset=".6" stop-color="#0E4566"/><stop offset="1" stop-color="#082436"/></linearGradient>
-          <linearGradient id="gdGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3D9AE"/><stop offset=".45" stop-color="#9FCBE2"/><stop offset="1" stop-color="#2E5C77"/></linearGradient>
-          <linearGradient id="gdRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9D3D9"/><stop offset="1" stop-color="#7E8E98"/></linearGradient>
-        </defs>
-        <g class="gd-fill" id="gdFill">
-          <g id="gdGrip"><rect x="98" y="8" width="44" height="18" rx="5" fill="#2B3B46"/><circle cx="120" cy="17" r="4" fill="#8A9AA4"/></g>
-          <path d="M120 28 V62 Q120 74 108 78 L70 90" fill="none" stroke="#3A4C58" stroke-width="7" stroke-linecap="round"/>
-          <path d="M44 98 Q120 74 196 98 L200 112 H40 Z" fill="url(#gdRoof)"/>
-          <rect x="30" y="108" width="180" height="196" rx="26" fill="url(#gdBody)"/>
-          <rect x="44" y="124" width="70" height="104" rx="12" fill="url(#gdGlass)"/>
-          <rect x="126" y="124" width="70" height="104" rx="12" fill="url(#gdGlass)" opacity=".92"/>
-          <path d="M52 132 L80 132 L56 216 L50 216 Z" fill="#fff" opacity=".28"/>
-          <rect x="30" y="242" width="180" height="9" fill="#00AAEB"/>
-          <rect x="30" y="256" width="180" height="3" fill="#E2B676"/>
-          <path d="M120 112 V300" stroke="#06202F" stroke-width="2" opacity=".6"/>
-          <rect x="62" y="300" width="116" height="10" rx="4" fill="#1A2A34"/>
-        </g>
-        <g id="gdLine">
-          <rect class="gd-line" x="104" y="6" width="32" height="22" rx="5"/>
-          <path class="gd-line" d="M120 28 V62 Q120 74 108 78 L70 90"/>
-          <path class="gd-line" d="M44 98 Q120 74 196 98 L200 112 H40 Z"/>
-          <rect class="gd-line" x="30" y="108" width="180" height="196" rx="26"/>
-          <rect class="gd-line" x="44" y="124" width="70" height="104" rx="12"/>
-          <rect class="gd-line" x="126" y="124" width="70" height="104" rx="12"/>
-          <path class="gd-line" d="M30 242 H210 M30 251 H210 M120 112 V300"/>
-        </g>
-      </svg>
-      <div class="f-sheet" id="f-sheet">
-        <span class="f-eyebrow">הצוות של העונה</span>
-        <h2>וולטורנס 2027</h2>
-        <span class="nb">ארבעה נציגים · אתר אחד ואתר לווין</span>
-        <div class="f-rows">
-          <div class="f-row"><b>בן</b><span data-roles="בן" data-tag="מוביל">ראש הצוות · אחראי אוטובוסים צרפת<i>מוביל</i></span></div>
-          <div class="f-row"><b>יותם</b><span data-roles="יותם">אחראי אתר לה מנואיר (Les Menuires)</span></div>
-          <div class="f-row"><b>דורון</b><span data-roles="דורון"></span></div>
-          <div class="f-row"><b>קרן</b><span data-roles="קרן"></span></div>
-        </div>
-        <p class="f-note">תחומי האחריות לפי טבלת האחריות. מעבר לתחומים, כל נציג לוקח חלק בכל משימות העונה.</p>
-      </div>
-    </div>
-  </section>
-</div>
+    <!-- 5.11.26 (Ben): gondola scene "מוכנים לעלות" removed -->
 
     <div class="sec-h"><span>מי מוביל מה</span><h2>תחומי אחריות</h2></div>
     <div class="rfull" id="rolesFull"></div>
@@ -3180,11 +3129,7 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
     <div class="qs-grid" id="qsGrid"></div>
   </section>
 
-  <section class="view" id="view-sup" role="tabpanel" hidden>
-    <div class="vhead"><div class="vhead-main"><h2>מיילים לספקים</h2><p>לכל ספק יש טיוטת מייל מוכנה לקראת שבוע ההכנה. פותחים את המייל, שולחים, ומעדכנים כאן מה ענו ומתי הפגישה, כדי שכולם ידעו. הטיוטה נחתמת בשם של מי שבחר "מי אני".</p></div>
-      <div class="vhead-side"><div class="vnum"><b id="supLeft">0</b><span id="supTot">עוד לא נשלחו</span></div><div class="bar"><i id="supBar" style="width:0%"></i></div></div></div>
-    <div class="sup-grid" id="supGrid"></div>
-  </section>
+  <!-- 5.11.26 (Ben): suppliers tab removed; mail buttons live in אנשי קשר -->
 
   <section class="view" id="view-inv" role="tabpanel" hidden>
     <div class="vhead"><div class="vhead-main"><h2>מחסן</h2></div>
@@ -5199,14 +5144,23 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const FIX = {};
   const NAMES = { 24: 'ראש צוות', 11: 'אוטובוסים צרפת', 12: 'לה מנואיר' };
   const short = n => n.replace(/^מלון \d+ · /, '').replace(' · אתר לווין', '').replace(/ \+ סיכום הגעה$/, '').replace(/ \+ פקל שדה תעופה$/, ' ופק״ל');
+  /* areas = the built-in list with Ben's renames, plus areas Ben added (resp doc keys rn-<id>; an empty name deletes an added area) */
+  const readSt = () => { try { return JSON.parse(localStorage.getItem('penguin-resp') || '{}') || {}; } catch(e){ return {}; } };
+  function areaList(st){
+    const base = (typeof RESP_AREAS !== 'undefined') ? RESP_AREAS : [];
+    const out = base.map(([i, n, pr]) => [i, (st['rn-' + i] || '').trim() || n, pr, false, !!(st['rn-' + i] || '').trim()]);
+    Object.keys(st).filter(k => /^rn-c/.test(k) && String(st[k]).trim()).sort().forEach(k => out.push([k.slice(3), String(st[k]).trim(), 'mid', true, true]));
+    return out;
+  }
+  const nm = a => a[4] ? a[1] : short(a[1]);
   function roles(){
-    let st = {}; try { st = JSON.parse(localStorage.getItem('penguin-resp') || '{}') || {}; } catch(e){}
+    const st = readSt();
     const out = { 'בן': [], 'יותם': [], 'דורון': [], 'קרן': [] };
-    const areas = (typeof RESP_AREAS !== 'undefined') ? RESP_AREAS : [];
+    const areas = areaList(st);
     const ord = { hi: 0, mid: 1, lo: 2 };
-    areas.slice().sort((a, b) => ord[a[2]] - ord[b[2]]).forEach(([i, n]) => {
-      if (FIX[i]) return;
-      const who = st['rw-' + i]; if (who && out[who]) out[who].push(short(n));
+    areas.slice().sort((a, b) => ord[a[2]] - ord[b[2]]).forEach(a => {
+      if (FIX[a[0]]) return;
+      const who = st['rw-' + a[0]]; if (who && out[who]) out[who].push(nm(a));
     });
     return out;
   }
@@ -5238,25 +5192,63 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   };
   const PRI = { hi: 'עדיפות גבוהה', mid: '', lo: '' };
   const escH = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  let editing = false, pend = false;
   function full(){
     const box = document.getElementById('rolesFull'); if (!box) return;
-    let st = {}; try { st = JSON.parse(localStorage.getItem('penguin-resp') || '{}') || {}; } catch(e){}
-    const areas = (typeof RESP_AREAS !== 'undefined') ? RESP_AREAS : [];
+    if (editing && box.contains(document.activeElement) && document.activeElement.matches('input')) { pend = true; return; }
+    pend = false;
+    const st = readSt(), ed = editing && typeof PG_OWNER !== 'undefined' && PG_OWNER;
+    const areas = areaList(st);
     const ord = { hi: 0, mid: 1, lo: 2 };
     const PC = window.PERSON_COLORS || {};
     const people = ['בן', 'יותם', 'דורון', 'קרן'];
     const by = {}; people.forEach(p => by[p] = []);
     const open = [];
     areas.slice().sort((a, b) => ord[a[2]] - ord[b[2]]).forEach(a => { const w = st['rw-' + a[0]]; if (w && by[w]) by[w].push(a); else open.push(a); });
+    const who = (i, cur) => `<select class="rf-w" data-id="${escH(i)}" aria-label="מי אחראי"><option value="">בלי אחראי</option>${people.map(p => `<option${p === cur ? ' selected' : ''}>${p}</option>`).join('')}</select>`;
+    const edItem = (a, cur) => { const [i, , pr, custom] = a, note = (st['rd-' + i] || '').trim();
+      return `<li class="${pr} ed" data-id="${escH(i)}"><input class="rf-n" data-id="${escH(i)}" value="${escH(nm(a))}" aria-label="שם התחום">${who(i, cur)}<input class="rf-d" data-id="${escH(i)}" value="${escH(note)}" placeholder="הערה (לא חובה)" aria-label="הערה"><button type="button" class="rf-x" data-id="${escH(i)}" data-custom="${custom ? 1 : ''}" aria-label="${custom ? 'מחיקת התחום' : 'הסרה מהאחראי'}" title="${custom ? 'מחיקת התחום' : 'הסרה מהאחראי'}">✕</button></li>`; };
+    box.classList.toggle('editing', ed);
     box.innerHTML = people.map(p => {
       const l = by[p];
-      const items = l.map(([i, n, pr]) => {
-        const note = (st['rd-' + i] || '').trim();
-        return `<li class="${pr}"><b>${escH(short(n))}</b>${PRI[pr] ? `<em>${PRI[pr]}</em>` : ''}<span>${escH(INFO[i] || '')}${note && note !== INFO[i] && !note.includes(short(n)) ? `<i>${escH(note)}</i>` : ''}</span></li>`;
+      const items = l.map(a => {
+        if (ed) return edItem(a, p);
+        const [i, , pr] = a, note = (st['rd-' + i] || '').trim(), n = nm(a);
+        return `<li class="${pr}"><b>${escH(n)}</b>${PRI[pr] ? `<em>${PRI[pr]}</em>` : ''}<span>${escH(INFO[i] || '')}${note && note !== INFO[i] && !note.includes(n) ? `<i>${escH(note)}</i>` : ''}</span></li>`;
       }).join('');
-      return `<article class="rf" style="--pc:${PC[p] || '#5B6B78'}"><header><span class="rf-av">${escH(p[0])}</span><div><h3>${escH(p)}${p === 'בן' ? ' <small>ראש הצוות</small>' : ''}</h3><p>${l.length} תחומי אחריות</p></div></header><ul>${items || '<li class="none">עוד לא שובצו תחומים</li>'}</ul></article>`;
-    }).join('') + (open.length ? `<div class="rf-open"><b>עוד בלי אחראי:</b> ${open.map(a => escH(short(a[1]))).join(' · ')}</div>` : '');
+      return `<article class="rf" style="--pc:${PC[p] || '#5B6B78'}"><header><span class="rf-av">${escH(p[0])}</span><div><h3>${escH(p)}${p === 'בן' ? ' <small>ראש הצוות</small>' : ''}</h3><p>${l.length} תחומי אחריות</p></div></header><ul>${items || '<li class="none">עוד לא שובצו תחומים</li>'}</ul>${ed ? `<button type="button" class="rf-add" data-who="${p}">+ תחום חדש ל${p}</button>` : ''}</article>`;
+    }).join('') + (open.length ? (ed ? `<div class="rf-open ed"><b>בלי אחראי</b><ul>${open.map(a => edItem(a, '')).join('')}</ul></div>` : `<div class="rf-open"><b>עוד בלי אחראי:</b> ${open.map(a => escH(nm(a))).join(' · ')}</div>`) : '');
   }
+  /* only Ben (owner key link) edits: button next to the section title */
+  (function(){
+    const box = document.getElementById('rolesFull'); if (!box) return;
+    const h = box.previousElementSibling && box.previousElementSibling.classList.contains('sec-h') ? box.previousElementSibling : null;
+    const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'rf-edit'; btn.hidden = true; btn.textContent = 'עריכה';
+    if (h) h.appendChild(btn);
+    const sync = () => { const own = typeof PG_OWNER !== 'undefined' && PG_OWNER; btn.hidden = !own; if (!own && editing){ editing = false; full(); }
+      /* the old table in presentation mode follows the same rule */
+      document.querySelectorAll('#view-deck select.rw, #view-deck .resp-f').forEach(el => { el.disabled = !own; el.title = own ? '' : 'רק בן יכול לשנות'; }); };
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class'] }); sync();
+    btn.addEventListener('click', () => { editing = !editing; btn.textContent = editing ? 'סיום' : 'עריכה'; btn.setAttribute('aria-pressed', String(editing)); full(); });
+    const save = (k, v) => { if (!(typeof PG_OWNER !== 'undefined' && PG_OWNER)) return; const o = tstore(TKEY.resp); if (v === null) delete o[k]; else o[k] = v; tsave(TKEY.resp, o); };
+    box.addEventListener('change', e => { const t = e.target, id = t.dataset.id; if (!id) return;
+      if (t.classList.contains('rf-w')) { save('rw-' + id, t.value); const sel = document.getElementById('rw-' + id); if (sel) sel.value = t.value; }
+      else if (t.classList.contains('rf-n')) { const v = t.value.trim(); if (!v && /^c/.test(id)) return; save('rn-' + id, v); }
+      else if (t.classList.contains('rf-d')) { save('rd-' + id, t.value.trim()); const f = document.getElementById('rd-' + id); if (f) f.value = t.value.trim(); }
+      else return;
+      if (window.updateResp) window.updateResp(); else paint(); });
+    box.addEventListener('focusout', () => setTimeout(() => { if (pend && !box.contains(document.activeElement)) paint(); }, 60));
+    box.addEventListener('click', async e => {
+      const add = e.target.closest('.rf-add');
+      if (add) { const id = 'c' + Date.now().toString(36); save('rn-' + id, 'תחום חדש'); save('rw-' + id, add.dataset.who); paint();
+        const n = box.querySelector(`.rf-n[data-id="${id}"]`); if (n) { n.focus(); n.select(); } return; }
+      const x = e.target.closest('.rf-x'); if (!x) return;
+      const id = x.dataset.id;
+      if (x.dataset.custom) { const n = box.querySelector(`.rf-n[data-id="${id}"]`); if (!(await (typeof askConfirm === 'function' ? askConfirm(`למחוק את התחום "${n ? n.value : ''}"?`) : Promise.resolve(confirm('למחוק?'))))) return; save('rn-' + id, ''); save('rw-' + id, ''); save('rd-' + id, ''); }
+      else { save('rw-' + id, ''); const sel = document.getElementById('rw-' + id); if (sel) sel.value = ''; }
+      if (window.updateResp) window.updateResp(); else paint();
+    });
+  })();
   function paint(){
     const r = roles();
     document.querySelectorAll('[data-roles]').forEach(el => {
@@ -5533,7 +5525,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   let ALL = [], grp = '', q = '';
   function card(c){
     const ph = (c.p || []).map(p => `<span class="ct-l"><a href="tel:${esc(p.t)}">${esc(p.v)}</a>${p.w ? `<a class="wa" href="https://wa.me/${esc(p.t.slice(1))}" target="_blank" rel="noopener" aria-label="וואטצאפ">${WA}</a>` : ''}${p.l ? `<em>${esc(p.l)}</em>` : ''}</span>`).join('');
-    const ml = c.m ? `<span class="ct-l"><a class="ml" href="mailto:${esc(c.m)}">${esc(c.m)}</a></span>` : '';
+    const ml = c.m ? `<span class="ct-l"><span class="ml" dir="ltr">${esc(c.m)}</span></span><a class="ct-mail" href="mailto:${esc(c.m)}" aria-label="שליחת מייל ל${esc(c.n)}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>שליחת מייל</a>` : '';
     return `<div class="ct"><b>${esc(c.n)}</b><span class="ct-r">${esc(c.r)}</span>${ph}${ml}${!ph && !ml ? '<span class="ct-none">עוד אין פרטים</span>' : ''}</div>`;
   }
   function render(){
@@ -5617,44 +5609,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     $('f-cue').style.opacity = String(1 - seg(p, 0, .08));
   }
 
-  /* --- 3 · gondola --- */
-  const cable = $('f-cableLine'), cable2 = $('f-cableLine2'), cabSvg = $('f-cable'), gd = $('f-gondola');
-  const gdLines = [...gd.querySelectorAll('.gd-line')];
-  gdLines.forEach(l => { let len = 900; try { len = l.getTotalLength(); } catch(e){} l.style.strokeDasharray = len; l.style.strokeDashoffset = len; l.dataset.len = len; });
-  const rows = [...document.querySelectorAll('#f-sheet .f-row')];
-  function drawGondola(p){
-    const mob = W < 760;
-    cabSvg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    const A = { x: W * (mob ? -.1 : .02), y: -H * .08 }, B = { x: W * (mob ? 1.1 : .98), y: H * (mob ? .62 : .78) };
-    cable.setAttribute('x1', A.x); cable.setAttribute('y1', A.y); cable.setAttribute('x2', B.x); cable.setAttribute('y2', B.y);
-    cable2.setAttribute('x1', A.x); cable2.setAttribute('y1', A.y + 26); cable2.setAttribute('x2', B.x); cable2.setAttribute('y2', B.y + 26);
-    const a = easeOut(seg(p, 0, .42));
-    const t = lerp(.06, .5, a);
-    let gx = lerp(A.x, B.x, t), gy = lerp(A.y, B.y, t);
-    const gw = gd.offsetWidth || 200;
-    let sc = lerp(.55, mob ? 1.15 : 1.5, a);
-    const b = ease(seg(p, .42, .7));
-    if (!mob){ gx = lerp(gx, W * .27, b); gy = lerp(gy, H * .40, b); sc = lerp(sc, 1.25, b); }
-    else { gy = lerp(gy, H * .2, b); sc = lerp(sc, .9, b); }
-    gd.dataset.sc = sc;
-    const ang = Math.atan2(B.y - A.y, B.x - A.x) * 180 / Math.PI * (1 - b);
-    $('gdGrip').setAttribute('transform', `rotate(${ang.toFixed(1)} 120 17)`);
-    gd.style.transform = `translate(${(gx - gw / 2).toFixed(1)}px, ${(gy - gw * .071).toFixed(1)}px) scale(${sc.toFixed(3)})`;
-    const dr = seg(p, 0, .22);
-    gdLines.forEach(l => l.style.strokeDashoffset = (l.dataset.len * (1 - dr)).toFixed(1));
-    $('gdFill').style.opacity = String(seg(p, .14, .32));
-    $('gdLine').style.opacity = String(1 - seg(p, .3, .42) * .85);
-    cabSvg.style.opacity = String(1 - seg(p, .48, .66));
-    const sp = ease(seg(p, .05, .5));
-    const wr = $('f-wR'), wl = $('f-wL');
-    if (!mob){ wr.style.transform = `translateX(${(sp * 22).toFixed(2)}vw)`; wl.style.transform = `translateX(${(-sp * 22).toFixed(2)}vw)`; }
-    else { wr.style.transform = `translateY(${(-sp * 8).toFixed(2)}vh)`; wl.style.transform = `translateY(${(sp * 8).toFixed(2)}vh)`; }
-    const fo = 1 - seg(p, .4, .6) * .92;
-    wr.style.opacity = wl.style.opacity = String(fo);
-    const sh = seg(p, .5, .66);
-    const sheet = $('f-sheet'); sheet.style.opacity = String(sh);
-    rows.forEach((r, i) => { const q = easeOut(seg(p, .55 + i * .05, .7 + i * .05)); r.style.opacity = String(q); r.style.transform = `translateY(${((1 - q) * 12).toFixed(1)}px)`; });
-  }
+  function drawGondola(){} /* scene removed 5.11.26 */
 
   let pMob = null, rW = 0;
   /* --- 6 · phases --- */
@@ -5855,7 +5810,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   function paintMine(){
     if (!me){
       mine.style.removeProperty('--pc');
-      mine.innerHTML = `<div class="mine-h"><h2>המשימות שלי</h2></div><p class="empty">בחרו מי אתם, והמשימות הפתוחות שלכם יופיעו כאן לפי סדר היעדים.</p><div class="pick">${PEOPLE.map(p => `<button type="button" data-me="${p}"><span class="me-av" style="--pc:${PC[p]}">${p[0]}</span>${p}</button>`).join('')}</div>`;
+      mine.innerHTML = `<div class="mine-h"><h2>המשימות שלי</h2></div><p class="empty">בוחרים מי אתם בכפתור "מי אני?" למעלה, והמשימות הפתוחות שלכם יופיעו כאן.</p>`;
       return;
     }
     mine.style.setProperty('--pc', PC[me]);
@@ -5937,7 +5892,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   document.body.appendChild(qf);
   const qin = qf.querySelector('input'), qlist = qf.querySelector('.qf-list');
   let res = [], sel = 0, lastFocus = null;
-  const TABS = [['overview', 'סקירה'], ['p1', 'לפני היציאה'], ['p2', 'שבוע ההכנה באתר'], ['p3', 'ציוד מהארץ'], ['wk', 'עבודה שוטפת'], ['plan', 'תוכנית עבודה'], ['qs', 'שאלות פתוחות'], ['sup', 'ספקים'], ['inv', 'מחסן'], ['sum', 'סיכומים שבועיים'], ['contacts', 'אנשי קשר'], ['team', 'הצוות שלנו']];
+  const TABS = [['overview', 'סקירה'], ['p1', 'לפני היציאה'], ['p2', 'שבוע ההכנה באתר'], ['p3', 'ציוד מהארץ'], ['wk', 'עבודה שוטפת'], ['plan', 'תוכנית עבודה'], ['qs', 'שאלות פתוחות'], ['inv', 'מחסן'], ['sum', 'סיכומים שבועיים'], ['contacts', 'אנשי קשר'], ['team', 'הצוות שלנו']];
   const hl = (s, q) => { const i = s.toLowerCase().indexOf(q); return i < 0 ? E(s) : E(s.slice(0, i)) + '<mark>' + E(s.slice(i, i + q.length)) + '</mark>' + E(s.slice(i + q.length)); };
   function contacts(){
     return [...document.querySelectorAll('#ctBody .ct')].map(c => ({ name: (c.querySelector('b, h4, .ct-n')?.textContent || c.textContent).trim().split('\n')[0], text: c.textContent.replace(/\s+/g, ' ').trim(), el: c }));
@@ -6577,25 +6532,7 @@ body:not(.deck-mode)::after{content:"";position:fixed;inset:0;z-index:-1;pointer
 }
 @media print{body{background:#fff!important}*{backdrop-filter:none!important;box-shadow:none!important}}
 </style>
-<script id="glassjs">
-/* glass: give the blur to the outermost light card on the board, so text never sits on a sharp photo */
-(function(){
-  const main = document.getElementById('boardMain'); if (!main) return;
-  const light = el => { const m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(getComputedStyle(el).backgroundColor); return m && +m[1] > 200 && +m[2] > 200 && +m[3] > 200 && (m[4] === undefined ? 1 : +m[4]) >= .4; };
-  function mark(){
-    const v = main.querySelector('.view:not([hidden])'); if (!v) return;
-    /* text that sits straight on the photo (no card under it) gets slate ink + a soft halo */
-    const bare = el => /rgba\(0, 0, 0, 0\)|transparent/.test(getComputedStyle(el).backgroundColor) && [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
-    const hasBg = el => { const cs = getComputedStyle(el); return cs.backgroundImage !== 'none' || !/rgba\(0, 0, 0, 0\)|transparent/.test(cs.backgroundColor); };
-    const walk = (el, covered) => { for (const c of el.children) { if (c.hidden || c.classList.contains('fx') || c.tagName === 'svg') continue; if (light(c)) { c.classList.add('gl'); continue; }
-      const cov = covered || hasBg(c); if (!cov && !/^(BUTTON|INPUT|SELECT|TEXTAREA|LABEL)$/.test(c.tagName) && bare(c)) c.classList.add('gt'); walk(c, cov); } };
-    walk(v, false);
-  }
-  let t = 0; const later = () => { clearTimeout(t); t = setTimeout(mark, 120); };
-  new MutationObserver(later).observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
-  mark();
-})();
-</script>
+<!-- script#glassjs merged into script#moodjs (5.11.26) -->
 <style id="mood">
 /* ================= Mood 5.11.26 (Ben): two themes, picked with the sun/moon button in the top bar (saved per browser).
    dark  = "night in the mountains": dark glass over a darkened photo, light ink.
@@ -6640,6 +6577,9 @@ html[data-theme="dark"] #boardMain select option{background:#1C2833;color:var(--
 html[data-theme="dark"] .gt{color:var(--m-ink)!important;text-shadow:0 1px 8px rgba(0,0,0,.6)!important}
 html[data-theme="light"] .gt{color:var(--m-ink)!important;text-shadow:0 0 6px rgba(var(--m-veil),.95),0 0 2px rgba(var(--m-veil),.95)!important}
 .tm-names span{color:var(--m-ink)!important;background:var(--m-soft)!important}
+html.m-scan *,html.m-scan *::before,html.m-scan *::after{transition:none!important}
+/* blur only on the outer layer: a blurred card inside a blurred card adds nothing and makes scrolling flicker */
+:is(.vhead,.toolbar,.cat,.wk-board,.wk,.season,.ssn,.tm-card,.wcard,.wf-sec,.wf-weeks,.mx,.qs-card,.inv-tools,.inv-grid,.ct-card,.cal,.cal-side,.plan-wrap,.pl-col,.ov-card,.my,.mine,.me-box,.gl) :is(.vhead,.toolbar,.cat,.wk-board,.wk,.season,.ssn,.tm-card,.wcard,.wf-sec,.wf-weeks,.mx,.qs-card,.inv-tools,.inv-grid,.inv-ni,.ct-card,.cal,.cal-side,.plan-wrap,.pl-col,.ov-card,.my,.mine,.me-box,.gl,.cfm-box){-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 /* theme button */
 .th-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0!important}
 .th-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -6647,42 +6587,109 @@ html[data-theme="dark"] .th-sun{display:none} html[data-theme="light"] .th-moon{
 @media (prefers-reduced-transparency:reduce){:root{--panel:rgb(var(--m-veil));--glass:rgb(var(--m-veil))}}
 </style>
 <script id="moodjs">
+/* 5.11.26: adapts older components to the theme and marks glass cards (.gl) and text straight on the photo (.gt).
+   Runs inside the MutationObserver callback, so new items get their colors before the first paint (no white flash),
+   with transitions off while it samples. Hovered or toggled items are sampled again once their state changes. */
 (function(){
   const main = document.getElementById('boardMain'); if (!main) return;
+  const H = document.documentElement;
   const rgb = s => { let m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(s); if (m) return [+m[1], +m[2], +m[3], m[4] === undefined ? 1 : +m[4]];
     m = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)/.exec(s); return m ? [m[1] * 255, m[2] * 255, m[3] * 255, m[4] === undefined ? 1 : +m[4]] : null; };
   const lum = c => { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); };
   const sat = c => (Math.max(c[0], c[1], c[2]) - Math.min(c[0], c[1], c[2])) / 255;
-  const dark = () => document.documentElement.dataset.theme !== 'light';
+  const dark = () => H.dataset.theme !== 'light';
+  const clear = c => !c || c[3] === 0;
+  let seen = new WeakSet(), inked = new WeakSet();
+  const undo = el => { if (el.dataset.mfix) el.dataset.mfix.split(' ').forEach(k => el.style.removeProperty(k));
+    delete el.dataset.mfix; delete el.dataset.mood; delete el.dataset.ink; delete el.dataset.mh; el.classList.remove('gl', 'gt'); seen.delete(el); inked.delete(el); };
   const put = (el, k, v) => { el.style.setProperty(k, v, 'important'); el.dataset.mfix = (el.dataset.mfix ? el.dataset.mfix + ' ' : '') + k; };
-  /* light grey/white surfaces take the theme's fill; in dark mode pastel badges become solid and big pastel blocks go dark */
-  function surfaces(v){
-    v.querySelectorAll('*').forEach(el => { if (el.dataset.mood || el.closest('.fx')) return;
-      const cs = getComputedStyle(el), gi = cs.backgroundImage;
-      if (/^linear-gradient/.test(gi)) { const g = rgb(gi); if (g && lum(g) > .55 && sat(g) < .09) { el.dataset.mood = 'g'; put(el, 'background-image', 'none'); put(el, 'background-color', 'var(--m-head)'); return; } }
-      const c = rgb(cs.backgroundColor); if (!c || c[3] < .3) return;
-      if (lum(c) > .55 && sat(c) < .09) { el.dataset.mood = 's'; put(el, 'background-color', 'var(--m-fill)'); }
-      else if (dark() && lum(c) > .45 && el.offsetHeight > 56) { el.dataset.mood = 'w'; put(el, 'background-color', `rgba(${c.slice(0, 3).join(',')},.12)`); }
-      else if (dark() && lum(c) > .45 && c[3] < 1) { el.dataset.mood = 'p'; put(el, 'background-color', `rgb(${c.slice(0, 3).map(x => Math.round(x * c[3] + 245 * (1 - c[3]))).join(',')})`); }
-      if (dark()) { const b = rgb(cs.borderTopColor); if (b && b[3] > .3 && lum(b) > .45 && sat(b) < .12 && parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth) > 0) put(el, 'border-color', 'var(--m-line)'); }
+  /* elements some :hover rule restyles (selector with :hover taken out) */
+  let hov = '';
+  try { const sel = new Set(); const walk = rs => { for (const r of rs) { if (r.cssRules && !r.selectorText) walk(r.cssRules);
+      else if (r.selectorText && r.selectorText.includes(':hover')) r.selectorText.split(',').forEach(x => { if (x.includes(':hover')) sel.add(x.replace(/:hover/g, '').trim() || '*'); }); } };
+    [...document.styleSheets].forEach(ss => { try { walk(ss.cssRules); } catch(e){} });
+    hov = [...sel].filter(x => { try { document.querySelector(x); return true; } catch(e){ return false; } }).join(','); } catch(e){}
+  /* dark mode: old :hover rules that paint a light background or dark text get a dark-safe twin, so hovering never lights up a row */
+  try { const out = [], walk = rs => { for (const r of rs) { if (r.cssRules && !r.selectorText) { walk(r.cssRules); continue; }
+      if (!r.selectorText || !r.selectorText.includes(':hover') || /boardTabs|topbar|sn-|th-btn|\.fx|f-/.test(r.selectorText)) continue;
+      const bg = rgb(r.style.backgroundColor || r.style.background || ''), co = rgb(r.style.color || ''), sel = r.selectorText.split(',').map(x => 'html[data-theme="dark"] #boardMain ' + x.trim()).join(',');
+      let d = '';
+      if (bg && lum(bg) > .5 && sat(bg) < .25) d += 'background-color:var(--m-soft)!important;';
+      if (co && lum(co) < .12) d += 'color:var(--m-ink)!important;';
+      if (d) out.push(sel + '{' + d + '}'); } };
+    [...document.styleSheets].forEach(ss => { try { walk(ss.cssRules); } catch(e){} });
+    const st = document.createElement('style'); st.id = 'moodhover'; st.textContent = out.join('\n'); document.head.appendChild(st); } catch(e){}
+  const skip = el => !el.isConnected || el.closest('.fx,.view[hidden]') || !main.contains(el);
+
+  function scan(roots, fresh, only){
+    const list = new Set();
+    roots.forEach(r => { if (r.nodeType !== 1 || skip(r)) return; list.add(r); if (!only) r.querySelectorAll('*').forEach(e => { if (!e.closest('.fx')) list.add(e); }); });
+    if (!list.size) return;
+    H.classList.add('m-scan');
+    if (fresh) list.forEach(undo);
+    const els = [...list], d = dark(), writes = [], glass = new Set();
+    /* 1. surfaces + glass cards (read everything, then write) */
+    els.forEach(el => { if (seen.has(el)) return;
+      const cs = getComputedStyle(el), gi = cs.backgroundImage, c = rgb(cs.backgroundColor), w = el.offsetWidth, h = el.offsetHeight;
+      if (!w && !h) return;
+      seen.add(el); if (hov && el.matches(hov) && el.matches(':hover')) writes.push([el, 'mh']);
+      if (c && c[0] > 200 && c[1] > 200 && c[2] > 200 && c[3] >= .4 && w >= 120 && h >= 40 && el.tagName !== 'svg') {
+        let p = el.parentElement, inner = false; for (; p && p !== main; p = p.parentElement) if (glass.has(p) || p.classList.contains('gl')) { inner = true; break; }
+        if (!inner) { glass.add(el); writes.push([el, 'gl']); }
+      }
+      if (/^linear-gradient/.test(gi)) { const g = rgb(gi); if (g && lum(g) > .55 && sat(g) < .09) { writes.push([el, 'g']); return; } }
+      if (!c || c[3] < .3) return;
+      if (lum(c) > .55 && sat(c) < .09) writes.push([el, 's']);
+      else if (d && lum(c) > .45 && h > 56) writes.push([el, 'w', `rgba(${c.slice(0, 3).join(',')},.12)`]);
+      else if (d && lum(c) > .45 && c[3] < 1) writes.push([el, 'p', `rgb(${c.slice(0, 3).map(x => Math.round(x * c[3] + 245 * (1 - c[3]))).join(',')})`]);
+      if (d) { const b = rgb(cs.borderTopColor); if (b && b[3] > .3 && lum(b) > .45 && sat(b) < .12 && parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth) > 0) writes.push([el, 'b']); }
     });
-  }
-  /* dark mode: dark text that ends up on a dark surface gets light ink */
-  const bgOf = el => { for (let e = el; e && e !== document.body; e = e.parentElement) { const c = rgb(getComputedStyle(e).backgroundColor); if (c && c[3] >= .5) return c; } return [20, 30, 40, 1]; };
-  function ink(v){
-    v.querySelectorAll('*').forEach(el => { if (el.dataset.ink || el.closest('.fx') || /^(INPUT|TEXTAREA|SELECT|OPTION)$/.test(el.tagName)) return;
+    writes.forEach(([el, k, v]) => {
+      if (k === 'mh') el.dataset.mh = '1';
+      else if (k === 'gl') el.classList.add('gl');
+      else if (k === 'g') { el.dataset.mood = 'g'; put(el, 'background-image', 'none'); put(el, 'background-color', 'var(--m-head)'); }
+      else if (k === 's') { el.dataset.mood = 's'; put(el, 'background-color', 'var(--m-fill)'); }
+      else if (k === 'w' || k === 'p') { el.dataset.mood = k; put(el, 'background-color', v); }
+      else if (k === 'b') put(el, 'border-color', 'var(--m-line)');
+    });
+    /* 2. ink: dark text on a dark surface gets light ink; text straight on the photo gets .gt */
+    const cs = new Map(), get = e => { let s = cs.get(e); if (!s) { s = getComputedStyle(e); cs.set(e, s); } return s; };
+    const bgOf = el => { for (let e = el; e && e !== document.body; e = e.parentElement) { const c = rgb(get(e).backgroundColor); if (c && c[3] >= .5) return c; } return [20, 30, 40, 1]; };
+    const cov = new Map(), covered = el => { if (!el || el === main || el.classList.contains('view')) return false; if (cov.has(el)) return cov.get(el);
+      const s = get(el), v = s.backgroundImage !== 'none' || !clear(rgb(s.backgroundColor)) || covered(el.parentElement); cov.set(el, v); return v; };
+    const iw = [];
+    els.forEach(el => { if (inked.has(el) || /^(INPUT|TEXTAREA|SELECT|OPTION|svg)$/.test(el.tagName) || !(el.offsetWidth || el.offsetHeight)) return;
+      inked.add(el);
       if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) return;
-      const t = rgb(getComputedStyle(el).color); if (!t) return;
-      if (lum(bgOf(el)) > .25 || lum(t) > .3) return;
-      el.dataset.ink = '1';
-      if (sat(t) < .2) put(el, 'color', lum(t) < .03 ? 'var(--m-ink)' : 'var(--m-muted)');
-      else put(el, 'color', `rgb(${t.slice(0, 3).map(x => Math.round(x * .45 + 255 * .55)).join(',')})`);
+      if (!/^(BUTTON|LABEL)$/.test(el.tagName) && !covered(el)) { iw.push([el, 'gt']); return; }
+      if (!d) return;
+      const t = rgb(get(el).color); if (!t || lum(t) > .3 || lum(bgOf(el)) > .25) return;
+      iw.push([el, sat(t) < .2 ? (lum(t) < .03 ? 'var(--m-ink)' : 'var(--m-muted)') : `rgb(${t.slice(0, 3).map(x => Math.round(x * .45 + 255 * .55)).join(',')})`]);
     });
+    iw.forEach(([el, v]) => { if (v === 'gt') el.classList.add('gt'); else { el.dataset.ink = '1'; put(el, 'color', v); } });
+    void main.offsetWidth; /* settle styles before transitions come back, so nothing animates */
+    H.classList.remove('m-scan');
+    mo.takeRecords(); /* our own class changes are not news */
   }
-  function run(){ const v = main.querySelector('.view:not([hidden])'); if (!v) return; surfaces(v); if (dark()) ink(v); }
-  /* switching theme: take back everything this script set, then adapt again */
-  function reset(){ main.querySelectorAll('[data-mfix]').forEach(el => { el.dataset.mfix.split(' ').forEach(k => el.style.removeProperty(k)); delete el.dataset.mfix; delete el.dataset.mood; delete el.dataset.ink; }); main.querySelectorAll('[data-mood],[data-ink]').forEach(el => { delete el.dataset.mood; delete el.dataset.ink; }); }
-  window.setTheme = th => { document.documentElement.dataset.theme = th; try { localStorage.setItem('penguin-theme', th); } catch(e){} reset(); run(); syncBtn(); };
+  const view = () => main.querySelector('.view:not([hidden])');
+  const mo = new MutationObserver(recs => {
+    const roots = new Set(), fresh = new Set();
+    recs.forEach(r => { const t = r.target; if (t.nodeType !== 1 || (t.closest && t.closest('.fx'))) return;
+      if (r.type === 'childList') r.addedNodes.forEach(n => { if (n.nodeType === 1) roots.add(n); else if (n.nodeType === 3) fresh.add(t); });
+      else if (r.attributeName === 'hidden') roots.add(t.classList.contains('view') ? t : t);
+      else if (!t.classList.contains('view')) fresh.add(t);
+    });
+    if (fresh.size) scan([...fresh], true);
+    if (roots.size) scan([...roots], false);
+  });
+  mo.observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden', 'class', 'open', 'aria-pressed', 'aria-selected', 'aria-checked', 'aria-expanded', 'disabled'] });
+  /* a checkbox or radio changes its look through CSS only: sample its row again */
+  main.addEventListener('change', e => { const r = e.target.closest('label,li,tr,.row,.item') || e.target.parentElement; if (r) requestAnimationFrame(() => scan([r], true)); }, true);
+  /* hover colors are not the item's own: once the pointer leaves, sample it again */
+  let hr = 0; main.addEventListener('pointerout', () => { if (hr) return; hr = requestAnimationFrame(() => { hr = 0;
+    const gone = [...main.querySelectorAll('[data-mh]')].filter(e => !e.matches(':hover')); if (gone.length) scan(gone, true, true); }); }, { passive: true });
+  function reset(){ main.querySelectorAll('[data-mfix],[data-mood],[data-ink],[data-mh],.gl,.gt').forEach(undo); seen = new WeakSet(); inked = new WeakSet(); }
+  window.setTheme = th => { H.dataset.theme = th; try { localStorage.setItem('penguin-theme', th); } catch(e){} reset(); const v = view(); if (v) scan([v], false); syncBtn(); };
   /* sun/moon button in the top bar */
   const btn = document.createElement('button');
   btn.type = 'button'; btn.className = 'icon-btn th-btn'; btn.id = 'themeBtn';
@@ -6691,8 +6698,7 @@ html[data-theme="dark"] .th-sun{display:none} html[data-theme="light"] .th-moon{
   btn.addEventListener('click', () => setTheme(dark() ? 'light' : 'dark'));
   const host = document.querySelector('.top-right'); if (host) host.insertBefore(btn, host.firstChild);
   syncBtn();
-  let t = 0; new MutationObserver(() => { clearTimeout(t); t = setTimeout(run, 150); }).observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
-  run();
+  const v = view(); if (v) scan([v], false);
 })();
 </script>
 <style id="hues">
@@ -6753,8 +6759,33 @@ body[data-view="contacts"],body[data-view="team"]{--hv:var(--h-heather)}
 /* the body knows which tab is open, so the page takes that tab's hue */
 (function(){
   const set = () => { const t = document.querySelector('#boardTabs .tab[aria-selected="true"]'); if (t) document.body.dataset.view = t.dataset.view; };
-  const _go = go; go = function(){ const r = _go.apply(this, arguments); set(); return r; };
+  const _go = go; go = function(v){ if (v === 'sup') v = 'contacts'; const r = _go.call(this, v); set(); return r; };
   set();
 })();
 </script>
+<style id="v511">
+/* 5.11.26 (Ben): mail button in contacts, owner-only roles editor */
+.ct .ct-l .ml{font-size:13px;font-weight:600;color:var(--m-muted);direction:ltr;unicode-bidi:isolate;word-break:break-all}
+.ct-mail{display:inline-flex;align-items:center;justify-content:center;gap:8px;align-self:flex-start;margin-top:2px;padding:8px 14px;border-radius:10px;
+  font:700 14px var(--fd,inherit);text-decoration:none;background:var(--hv,var(--h-lake));color:var(--h-on)!important;border:0;cursor:pointer}
+.ct-mail svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.ct-mail:hover{filter:brightness(1.08)}
+.ct-mail:focus-visible{outline:2px solid var(--m-ink);outline-offset:2px}
+.sec-h:has(.rf-edit){position:relative}
+.rf-edit{position:absolute;inset-inline-end:0;bottom:2px;padding:7px 16px;border-radius:10px;border:1px solid var(--m-line);background:var(--m-fill);color:var(--m-ink);font:700 14px var(--fd,inherit);cursor:pointer}
+.rf-edit[aria-pressed="true"]{background:var(--hv,var(--h-lake));color:var(--h-on);border-color:transparent}
+.rfull.editing li.ed{display:grid;grid-template-columns:1fr 110px 34px;gap:6px;align-items:center}
+.rfull.editing li.ed .rf-d{grid-column:1 / 3}
+.rfull.editing li.ed .rf-x{grid-row:1;grid-column:3}
+.rfull.editing input,.rfull.editing select{font:600 14px var(--fd,inherit);padding:7px 10px;border-radius:8px;border:1px solid var(--m-line);min-width:0;width:100%}
+.rfull.editing .rf-d{font-weight:500;font-size:13px}
+.rf-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--m-line);background:transparent;color:var(--m-muted);cursor:pointer;font-size:14px}
+.rf-x:hover{color:var(--m-ink);background:var(--m-soft)}
+.rf-add{margin-top:10px;width:100%;padding:9px;border-radius:10px;border:1px dashed var(--m-line);background:transparent;color:var(--m-ink);font:700 14px var(--fd,inherit);cursor:pointer}
+.rf-add:hover{background:var(--m-soft)}
+.rf-open.ed{background:var(--m-glass)!important;border-color:var(--m-line)!important}
+.rf-open.ed ul{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
+.rf-open.ed li{padding:8px;border-radius:10px;background:var(--m-soft)}
+@media (max-width:640px){.rf-edit{position:static;align-self:flex-start;margin-top:8px}.rfull.editing li.ed{grid-template-columns:1fr 34px}.rfull.editing li.ed .rf-w,.rfull.editing li.ed .rf-d{grid-column:1 / -1}}
+</style>
 </body></html>
