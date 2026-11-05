@@ -5806,7 +5806,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
   const mine = document.createElement('section'); mine.className = 'mine'; mine.setAttribute('aria-label', 'המשימות שלי');
   const ov = $('view-overview');
   const anchor = ov && [...ov.children].find(c => c.classList.contains('sec-h'));
-  if (anchor) ov.insertBefore(mine, anchor);
+  /* 5.11.26 (Ben): no "my tasks" panel on the overview; who-am-I lives only in the top bar */
   function paintMine(){
     if (!me){
       mine.style.removeProperty('--pc');
