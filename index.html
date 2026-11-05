@@ -6597,26 +6597,16 @@ body:not(.deck-mode)::after{content:"";position:fixed;inset:0;z-index:-1;pointer
 </script>
 <style id="mood">
 /* ================= Mood 5.11.26 (Ben): no bright white. Matte, warm-to-cool tints that sit with the mountain photo.
-   Three palettes share one set of tokens; html[data-mood] picks one (default = a). ================= */
-/* palette a · dusk (default) */
+   Stone and forest: sage glass, forest top bar, steel-blue accent. Worst case over a dark photo spot: muted 6:1, red 5:1. ================= */
+/* palette · stone and forest (Ben chose 5.11.26) */
 :root{
-  --m-veil:226,208,190;                 /* wash over the photo */
-  --m-glass:rgba(238,224,207,.9);       /* cards */
-  --m-side:rgba(218,199,180,.9);        /* side menu, phone bar */
-  --m-fill:rgba(245,236,224,.94);       /* surfaces inside cards (cells, inputs, chips) */
-  --m-head:rgba(226,208,188,.75);       /* card headers */
-  --m-top:rgba(70,48,58,.9);            /* top bar */
-  --m-ink:#2B2228; --m-muted:#56484E; --m-accent:#36507A;
-}
-/* palette b · stone and forest */
-html[data-mood="b"]{
-  --m-veil:205,215,203; --m-glass:rgba(224,232,220,.9); --m-side:rgba(200,213,197,.9); --m-fill:rgba(238,243,234,.94);
-  --m-head:rgba(206,218,202,.75); --m-top:rgba(34,52,44,.9); --m-ink:#1E2A25; --m-muted:#435249; --m-accent:#30516A;
-}
-/* palette c · cold evening */
-html[data-mood="c"]{
-  --m-veil:200,205,226; --m-glass:rgba(222,226,241,.9); --m-side:rgba(198,204,230,.9); --m-fill:rgba(236,238,248,.94);
-  --m-head:rgba(205,211,235,.75); --m-top:rgba(38,40,72,.9); --m-ink:#20223A; --m-muted:#454A66; --m-accent:#3F4C85;
+  --m-veil:205,215,203;                 /* wash over the photo */
+  --m-glass:rgba(224,232,220,.9);       /* cards */
+  --m-side:rgba(200,213,197,.9);        /* side menu, phone bar */
+  --m-fill:rgba(238,243,234,.94);       /* surfaces inside cards (cells, inputs, chips) */
+  --m-head:rgba(206,218,202,.75);       /* card headers */
+  --m-top:rgba(34,52,44,.9);            /* top bar */
+  --m-ink:#1E2A25; --m-muted:#435249; --m-accent:#30516A;
 }
 :root{--panel:var(--m-glass);--glass:var(--m-glass);--glass-strong:var(--m-fill);--glass-edge:rgba(255,255,255,.32);
   --slate:var(--m-ink);--muted:var(--m-muted);--run-blue:var(--m-accent);--primary-fill:var(--m-accent);--tint:rgba(var(--m-veil),.9);--tint2:rgba(0,0,0,.06);
@@ -6651,6 +6641,71 @@ body:not(.deck-mode)::after{background:linear-gradient(180deg,rgba(var(--m-veil)
   }
   let t = 0; new MutationObserver(() => { clearTimeout(t); t = setTimeout(mark, 150); }).observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
   mark();
+})();
+</script>
+<style id="hues">
+/* ================= Hues 5.11.26 (Ben): stone-and-forest base, but not one color everywhere.
+   Five matte nature hues; each part of the site owns one. Hues color bands, icons, badges and bars; text stays ink. ================= */
+:root{
+  --h-moss:#5E7A4E; --h-lake:#4C7290; --h-clay:#A9644A; --h-ochre:#A9813A; --h-heather:#7A5A78;
+  --hv:var(--h-lake);
+}
+/* each tab's hue */
+body[data-view="overview"],body[data-view="plan"]{--hv:var(--h-lake)}
+body[data-view="p1"],body[data-view="p2"],body[data-view="p3"],body[data-view="wk"]{--hv:var(--h-moss)}
+body[data-view="qs"],body[data-view="sup"]{--hv:var(--h-clay)}
+body[data-view="inv"],body[data-view="sum"]{--hv:var(--h-ochre)}
+body[data-view="contacts"],body[data-view="team"]{--hv:var(--h-heather)}
+#boardTabs .tab[data-view="overview"],#boardTabs .tab[data-view="plan"]{--th:var(--h-lake)}
+#boardTabs .tab[data-view="p1"],#boardTabs .tab[data-view="p2"],#boardTabs .tab[data-view="p3"],#boardTabs .tab[data-view="wk"]{--th:var(--h-moss)}
+#boardTabs .tab[data-view="qs"],#boardTabs .tab[data-view="sup"]{--th:var(--h-clay)}
+#boardTabs .tab[data-view="inv"],#boardTabs .tab[data-view="sum"]{--th:var(--h-ochre)}
+#boardTabs .tab[data-view="contacts"],#boardTabs .tab[data-view="team"]{--th:var(--h-heather)}
+
+/* side menu: icon in the tab's hue, the open tab gets a soft wash of it */
+#boardTabs .tab .ti{color:var(--th)}
+#boardTabs .tab[aria-selected="true"]{color:var(--m-ink)!important;background:color-mix(in srgb,var(--th) 16%,var(--m-fill))!important}
+#boardTabs .tab[aria-selected="true"]::after{background:var(--th)!important}
+#boardTabs .tab[aria-selected="true"] .pill{background:var(--th)!important;color:#fff!important}
+.sn-open .ti{color:var(--hv)}
+.sn-open .pill{background:var(--hv)!important}
+
+/* page header: band, badge and bar in the tab's hue */
+.view .vhead{border-top:4px solid var(--hv)!important}
+.view .vhead h2 .mk{background:var(--hv)!important}
+.view .vhead .bar i{background:var(--hv)!important}
+
+/* task columns and cards rotate through the hues so neighbours differ */
+.cats>.cat:nth-child(5n+1){--hc:var(--h-moss)} .cats>.cat:nth-child(5n+2){--hc:var(--h-lake)} .cats>.cat:nth-child(5n+3){--hc:var(--h-ochre)}
+.cats>.cat:nth-child(5n+4){--hc:var(--h-clay)} .cats>.cat:nth-child(5n){--hc:var(--h-heather)}
+.cats>.cat{border-top:4px solid var(--hc)!important}
+.cats>.cat .cat-head{background:color-mix(in srgb,var(--hc) 14%,var(--m-glass))!important}
+.qs-grid>*:nth-child(3n+1),.sup-grid>*:nth-child(3n+1),.tm-grid>*:nth-child(3n+1){--hc:var(--h-clay)}
+.qs-grid>*:nth-child(3n+2),.sup-grid>*:nth-child(3n+2),.tm-grid>*:nth-child(3n+2){--hc:var(--h-lake)}
+.qs-grid>*:nth-child(3n),.sup-grid>*:nth-child(3n),.tm-grid>*:nth-child(3n){--hc:var(--h-moss)}
+.qs-card,.tm-card{border-top:4px solid var(--hc,var(--hv))!important}
+.inv-hc{border-inline-start:4px solid var(--h-ochre)!important}
+.inv-need .inv-ni{border-inline-start-color:var(--h-clay)!important}
+
+/* cards carry a light wash of their hue, headers a stronger one */
+.cats>.cat,.qs-card,.tm-card{background:color-mix(in srgb,var(--hc,var(--hv)) 9%,var(--m-glass))!important}
+.qs-card>:first-child,.cats>.cat .cat-head{background:color-mix(in srgb,var(--hc,var(--hv)) 20%,var(--m-glass))!important}
+.view .vhead{background:color-mix(in srgb,var(--hv) 10%,var(--m-glass))!important}
+#boardTabs.tabs{background:color-mix(in srgb,var(--hv) 8%,var(--m-side))!important}
+/* small topic labels take a deep version of the card's hue */
+.qs-topic>h4{color:color-mix(in srgb,var(--hc,var(--hv)) 70%,#1E2A25)!important}
+/* top bar: a thin line of all five hues, like trail markers */
+.topbar{box-shadow:inset 0 -3px 0 0 transparent!important;border-bottom:0!important;position:sticky}
+.topbar::after{content:"";position:absolute;inset-inline:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,var(--h-moss) 0 20%,var(--h-lake) 20% 40%,var(--h-ochre) 40% 60%,var(--h-clay) 60% 80%,var(--h-heather) 80%);opacity:.9}
+@media (max-width:760px){.topbar{position:relative}}
+</style>
+<script id="huesjs">
+/* the body knows which tab is open, so the page takes that tab's hue */
+(function(){
+  const set = () => { const t = document.querySelector('#boardTabs .tab[aria-selected="true"]'); if (t) document.body.dataset.view = t.dataset.view; };
+  const _go = go; go = function(){ const r = _go.apply(this, arguments); set(); return r; };
+  set();
 })();
 </script>
 </body></html>
