@@ -6637,11 +6637,18 @@ body:not(.deck-mode)::after{background:linear-gradient(180deg,rgba(var(--m-veil)
 @media (prefers-reduced-transparency:reduce){:root{--panel:rgb(var(--m-veil));--glass:rgb(var(--m-veil))}}
 </style>
 <script id="moodjs">
-/* inner surfaces that are still pure white get the palette's fill (.wt) */
+/* inner surfaces that are still white or the old pale blue take the palette's fill */
 (function(){
   const main = document.getElementById('boardMain'); if (!main) return;
-  const white = el => { const m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(getComputedStyle(el).backgroundColor); return m && +m[1] >= 248 && +m[2] >= 248 && +m[3] >= 248 && (m[4] === undefined || +m[4] >= .85); };
-  function mark(){ const v = main.querySelector('.view:not([hidden])'); if (!v) return; v.querySelectorAll('*').forEach(el => { if (!el.classList.contains('wt') && !el.closest('.fx') && white(el)) el.classList.add('wt'); }); }
+  const pale = el => { const m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(getComputedStyle(el).backgroundColor); if (!m) return 0;
+    const r = +m[1], g = +m[2], b = +m[3], al = m[4] === undefined ? 1 : +m[4];
+    if (al < .3 || r < 215 || g < 215 || b < 215) return 0;
+    return (r >= 248 && g >= 248 && b >= 248) ? 1 : (b - r >= 3 ? 2 : 0); };
+  function mark(){
+    const v = main.querySelector('.view:not([hidden])'); if (!v) return;
+    v.querySelectorAll('*').forEach(el => { if (el.dataset.mood || el.closest('.fx')) return; const k = pale(el);
+      if (k) { el.dataset.mood = k; el.style.setProperty('background-color', k === 1 ? 'var(--m-fill)' : 'var(--m-head)', 'important'); } });
+  }
   let t = 0; new MutationObserver(() => { clearTimeout(t); t = setTimeout(mark, 150); }).observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
   mark();
 })();
