@@ -53,9 +53,31 @@ one shadow only for floating menus and the search dialog.
 Only the scroll scenes move, and only when scrolled. Everything else moves only in answer to an action.
 `prefers-reduced-motion` turns all of it off.
 
+## Glass + side menu (Ben, 5.11.26)
+Apple-style glass replaces the flat snow page: a washed-out season photo (`--bg1`) is fixed behind the board,
+and the top bar (dark glass), side menu and cards (white glass, `--glass` 78%, veil 66–90% over the photo, blur 22px, light rim) sit on it.
+Text always sits on glass, never on the bare photo (worst case over a dark photo spot: muted 5.1:1, red 4.7:1, slate 12:1); floating dialogs/menus use `--glass-strong` (80%).
+`prefers-reduced-transparency` turns it back into solid white. CSS in `style#glass`, runtime marking in `script#glassjs`.
+Tabs live in a right side menu (≥1024px) or a drawer opened from the current-tab bar (smaller): `style#sidenav`.
+
+## Themes (Ben, 5.11.26)
+Sun/moon button in the top bar (`#themeBtn`, added by `script#moodjs`) switches `html[data-theme]` between dark (default)
+and light; the choice is saved per browser (`localStorage penguin-theme`) and applied in <head> before paint.
+Light = soft snow: glass rgba(242,245,247,.86), fill rgba(234,239,243,.92), ink #1C2C37, muted #4A5B67,
+hues deepened (moss #4E6B40, lake #3A6386, clay #9A5136, ochre #85621C, heather #6D4B6B) with white text on them.
+
+## Palette: night in the mountains (Ben, 5.11.26)
+Ben found the light sage base muddy. The board is now dark glass over a darkened season photo:
+cards `--m-glass` rgba(22,32,42,.74), side menu rgba(14,22,30,.82), inner surfaces `--m-fill` rgba(38,50,62,.82),
+top bar rgba(9,14,20,.86). Ink #E8EDF1, muted #A9B5BF, lines rgba(255,255,255,.12). Tokens in `style#mood`.
+`script#moodjs` turns leftover light surfaces dark, makes pastel badges solid, and re-inks dark text on dark surfaces
+(colored text is lightened 55% toward white), so older components follow without rewrites.
+Five clear matte hues, one per tab (header band, badge, bar, menu icon) and rotating on task columns:
+moss #9CBF88, lake #8DB4D6, clay #E0A285, ochre #E2BF78, heather #C3A5D0. Text stays ink. `style#hues`.
+
 ## Never
 Eyebrow labels with dots, `01/02/03` on things that aren't a sequence, cartoon skiers, a separate story
-mode, frosted cards, falling snow, gold accents.
+mode, falling snow, gold accents.
 
 ## Polish 2.11.26 (UI UX Pro Max review, `style#polish`)
 - Tabs never clip the first tab; all 12 fit from 1440px, below that they scroll with an edge fade.
