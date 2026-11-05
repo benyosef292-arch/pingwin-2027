@@ -6596,58 +6596,84 @@ body:not(.deck-mode)::after{content:"";position:fixed;inset:0;z-index:-1;pointer
 })();
 </script>
 <style id="mood">
-/* ================= Mood 5.11.26 (Ben): no bright white. Matte, warm-to-cool tints that sit with the mountain photo.
-   Stone and forest: sage glass, forest top bar, steel-blue accent. Worst case over a dark photo spot: muted 6:1, red 5:1. ================= */
-/* palette · stone and forest (Ben chose 5.11.26) */
+/* ================= Mood 5.11.26 (Ben): "night in the mountains". Dark, rich glass over a darkened season photo,
+   light ink, and a few clear matte hues (style#hues). script#moodjs turns leftover light surfaces dark and
+   re-inks dark text that ends up on a dark surface, so old components follow without rewriting them. ================= */
 :root{
-  --m-veil:205,215,203;                 /* wash over the photo */
-  --m-glass:rgba(224,232,220,.9);       /* cards */
-  --m-side:rgba(200,213,197,.9);        /* side menu, phone bar */
-  --m-fill:rgba(238,243,234,.94);       /* surfaces inside cards (cells, inputs, chips) */
-  --m-head:rgba(206,218,202,.75);       /* card headers */
-  --m-top:rgba(34,52,44,.9);            /* top bar */
-  --m-ink:#1E2A25; --m-muted:#435249; --m-accent:#30516A;
+  --m-veil:12,20,28;                    /* night wash over the photo */
+  --m-glass:rgba(22,32,42,.74);         /* cards */
+  --m-side:rgba(14,22,30,.82);          /* side menu, phone bar */
+  --m-fill:rgba(38,50,62,.82);          /* surfaces inside cards (cells, inputs, rows) */
+  --m-head:rgba(255,255,255,.05);       /* card headers */
+  --m-top:rgba(9,14,20,.86);            /* top bar */
+  --m-ink:#E8EDF1; --m-muted:#A9B5BF; --m-line:rgba(255,255,255,.12);
 }
-:root{--panel:var(--m-glass);--glass:var(--m-glass);--glass-strong:var(--m-fill);--glass-edge:rgba(255,255,255,.32);
-  --slate:var(--m-ink);--muted:var(--m-muted);--run-blue:var(--m-accent);--primary-fill:var(--m-accent);--tint:rgba(var(--m-veil),.9);--tint2:rgba(0,0,0,.06);
-  /* deeper, matte versions of the signal colors so they stay >= 4.5:1 on the tinted glass */
-  --run-red:#A8282E;--marker-ink:#8A4508}
-body:not(.deck-mode){background:rgb(var(--m-veil))!important}
-body:not(.deck-mode)::after{background:linear-gradient(180deg,rgba(var(--m-veil),.6),rgba(var(--m-veil),.8) 50%,rgba(var(--m-veil),.9)),var(--bg1) center 30%/cover!important}
-.topbar{background:var(--m-top)!important}
-#boardTabs.tabs,.sn-bar{background:var(--m-side)!important}
-@media (max-width:1023.98px){#boardTabs.tabs{background:var(--m-side)!important}}
-#boardTabs .tab[aria-selected="true"],.sn-open{background:var(--m-fill)!important}
-#boardTabs .tab:hover{background:rgba(255,255,255,.3)!important}
-#boardTabs .tab{color:var(--m-ink)!important}
-#boardTabs .tab[aria-selected="true"]{color:var(--m-accent)!important}
+:root{--panel:var(--m-glass);--glass:var(--m-glass);--glass-strong:rgba(28,40,52,.95);--glass-edge:rgba(255,255,255,.10);
+  --glass-sh:0 1px 0 rgba(255,255,255,.06) inset,0 10px 30px -14px rgba(0,0,0,.6);
+  --hair:var(--m-line);--line:var(--m-line);--line2:rgba(255,255,255,.18);--tint2:rgba(255,255,255,.08)}
+body:not(.deck-mode){background:rgb(var(--m-veil))!important;color:var(--m-ink)}
+body:not(.deck-mode)::after{background:linear-gradient(180deg,rgba(var(--m-veil),.55),rgba(var(--m-veil),.72) 50%,rgba(var(--m-veil),.82)),var(--bg1) center 30%/cover!important}
+.topbar{background:var(--m-top)!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
+#boardTabs.tabs,.sn-bar{background:var(--m-side)!important;border-color:rgba(255,255,255,.08)!important}
+@media (max-width:1023.98px){#boardTabs.tabs{background:rgba(14,22,30,.94)!important}}
+#boardTabs .tab{color:var(--m-muted)!important}
+#boardTabs .tab:hover{background:rgba(255,255,255,.06)!important;color:var(--m-ink)!important}
+#boardTabs .tab[aria-selected="true"]{color:var(--m-ink)!important}
+#boardTabs .tab .pill{background:rgba(255,255,255,.1)!important;color:var(--m-ink)!important}
+#boardTabs .tab[data-view]::before{border-color:rgba(255,255,255,.1)!important}
+.sn-open{background:var(--m-fill)!important;color:var(--m-ink)!important;border-color:var(--m-line)!important}
 .cat-head{background:var(--m-head)!important}
-.search input,.toolbar input,.sup-f input,.sup-f select,.wf-in,.inv-add input,.ct-search input,.wt{background-color:var(--m-fill)!important}
-.gt{text-shadow:0 0 6px rgba(var(--m-veil),.95),0 0 2px rgba(var(--m-veil),.95)!important}
-@media (prefers-reduced-transparency:reduce){:root{--panel:rgb(var(--m-veil));--glass:rgb(var(--m-veil))}}
+.search input,.toolbar input,.sup-f input,.sup-f select,.wf-in,.inv-add input,.ct-search input,#boardMain input,#boardMain textarea,#boardMain select{
+  background-color:var(--m-fill)!important;color:var(--m-ink)!important;border-color:var(--m-line)!important}
+#boardMain ::placeholder{color:#8C99A4!important}
+#boardMain,#boardTabs,.sn-bar{color-scheme:dark}
+#boardMain select option{background:#1C2833;color:var(--m-ink)}
+.gt{color:var(--m-ink)!important;text-shadow:0 1px 8px rgba(0,0,0,.6)!important}
+.tm-names span{color:var(--m-ink)!important;background:rgba(255,255,255,.1)!important}
+@media (prefers-reduced-transparency:reduce){:root{--panel:#16202A;--glass:#16202A}}
 </style>
 <script id="moodjs">
-/* inner surfaces that are still white or the old pale blue take the palette's fill */
 (function(){
   const main = document.getElementById('boardMain'); if (!main) return;
-  const pale = el => { const m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(getComputedStyle(el).backgroundColor); if (!m) return 0;
-    const r = +m[1], g = +m[2], b = +m[3], al = m[4] === undefined ? 1 : +m[4];
-    if (al < .3 || r < 215 || g < 215 || b < 215) return 0;
-    return (r >= 248 && g >= 248 && b >= 248) ? 1 : (b - r >= 3 ? 2 : 0); };
-  function mark(){
-    const v = main.querySelector('.view:not([hidden])'); if (!v) return;
-    v.querySelectorAll('*').forEach(el => { if (el.dataset.mood || el.closest('.fx')) return; const k = pale(el);
-      if (k) { el.dataset.mood = k; el.style.setProperty('background-color', k === 1 ? 'var(--m-fill)' : 'var(--m-head)', 'important'); } });
+  const rgb = s => { let m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(s); if (m) return [+m[1], +m[2], +m[3], m[4] === undefined ? 1 : +m[4]];
+    m = /color\(srgb ([\d.]+) ([\d.]+) ([\d.]+)(?: \/ ([\d.]+))?\)/.exec(s); return m ? [m[1] * 255, m[2] * 255, m[3] * 255, m[4] === undefined ? 1 : +m[4]] : null; };
+  const lum = c => { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(c[0]) + .7152 * f(c[1]) + .0722 * f(c[2]); };
+  const sat = c => (Math.max(c[0], c[1], c[2]) - Math.min(c[0], c[1], c[2])) / 255;
+  /* light grey/white surfaces go dark; light pastel badges stay as they are */
+  function surfaces(v){
+    v.querySelectorAll('*').forEach(el => { if (el.dataset.mood || el.closest('.fx')) return;
+      const gi = getComputedStyle(el).backgroundImage;
+      if (/^linear-gradient/.test(gi)) { const g = rgb(gi); if (g && lum(g) > .55 && sat(g) < .09) { el.dataset.mood = 'g'; el.style.setProperty('background-image', 'none', 'important'); el.style.setProperty('background-color', 'var(--m-head)', 'important'); return; } }
+      const c = rgb(getComputedStyle(el).backgroundColor); if (!c || c[3] < .3) return;
+      if (lum(c) > .55 && sat(c) < .09) { el.dataset.mood = 's'; el.style.setProperty('background-color', 'var(--m-fill)', 'important'); }
+      /* pastel badges (people, status) become solid so their dark text keeps its contrast */
+      else if (lum(c) > .45 && el.offsetHeight > 56) { el.dataset.mood = 'w'; el.style.setProperty('background-color', `rgba(${c.slice(0, 3).join(',')},.12)`, 'important'); }
+      else if (lum(c) > .45 && c[3] < 1) { el.dataset.mood = 'p'; el.style.setProperty('background-color', `rgb(${c.slice(0, 3).map(x => Math.round(x * c[3] + 245 * (1 - c[3]))).join(',')})`, 'important'); }
+      const b = rgb(getComputedStyle(el).borderTopColor); if (b && b[3] > .3 && lum(b) > .45 && sat(b) < .12 && parseFloat(getComputedStyle(el).borderTopWidth) + parseFloat(getComputedStyle(el).borderBottomWidth) > 0) el.style.setProperty('border-color', 'var(--m-line)', 'important');
+    });
   }
-  let t = 0; new MutationObserver(() => { clearTimeout(t); t = setTimeout(mark, 150); }).observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
-  mark();
+  /* text: find what is really behind it; dark text on a dark surface gets light ink */
+  const bgOf = el => { for (let e = el; e && e !== document.body; e = e.parentElement) { const c = rgb(getComputedStyle(e).backgroundColor); if (c && c[3] >= .5) return c; } return [20, 30, 40, 1]; };
+  function ink(v){
+    v.querySelectorAll('*').forEach(el => { if (el.dataset.ink || el.closest('.fx') || /^(INPUT|TEXTAREA|SELECT|OPTION)$/.test(el.tagName)) return;
+      if (![...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim())) return;
+      const cs = getComputedStyle(el), t = rgb(cs.color); if (!t) return;
+      if (lum(bgOf(el)) > .25 || lum(t) > .3) return;
+      el.dataset.ink = '1';
+      if (sat(t) < .2) el.style.setProperty('color', lum(t) < .03 ? 'var(--m-ink)' : 'var(--m-muted)', 'important');
+      else el.style.setProperty('color', `rgb(${t.slice(0, 3).map(x => Math.round(x * .45 + 255 * .55)).join(',')})`, 'important');
+    });
+  }
+  function run(){ const v = main.querySelector('.view:not([hidden])'); if (!v) return; surfaces(v); ink(v); }
+  let t = 0; new MutationObserver(() => { clearTimeout(t); t = setTimeout(run, 150); }).observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
+  run();
 })();
 </script>
 <style id="hues">
 /* ================= Hues 5.11.26 (Ben): stone-and-forest base, but not one color everywhere.
    Five matte nature hues; each part of the site owns one. Hues color bands, icons, badges and bars; text stays ink. ================= */
 :root{
-  --h-moss:#5E7A4E; --h-lake:#4C7290; --h-clay:#A9644A; --h-ochre:#A9813A; --h-heather:#7A5A78;
+  --h-moss:#9CBF88; --h-lake:#8DB4D6; --h-clay:#E0A285; --h-ochre:#E2BF78; --h-heather:#C3A5D0;
   --hv:var(--h-lake);
 }
 /* each tab's hue */
@@ -6664,36 +6690,33 @@ body[data-view="contacts"],body[data-view="team"]{--hv:var(--h-heather)}
 
 /* side menu: icon in the tab's hue, the open tab gets a soft wash of it */
 #boardTabs .tab .ti{color:var(--th)}
-#boardTabs .tab[aria-selected="true"]{color:var(--m-ink)!important;background:color-mix(in srgb,var(--th) 16%,var(--m-fill))!important}
+#boardTabs .tab[aria-selected="true"]{color:var(--m-ink)!important;background:color-mix(in srgb,var(--th) 20%,transparent)!important}
 #boardTabs .tab[aria-selected="true"]::after{background:var(--th)!important}
-#boardTabs .tab[aria-selected="true"] .pill{background:var(--th)!important;color:#fff!important}
+#boardTabs .tab[aria-selected="true"] .pill{background:var(--th)!important;color:#10181F!important}
 .sn-open .ti{color:var(--hv)}
-.sn-open .pill{background:var(--hv)!important}
+.sn-open .pill{background:var(--hv)!important;color:#10181F!important}
 
 /* page header: band, badge and bar in the tab's hue */
-.view .vhead{border-top:4px solid var(--hv)!important}
-.view .vhead h2 .mk{background:var(--hv)!important}
+.view .vhead{border-top:3px solid var(--hv)!important}
+.view .vhead h2 .mk{background:var(--hv)!important;color:#10181F!important}
 .view .vhead .bar i{background:var(--hv)!important}
 
 /* task columns and cards rotate through the hues so neighbours differ */
 .cats>.cat:nth-child(5n+1){--hc:var(--h-moss)} .cats>.cat:nth-child(5n+2){--hc:var(--h-lake)} .cats>.cat:nth-child(5n+3){--hc:var(--h-ochre)}
 .cats>.cat:nth-child(5n+4){--hc:var(--h-clay)} .cats>.cat:nth-child(5n){--hc:var(--h-heather)}
-.cats>.cat{border-top:4px solid var(--hc)!important}
-.cats>.cat .cat-head{background:color-mix(in srgb,var(--hc) 14%,var(--m-glass))!important}
+.cats>.cat{border-top:3px solid var(--hc)!important}
+
 .qs-grid>*:nth-child(3n+1),.sup-grid>*:nth-child(3n+1),.tm-grid>*:nth-child(3n+1){--hc:var(--h-clay)}
 .qs-grid>*:nth-child(3n+2),.sup-grid>*:nth-child(3n+2),.tm-grid>*:nth-child(3n+2){--hc:var(--h-lake)}
 .qs-grid>*:nth-child(3n),.sup-grid>*:nth-child(3n),.tm-grid>*:nth-child(3n){--hc:var(--h-moss)}
-.qs-card,.tm-card{border-top:4px solid var(--hc,var(--hv))!important}
+.qs-card,.tm-card{border-top:3px solid var(--hc,var(--hv))!important}
 .inv-hc{border-inline-start:4px solid var(--h-ochre)!important}
 .inv-need .inv-ni{border-inline-start-color:var(--h-clay)!important}
 
-/* cards carry a light wash of their hue, headers a stronger one */
-.cats>.cat,.qs-card,.tm-card{background:color-mix(in srgb,var(--hc,var(--hv)) 9%,var(--m-glass))!important}
-.qs-card>:first-child,.cats>.cat .cat-head{background:color-mix(in srgb,var(--hc,var(--hv)) 20%,var(--m-glass))!important}
-.view .vhead{background:color-mix(in srgb,var(--hv) 10%,var(--m-glass))!important}
-#boardTabs.tabs{background:color-mix(in srgb,var(--hv) 8%,var(--m-side))!important}
+/* only the header gets a faint wash of the tab's hue */
+.view .vhead{background:color-mix(in srgb,var(--hv) 8%,var(--m-glass))!important}
 /* small topic labels take a deep version of the card's hue */
-.qs-topic>h4{color:color-mix(in srgb,var(--hc,var(--hv)) 70%,#1E2A25)!important}
+.qs-topic>h4{color:var(--hc,var(--hv))!important}
 /* top bar: a thin line of all five hues, like trail markers */
 .topbar{box-shadow:inset 0 -3px 0 0 transparent!important;border-bottom:0!important;position:sticky}
 .topbar::after{content:"";position:absolute;inset-inline:0;bottom:0;height:3px;

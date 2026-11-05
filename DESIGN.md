@@ -60,12 +60,14 @@ Text always sits on glass, never on the bare photo (worst case over a dark photo
 `prefers-reduced-transparency` turns it back into solid white. CSS in `style#glass`, runtime marking in `script#glassjs`.
 Tabs live in a right side menu (≥1024px) or a drawer opened from the current-tab bar (smaller): `style#sidenav`.
 
-## Palette: stone and forest (Ben, 5.11.26)
-No bright white. Matte sage glass `--m-glass` rgba(224,232,220,.9), side menu `--m-side` rgba(200,213,197,.9),
-inner surfaces `--m-fill`, forest top bar rgba(34,52,44,.9). Ink #1E2A25, muted #435249, accent (was run-blue) #30516A,
-red #A8282E, marker-ink #8A4508. Tokens in `style#mood`; `script#moodjs` re-tints leftover white/pale-blue surfaces.
-Not one color everywhere: five matte hues (moss #5E7A4E, lake #4C7290, clay #A9644A, ochre #A9813A, heather #7A5A78).
-Each tab owns one (header band, badge, bar, menu icon); task columns and cards rotate through them. Text stays ink. `style#hues`.
+## Palette: night in the mountains (Ben, 5.11.26)
+Ben found the light sage base muddy. The board is now dark glass over a darkened season photo:
+cards `--m-glass` rgba(22,32,42,.74), side menu rgba(14,22,30,.82), inner surfaces `--m-fill` rgba(38,50,62,.82),
+top bar rgba(9,14,20,.86). Ink #E8EDF1, muted #A9B5BF, lines rgba(255,255,255,.12). Tokens in `style#mood`.
+`script#moodjs` turns leftover light surfaces dark, makes pastel badges solid, and re-inks dark text on dark surfaces
+(colored text is lightened 55% toward white), so older components follow without rewrites.
+Five clear matte hues, one per tab (header band, badge, bar, menu icon) and rotating on task columns:
+moss #9CBF88, lake #8DB4D6, clay #E0A285, ochre #E2BF78, heather #C3A5D0. Text stays ink. `style#hues`.
 
 ## Never
 Eyebrow labels with dots, `01/02/03` on things that aren't a sequence, cartoon skiers, a separate story
