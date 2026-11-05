@@ -60,6 +60,12 @@ Text always sits on glass, never on the bare photo (worst case over a dark photo
 `prefers-reduced-transparency` turns it back into solid white. CSS in `style#glass`, runtime marking in `script#glassjs`.
 Tabs live in a right side menu (≥1024px) or a drawer opened from the current-tab bar (smaller): `style#sidenav`.
 
+## Themes (Ben, 5.11.26)
+Sun/moon button in the top bar (`#themeBtn`, added by `script#moodjs`) switches `html[data-theme]` between dark (default)
+and light; the choice is saved per browser (`localStorage penguin-theme`) and applied in <head> before paint.
+Light = soft snow: glass rgba(242,245,247,.86), fill rgba(234,239,243,.92), ink #1C2C37, muted #4A5B67,
+hues deepened (moss #4E6B40, lake #3A6386, clay #9A5136, ochre #85621C, heather #6D4B6B) with white text on them.
+
 ## Palette: night in the mountains (Ben, 5.11.26)
 Ben found the light sage base muddy. The board is now dark glass over a darkened season photo:
 cards `--m-glass` rgba(22,32,42,.74), side menu rgba(14,22,30,.82), inner surfaces `--m-fill` rgba(38,50,62,.82),
