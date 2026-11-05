@@ -55,8 +55,8 @@ Only the scroll scenes move, and only when scrolled. Everything else moves only 
 
 ## Glass + side menu (Ben, 5.11.26)
 Apple-style glass replaces the flat snow page: a washed-out season photo (`--bg1`) is fixed behind the board,
-and the top bar (dark glass), side menu and cards (white glass, `--glass` ~68%, blur 22px, light rim) sit on it.
-Text always sits on glass, never on the bare photo; floating dialogs/menus use `--glass-strong` (80%).
+and the top bar (dark glass), side menu and cards (white glass, `--glass` 78%, veil 66–90% over the photo, blur 22px, light rim) sit on it.
+Text always sits on glass, never on the bare photo (worst case over a dark photo spot: muted 5.1:1, red 4.7:1, slate 12:1); floating dialogs/menus use `--glass-strong` (80%).
 `prefers-reduced-transparency` turns it back into solid white. CSS in `style#glass`, runtime marking in `script#glassjs`.
 Tabs live in a right side menu (≥1024px) or a drawer opened from the current-tab bar (smaller): `style#sidenav`.
 

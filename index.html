@@ -6524,10 +6524,10 @@ body.deck-mode .sn-bar,body.film-mode .sn-bar,body.deck-mode #boardTabs.tabs,bod
 </script>
 <style id="glass">
 /* ================= Glass 5.11.26 (Ben): Apple-style glass. A soft mountain photo sits behind the board;
-   bars, side menu and cards are translucent layers that blur it. Text stays on near-white glass for contrast. ================= */
+   bars, side menu and cards are translucent layers that blur it. Text stays on near-white glass: worst case (dark photo spot) still gives muted/red/blue text >= 4.5:1. ================= */
 :root{
-  --panel:rgba(255,255,255,.66);
-  --glass:rgba(255,255,255,.68);
+  --panel:rgba(255,255,255,.78);
+  --glass:rgba(255,255,255,.78);
   --glass-strong:rgba(255,255,255,.8);
   --glass-edge:rgba(255,255,255,.75);
   --glass-line:rgba(28,44,55,.10);
@@ -6539,7 +6539,7 @@ body.deck-mode .sn-bar,body.film-mode .sn-bar,body.deck-mode #boardTabs.tabs,bod
 /* backdrop: the season photo, washed out and soft */
 body:not(.deck-mode){background:#E3EAF0!important}
 body:not(.deck-mode)::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(236,242,247,.55),rgba(236,242,247,.8) 50%,rgba(236,242,247,.9)),var(--bg1) center 30%/cover}
+  background:linear-gradient(180deg,rgba(236,242,247,.66),rgba(236,242,247,.82) 50%,rgba(236,242,247,.9)),var(--bg1) center 30%/cover}
 
 /* top bar: dark glass */
 .topbar{background:rgba(22,36,46,.7)!important;-webkit-backdrop-filter:var(--glass-blur)!important;backdrop-filter:var(--glass-blur)!important;
@@ -6553,7 +6553,7 @@ body:not(.deck-mode)::after{content:"";position:fixed;inset:0;z-index:-1;pointer
 @media (max-width:1023.98px){#boardTabs.tabs{background:rgba(244,247,250,.9)!important}}
 
 /* cards: glass panels with a light rim */
-.vhead,.view .vhead,.toolbar,.cat,.wk-top,.wk-board,.wk,.season,.ssn,.tm-card,.wcard,.wf-sec,.wf-weeks,.mx,
+.vhead,.view .vhead,.toolbar,.cat,.wk-board,.wk,.season,.ssn,.tm-card,.wcard,.wf-sec,.wf-weeks,.mx,
 .qs-card,.sup-card,.inv-tools,.inv-grid,.inv-need .inv-ni,.ct-card,.cal,.cal-side,.plan-wrap,.pl-col,.ov-card,.my,.mine,.me-box{
   background:var(--glass)!important;-webkit-backdrop-filter:var(--glass-blur)!important;backdrop-filter:var(--glass-blur)!important;
   border:1px solid var(--glass-edge)!important;box-shadow:var(--glass-sh)!important}
@@ -6565,6 +6565,9 @@ body:not(.deck-mode)::after{content:"";position:fixed;inset:0;z-index:-1;pointer
 
 /* any other white card found at runtime (script#glassjs marks it .gl) */
 .gl{-webkit-backdrop-filter:var(--glass-blur)!important;backdrop-filter:var(--glass-blur)!important;border-color:var(--glass-edge)!important}
+/* team names were white on white (also before the glass) */
+.tm-names span{color:var(--slate)!important;background:var(--tint2)!important}
+.gt{color:var(--slate)!important;text-shadow:0 0 6px rgba(255,255,255,.95),0 0 2px rgba(255,255,255,.95)}
 @media (prefers-reduced-transparency:reduce){
   :root{--panel:#fff;--glass:#fff;--glass-strong:#fff}
   body:not(.deck-mode){background:var(--snow)!important}
@@ -6580,8 +6583,12 @@ body:not(.deck-mode)::after{content:"";position:fixed;inset:0;z-index:-1;pointer
   const light = el => { const m = /rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/.exec(getComputedStyle(el).backgroundColor); return m && +m[1] > 200 && +m[2] > 200 && +m[3] > 200 && (m[4] === undefined ? 1 : +m[4]) >= .4; };
   function mark(){
     const v = main.querySelector('.view:not([hidden])'); if (!v) return;
-    const walk = el => { for (const c of el.children) { if (c.classList.contains('fx') || c.tagName === 'svg') continue; if (light(c)) { c.classList.add('gl'); continue; } walk(c); } };
-    walk(v);
+    /* text that sits straight on the photo (no card under it) gets slate ink + a soft halo */
+    const bare = el => /rgba\(0, 0, 0, 0\)|transparent/.test(getComputedStyle(el).backgroundColor) && [...el.childNodes].some(n => n.nodeType === 3 && n.textContent.trim());
+    const hasBg = el => { const cs = getComputedStyle(el); return cs.backgroundImage !== 'none' || !/rgba\(0, 0, 0, 0\)|transparent/.test(cs.backgroundColor); };
+    const walk = (el, covered) => { for (const c of el.children) { if (c.hidden || c.classList.contains('fx') || c.tagName === 'svg') continue; if (light(c)) { c.classList.add('gl'); continue; }
+      const cov = covered || hasBg(c); if (!cov && !/^(BUTTON|INPUT|SELECT|TEXTAREA|LABEL)$/.test(c.tagName) && bare(c)) c.classList.add('gt'); walk(c, cov); } };
+    walk(v, false);
   }
   let t = 0; const later = () => { clearTimeout(t); t = setTimeout(mark, 120); };
   new MutationObserver(later).observe(main, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden'] });
