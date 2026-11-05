@@ -84,7 +84,7 @@ Only the scroll scenes on the overview move, and only when scrolled. Everything 
 
 ## Never
 Eyebrow labels with dots, `01/02/03` on things that aren't a sequence, cartoon skiers, a separate story
-mode, falling snow on the board (the light snow behind the deck slides stays, Ben 5.11.26), gold accents, white or muddy-green surfaces.
+mode, falling snow (deck snow removed, Ben 5.11.26), gold accents, white or muddy-green surfaces.
 
 ## Removed (do not bring back without Ben)
 Gondola scene "מוכנים לעלות", the suppliers tab (mail buttons are in אנשי קשר), the "my tasks" panel on the overview

@@ -988,7 +988,6 @@ body.reordering{user-select:none;-webkit-user-select:none}
 @keyframes upIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .sl-h .w{display:inline-block;animation:wIn .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.12s + var(--w,0) * .07s)}
 @keyframes wIn{from{opacity:0;transform:translateY(.35em);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
-#deckSnow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 .deck-wrap .stage{z-index:1}
 
 /* ================= BOARD motion ================= */
@@ -3656,7 +3655,7 @@ function setMode(m){
   document.body.classList.toggle('film-mode', m === 'film');
   document.getElementById('view-deck').style.display = m === 'deck' ? 'flex' : 'none';
   document.querySelectorAll('.mode-btn').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === m)));
-  if (m === 'deck') { fitDeck(); showSlide(si); if (window.DeckMotion) DeckMotion.size(); }
+  if (m === 'deck') { fitDeck(); showSlide(si); }
   try { localStorage.setItem('penguin-mode', m); } catch(e){}
   window.scrollTo({ top: 0 });
   if (m === 'board' && window.FilmMode) FilmMode.enter();
@@ -4399,25 +4398,6 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     }
     laneProgress();
   };
-  /* snow behind the stage */
-  const host = document.getElementById('view-deck');
-  const c = document.createElement('canvas'); c.id = 'deckSnow'; c.setAttribute('aria-hidden', 'true'); host.insertBefore(c, host.firstChild);
-  const ctx = c.getContext('2d'); let fl = [], w = 0, h = 0;
-  function size(){ const d = Math.min(2, devicePixelRatio || 1); w = host.clientWidth; h = host.clientHeight; if (!w) return; c.width = w * d; c.height = h * d; ctx.setTransform(d, 0, 0, d, 0, 0);
-    fl = Array.from({ length: Math.min(90, Math.round(w * h / 16000)) }, () => ({ x: Math.random() * w, y: Math.random() * h, r: .5 + Math.random() * 1.8, v: .2 + Math.random() * .6, p: Math.random() * 6 })); }
-  addEventListener('resize', size);
-  const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function tick(){
-    if (document.body.classList.contains('deck-mode') && !document.hidden){
-      if (!w || c.width === 0) size();
-      ctx.clearRect(0, 0, w, h);
-      for (const f of fl){ f.p += .012; f.y += f.v; f.x += Math.sin(f.p) * .3; if (f.y > h + 4){ f.y = -4; f.x = Math.random() * w; }
-        ctx.fillStyle = `rgba(200,230,245,${(.18 + f.r * .14).toFixed(2)})`; ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fill(); }
-    }
-    requestAnimationFrame(tick);
-  }
-  if (!RM) requestAnimationFrame(tick);
-  window.DeckMotion = { size };
 })();
 
 /* ================= BOARD motion ================= */
