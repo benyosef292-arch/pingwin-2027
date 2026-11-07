@@ -1,91 +1,91 @@
 # DESIGN.md · Penguin Val Thorens 2027 team site
 
 Internal work site for four Penguin reps and the office. Job: know what's mine, what's next, and by when.
-Language: the resort's piste map and signage. Colors already mean something on a mountain, so they mean the same thing here.
-Not based on UXKIN examples (the UXKIN connection was not available); based on the site's own history and Ben's feedback.
+Based on the site's own history and Ben's feedback (not on UXKIN examples).
+Ben's taste: order and uniformity, checkboxes on the right, few words. No white, no muddy green; matte, varied colors.
 
-## 2.11.26 face lift (UI UX Pro Max, "Productivity Tool")
-Style: Flat Design + Minimalism. No shadows (except the search dialog), 8px panel radius, 150ms transitions.
-Type: Noto Sans Hebrew ("Hebrew Modern" pairing), IBM Plex Sans Hebrew as fallback. Frank Ruhl Libre stays for scene titles.
-Colors: unchanged (the table below). Ben preferred the original palette over the skill's teal.
-All phase signs use run-blue, not one run color each. People colors unchanged. Photo scenes unchanged.
+The CSS is built in layers; a later `<style>` overrides an earlier one. The look on screen today comes from
+the last layers: `style#mood` (tokens), `style#hues` (per-tab colors), `style#sidenav`, `style#glass`.
+The older tokens below (`--snow`, `--panel`, ...) are still defined and still feed components that the
+`#mood` layer re-maps.
 
-## Color
+## Themes
+Sun/moon button in the top bar (`#themeBtn`, added by `script#moodjs`) switches `html[data-theme]` between
+dark (default) and light. The choice is saved per browser (`localStorage penguin-theme`) and applied in `<head>` before paint.
 
-| Token | Value | Role |
-|---|---|---|
-| `--snow` | #F1F4F6 | page background (work board) |
-| `--panel` | #FFFFFF | panels, cards |
-| `--slate` | #1C2C37 | text, top bar, dark scenes' base |
-| `--muted` | #536572 | secondary text (4.9:1 on white, 4.6:1 on #EDEDED) |
-| `--hair` | #D3DCE2 | borders |
-| `--run-blue` | #1858C4 | open / active / links / focus |
-| `--run-red` | #C62A30 | due, overdue, red lines |
-| `--run-green` | #1F8A55 | done, only done |
-| `--marker` | #EE8418 | today, next, "you are here" (fills only; text uses `--marker-ink` #A4520A) |
-| `--glow` | #F6C38B | the one warm tint on the dark photo scenes (replaces the old gold); goggle rim |
-
-People have their own colors, chosen so none of them can be read as a run color:
-בן #6941C6 · יותם #0E7490 · דורון #8B5A2B · קרן #B42370 · כולם #475966 · פתוח #8A6100.
-People chips: tinted background, text in the person's color (all ≥4.5:1).
-
-Dark photo scenes (goggles, gondola, team building): slate night + white type + `--glow` only for
-the next/active thing. No gold eyebrows, no single word painted in an accent color.
-
-## Typography
-IBM Plex Sans Hebrew everywhere, 400/500/600/700, tabular numbers for dates and counts.
-Frank Ruhl Libre only for the goggle hero title and the scene titles (the "poster" voice).
-Scale: 12 / 13 / 14.5 / 16 / 20 / 28 / 32 / clamp(46–96) hero. Body 14.5–16px, lines under 75ch.
-
-## Spacing, shape, depth
-4px base: 4 8 12 16 20 24 32 40 56. Content width 1160px.
-Radius by level: panels 10px, chips/rows 6px, people pills round. Borders instead of shadows;
-one shadow only for floating menus and the search dialog.
-
-## Components
-- Tab header = sign plate: run-colored square with stage number, title, one line, a tick per task.
-- Task row: checkbox (green when done), title, one quiet line of detail, owner chip. The deadline is shown
-  once on the group, not repeated on every task (the owner's picker stays quiet until changed).
-- Buttons: primary = slate fill; secondary = border; quiet = text. All show a 2px run-blue focus ring.
-- Touch targets ≥ 40px on phones.
-
-## Motion
-Only the scroll scenes move, and only when scrolled. Everything else moves only in answer to an action.
-`prefers-reduced-motion` turns all of it off.
-
-## Glass + side menu (Ben, 5.11.26)
-Apple-style glass replaces the flat snow page: a washed-out season photo (`--bg1`) is fixed behind the board,
-and the top bar (dark glass), side menu and cards (white glass, `--glass` 78%, veil 66–90% over the photo, blur 22px, light rim) sit on it.
-Text always sits on glass, never on the bare photo (worst case over a dark photo spot: muted 5.1:1, red 4.7:1, slate 12:1); floating dialogs/menus use `--glass-strong` (80%).
-`prefers-reduced-transparency` turns it back into solid white. CSS in `style#glass`, runtime marking in `script#glassjs`.
-Tabs live in a right side menu (≥1024px) or a drawer opened from the current-tab bar (smaller): `style#sidenav`.
-
-## Themes (Ben, 5.11.26)
-Sun/moon button in the top bar (`#themeBtn`, added by `script#moodjs`) switches `html[data-theme]` between dark (default)
-and light; the choice is saved per browser (`localStorage penguin-theme`) and applied in <head> before paint.
-Light = soft snow: glass rgba(242,245,247,.86), fill rgba(234,239,243,.92), ink #1C2C37, muted #4A5B67,
-hues deepened (moss #4E6B40, lake #3A6386, clay #9A5136, ochre #85621C, heather #6D4B6B) with white text on them.
-
-## Palette: night in the mountains (Ben, 5.11.26)
-Ben found the light sage base muddy. The board is now dark glass over a darkened season photo:
-cards `--m-glass` rgba(22,32,42,.74), side menu rgba(14,22,30,.82), inner surfaces `--m-fill` rgba(38,50,62,.82),
+**Dark: night in the mountains.** Dark glass over a darkened season photo.
+Cards `--m-glass` rgba(22,32,42,.74), side menu rgba(14,22,30,.82), inner surfaces `--m-fill` rgba(38,50,62,.82),
 top bar rgba(9,14,20,.86). Ink #E8EDF1, muted #A9B5BF, lines rgba(255,255,255,.12). Tokens in `style#mood`.
 `script#moodjs` turns leftover light surfaces dark, makes pastel badges solid, and re-inks dark text on dark surfaces
 (colored text is lightened 55% toward white), so older components follow without rewrites.
-Five clear matte hues, one per tab (header band, badge, bar, menu icon) and rotating on task columns:
-moss #9CBF88, lake #8DB4D6, clay #E0A285, ochre #E2BF78, heather #C3A5D0. Text stays ink. `style#hues`.
+
+**Light: soft snow.** Glass rgba(242,245,247,.86), fill rgba(234,239,243,.92), ink #1C2C37, muted #4A5B67.
+
+## Five hues
+One per tab (header band, badge, bar, menu icon) and rotating on task columns. `style#hues`.
+
+| Hue | Dark theme | Light theme (white text on it) |
+|---|---|---|
+| moss | #9CBF88 | #4E6B40 |
+| lake | #8DB4D6 | #3A6386 |
+| clay | #E0A285 | #9A5136 |
+| ochre | #E2BF78 | #85621C |
+| heather | #C3A5D0 | #6D4B6B |
+
+In the dark theme text on a hue stays ink.
+
+## Glass and side menu
+A season photo (`--bg1`) is fixed behind the board. Top bar, side menu and cards are glass over it (blur 22px, light rim).
+Text always sits on glass, never on the bare photo. Floating dialogs and menus use `--glass-strong`.
+`prefers-reduced-transparency` turns the glass solid. CSS in `style#glass`; `script#moodjs` marks leftover white cards at runtime (`.gl`).
+Tabs live in a right side menu (≥1024px) or a drawer opened from the current-tab bar (smaller): `style#sidenav`.
+
+## Base tokens (older layers)
+
+| Token | Value | Role |
+|---|---|---|
+| `--slate` | #1C2C37 | text, dark scenes' base |
+| `--muted` | #536572 | secondary text |
+| `--hair` | #D3DCE2 | borders |
+| `--run-blue` | #1858C4 | open / active / links / focus |
+| `--run-red` | #C62A30 | due, overdue |
+| `--run-green` | #1F8A55 | done, only done |
+| `--marker` | #EE8418 | today, next (fills only; text uses `--marker-ink` #A4520A) |
+| `--glow` | #F6C38B | the one warm tint on the dark photo scenes |
+
+People colors, chosen so none reads as a status color:
+בן #6941C6 · יותם #0E7490 · דורון #8B5A2B · קרן #B42370 · כולם #475966 · פתוח #8A6100.
+People chips: tinted background, text in the person's color.
+
+Calendar event colors (white text ≥4.5:1): ספקים #A35F00, לקוחות #C0392B, שבועות העונה #0B7A71, ואקאנס #66727E.
+
+## Typography
+Noto Sans Hebrew for everything (`--fd`, `--fb`), IBM Plex Sans Hebrew as fallback. 400/500/600/700,
+tabular numbers for dates and counts. Frank Ruhl Libre (`--f-serif`) only for the hero and scene titles.
+Text floor 12px for chips, counters and field labels. Body 14.5–16px, lines under 75ch.
+
+## Spacing and shape
+4px base: 4 8 12 16 20 24 32 40 56. Content width 1160px.
+Radius: panels 8–10px, chips/rows 6px, people pills round.
+
+## Components
+- Tab header: hue band, stage number, title, one line, a tick per task.
+- Task row: checkbox on the right (green when done), title, one quiet line of detail, owner chip.
+  The deadline is shown once on the group, not on every task.
+- Checkboxes: one box everywhere (tasks, open questions), 20px (24px on touch), border #7A8B98.
+- Buttons: primary = filled; secondary = border; quiet = text. One focus ring: 2px run-blue.
+- Touch targets ≥ 40px on phones. Footer is one line.
+- Warehouse (`style#inv`, doc `inv`): one row per item (name, quantity with − / + when it is a plain number, note).
+  Owner site is fixed in the seed. Items of other sites get an orange edge and a handover card per site at the top.
+
+## Motion
+Only the scroll scenes on the overview move, and only when scrolled. Everything else moves only in answer to an action.
+`prefers-reduced-motion` turns all of it off.
 
 ## Never
 Eyebrow labels with dots, `01/02/03` on things that aren't a sequence, cartoon skiers, a separate story
-mode, falling snow, gold accents.
+mode, falling snow (deck snow removed, Ben 5.11.26), gold accents, white or muddy-green surfaces.
 
-## Polish 2.11.26 (UI UX Pro Max review, `style#polish`)
-- Tabs never clip the first tab; all 12 fit from 1440px, below that they scroll with an edge fade.
-- Text floor 12px for chips, counters and field labels.
-- Checkboxes: one box everywhere (tasks, open questions), 20px (24px on touch), border #7A8B98 (3.5:1).
-- Calendar event colors darkened for white text ≥4.5:1: ספקים #A35F00, לקוחות #C0392B, שבועות העונה #0B7A71, ואקאנס #66727E.
-- Footer is one line, no empty dark band. One focus ring: 2px run-blue.
-
-## Warehouse tab 3.11.26 (`style#inv`, doc `inv`)
-- One row per item: name, quantity (− / + when it is a plain number), note. Owner site is fixed in the seed (no picker, Ben 3.11).
-- Items of other sites: orange edge/select, and a handover card per site at the top with a tick on the right.
+## Removed (do not bring back without Ben)
+Gondola scene "מוכנים לעלות", the suppliers tab (mail buttons are in אנשי קשר), the "my tasks" panel on the overview
+(who-am-I is only in the top bar).
