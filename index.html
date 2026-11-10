@@ -7121,4 +7121,13 @@ dlg.querySelector('form').addEventListener('submit',e=>{e.preventDefault(); if(d
   }).catch(() => { if (hasKey) note('לא הצלחתי לטעון את הקישורים. נסו לרענן.'); });
 })();
 </script>
+<style id="drawerfix">
+/* 10.11.26: iPhone Safari showed the phone menu as an empty blurred panel (backdrop blur + slide transform on the drawer).
+   Phone/tablet drawer: solid background, no blur, no slide animation. */
+@media (max-width:1023.98px){
+  #boardTabs.tabs{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgb(var(--m-veil,233,238,242))!important;
+    transform:none!important;-webkit-transform:none!important;transition:none!important;visibility:hidden;display:none!important}
+  body.sn-on #boardTabs.tabs{visibility:visible;display:flex!important}
+}
+</style>
 </body></html>
