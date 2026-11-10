@@ -4762,7 +4762,7 @@ document.addEventListener('keydown', e => {
 (function(){
   const chip = document.getElementById('syncChip'), txt = document.getElementById('syncTxt');
   const setChip = (st, label) => { chip.dataset.s = st; txt.textContent = label; };
-  const DOCS = { checks: KEY, voices: TKEY.voices, hw: TKEY.hw, sums: TKEY.sums, wform: TKEY.wform, order: ORDER_KEY, resp: TKEY.resp, owners: OWN_KEY, dl: DL_KEY, custom: CUSTOM_KEY, qs: QS_KEY, sup: SUP_KEY, weekly: "penguin-weekly", inv: INV_KEY };
+  const DOCS = { checks: KEY, voices: TKEY.voices, hw: TKEY.hw, sums: TKEY.sums, wform: TKEY.wform, order: ORDER_KEY, resp: TKEY.resp, owners: OWN_KEY, dl: DL_KEY, custom: CUSTOM_KEY, qs: QS_KEY, sup: SUP_KEY, weekly: "penguin-weekly", inv: INV_KEY, pw: "penguin-pw" };
   const readLocal = k => { try { return JSON.parse(localStorage.getItem(k) || '{}') || {}; } catch(e){ return {}; } };
   const writeLocal = (k, o) => { try { localStorage.setItem(k, JSON.stringify(o)); } catch(e){} };
   let db = null, readOnly = false;
@@ -4791,6 +4791,8 @@ document.addEventListener('keydown', e => {
       renderInv();
     } else if (name === 'weekly'){
       if (window.renderWk) window.renderWk();
+    } else if (name === 'pw'){
+      if (window.pwRender) window.pwRender();
     } else {
       Object.keys(items).forEach(id => {
         const el = document.getElementById(id);
@@ -6788,4 +6790,213 @@ body[data-view="contacts"],body[data-view="team"]{--hv:var(--h-heather)}
 .rf-open.ed li{padding:8px;border-radius:10px;background:var(--m-soft)}
 @media (max-width:640px){.rf-edit{position:static;align-self:flex-start;margin-top:8px}.rfull.editing li.ed{grid-template-columns:1fr 34px}.rfull.editing li.ed .rf-w,.rfull.editing li.ed .rf-d{grid-column:1 / -1}}
 </style>
+<style id="pwsched">
+/* 8.11.26 prep-week schedule (Ben): week grid on top of "שבוע ההכנה באתר". Team link can drag items between days/hours and tick done (doc 'pw'). */
+#pwSched{--pw-bg:#141a22;--pw-panel:#1a212b;--pw-line:#28323f;--pw-fg:#e8edf2;--pw-mut:#9aa7b5;--pw-band:#222b37;--pw-fix:#d6ad52;
+  --pw-hot:#5b8db5;--pw-eq:#c47c56;--pw-ski:#9c7ec4;--pw-sup:#4fa59d;--pw-fld:#82ab69;--pw-ops:#8a99ae;--pw-tint:30%;
+  --pw-B:#9b7fe0;--pw-Y:#3fa7bd;--pw-D:#c08a5a;--pw-K:#d0679a;--pw-A:#8c9cab;
+  margin:0 0 22px;color:var(--pw-fg);font-family:inherit}
+html[data-theme="light"] #pwSched{--pw-bg:#e3e8ee;--pw-panel:#edf1f5;--pw-line:#cfd7e0;--pw-fg:#1b2531;--pw-mut:#55626f;--pw-band:#dde3ea;--pw-fix:#9a7015;
+  --pw-hot:#2f6690;--pw-eq:#9a4f2c;--pw-ski:#6b4c94;--pw-sup:#1f7068;--pw-fld:#4a7337;--pw-ops:#4f5d70;--pw-tint:18%;
+  --pw-B:#6941C6;--pw-Y:#0E7490;--pw-D:#8B5A2B;--pw-K:#B42370;--pw-A:#5d6b79}
+#pwSched .pw-top{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;background:var(--pw-panel);border:1px solid var(--pw-line);border-radius:10px 10px 0 0;border-bottom:0;padding:12px 14px 10px}
+#pwSched h3{margin:0;font-size:18px;color:var(--pw-fg)}
+#pwSched .pw-sub{color:var(--pw-mut);font-size:13px;font-variant-numeric:tabular-nums}
+#pwSched .pw-cnt{margin-inline-start:auto;font-size:13px;color:var(--pw-mut)}
+#pwSched .pw-cnt b{color:var(--pw-fg)}
+#pwSched .pw-key{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:12.5px;width:100%;color:var(--pw-fg)}
+#pwSched .pw-key span{display:inline-flex;align-items:center;gap:6px}
+#pwSched .pw-key .sep{width:1px;height:14px;background:var(--pw-line)}
+#pwSched .sw{width:14px;height:14px;border-radius:3px;display:inline-block;background:color-mix(in srgb,var(--c) var(--pw-tint),var(--pw-panel));border-inline-start:4px solid var(--c)}
+#pwSched .sw.fx{background:transparent;border:2px solid var(--pw-fix)}
+#pwSched .sw.pd{background:transparent;border:1.5px dashed var(--pw-mut)}
+#pwSched .pw-lay{display:flex;gap:12px;align-items:flex-start;background:var(--pw-panel);border:1px solid var(--pw-line);border-top:0;border-radius:0 0 10px 10px;padding:0 10px 10px}
+#pwSched .pw-scroll{flex:1;min-width:0;overflow-x:auto;border:1px solid var(--pw-line);border-radius:8px;background:var(--pw-panel)}
+#pwSched .pw-grid{display:grid;grid-template-columns:50px repeat(9,minmax(150px,1fr));grid-auto-rows:minmax(24px,auto);min-width:1410px}
+#pwSched .gh{position:sticky;top:0;z-index:3;background:var(--pw-panel);border-bottom:1px solid var(--pw-line);border-inline-start:1px solid var(--pw-line);padding:8px 9px 7px}
+#pwSched .gh em{display:block;font-style:normal;color:var(--pw-mut);font-size:12px;font-variant-numeric:tabular-nums}
+#pwSched .gh b{display:block;font-size:14px;line-height:1.3;color:var(--pw-fg)}
+#pwSched .gh.cl b{color:var(--pw-fix)}
+#pwSched .gt{grid-column:1;font-size:11px;color:var(--pw-mut);font-variant-numeric:tabular-nums;padding:2px 5px;direction:ltr;text-align:right}
+#pwSched .gl{border-inline-start:1px solid var(--pw-line)}
+#pwSched .gl.hr{border-top:1px solid color-mix(in srgb,var(--pw-line) 70%,transparent)}
+#pwSched .gl.ov{background:color-mix(in srgb,var(--pw-fix) 22%,transparent);border-radius:4px}
+#pwSched .gb{margin:3px 4px;display:flex;flex-direction:column;gap:5px;z-index:1;min-width:0}
+#pwSched .gb.brk{pointer-events:none;justify-content:center;align-items:center;color:var(--pw-mut);font-size:12px;background:var(--pw-band);margin:2px 0;z-index:0}
+#pwSched .pwi{--c:var(--pw-ops);position:relative;flex:1;border-radius:6px;background:color-mix(in srgb,var(--c) var(--pw-tint),var(--pw-panel));border-inline-start:4px solid var(--c);padding:6px 8px;font-size:13px;line-height:1.35;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 7px;align-content:start;color:var(--pw-fg)}
+#pwSched .pwi.hot{--c:var(--pw-hot)}#pwSched .pwi.eq{--c:var(--pw-eq)}#pwSched .pwi.ski{--c:var(--pw-ski)}#pwSched .pwi.sup{--c:var(--pw-sup)}#pwSched .pwi.fld{--c:var(--pw-fld)}
+#pwSched .pwi.fix{outline:2px solid var(--pw-fix);outline-offset:-2px;font-weight:700}
+#pwSched .pwi.set{background:color-mix(in srgb,var(--c) 8%,var(--pw-panel));border:1.5px dashed var(--c);border-inline-start-width:4px}
+#pwSched .pwi.done{opacity:.55}
+#pwSched .pwi.done .pw-tx{text-decoration:line-through}
+#pwSched .pwi.drag{opacity:.35}
+#pwSched.can .pwi{cursor:grab}
+#pwSched .pw-ck{grid-row:1/3;align-self:start;margin:1px 0 0;width:16px;height:16px;accent-color:var(--c);cursor:pointer}
+#pwSched .pw-tx{min-width:0;padding-inline-end:18px}
+#pwSched .tm2{display:block;font-size:11px;color:var(--pw-mut);font-variant-numeric:tabular-nums;font-weight:400}
+#pwSched .pwi.fix .tm2{color:var(--pw-fix);font-weight:700}
+#pwSched .tag{font-size:10.5px;border-radius:9px;padding:0 7px;margin-inline-start:5px;white-space:nowrap}
+#pwSched .tag.f{color:var(--pw-bg);background:var(--pw-fix);font-weight:700}
+#pwSched .tag.s{color:var(--pw-mut);border:1px dashed var(--pw-mut);font-weight:400}
+#pwSched .who{grid-column:2;display:flex;gap:4px;flex-wrap:wrap;align-self:end}
+#pwSched .p{font-size:11px;font-weight:700;border-radius:4px;padding:0 6px;color:var(--pw-bg);background:var(--pw-A);white-space:nowrap;font-style:normal}
+#pwSched .p.B{background:var(--pw-B)}#pwSched .p.Y{background:var(--pw-Y)}#pwSched .p.D{background:var(--pw-D)}#pwSched .p.K{background:var(--pw-K)}
+#pwSched .pw-mv{position:absolute;top:3px;inset-inline-end:3px;width:22px;height:22px;border:0;border-radius:4px;background:transparent;color:var(--pw-mut);font-size:15px;line-height:1;cursor:pointer;display:none;padding:0}
+#pwSched.can .pw-mv{display:block}
+#pwSched .pw-mv:hover,#pwSched .pw-mv:focus-visible{background:color-mix(in srgb,var(--pw-fg) 12%,transparent);color:var(--pw-fg);outline:none}
+#pwSched .pw-side{flex:0 0 210px;position:sticky;top:70px;border:1px solid var(--pw-line);border-radius:8px;padding:10px;background:var(--pw-panel);min-height:120px}
+#pwSched .pw-side.ov{outline:2px dashed var(--pw-fix);outline-offset:-3px}
+#pwSched .pw-side h4{margin:0 0 8px;font-size:14px;display:flex;justify-content:space-between;color:var(--pw-fg)}
+#pwSched .pw-side h4 span{font-size:12px;color:var(--pw-mut);font-weight:400}
+#pwSched .pw-side .pw-list{display:flex;flex-direction:column;gap:6px}
+#pwSched .pw-side .pwi{flex:none}
+#pwSched .pw-empty{color:var(--pw-mut);font-size:12.5px;margin:0}
+#pwSched .pw-ro{width:100%;color:var(--pw-mut);font-size:12.5px;margin:0}
+#pwSched.can .pw-ro{display:none}
+.pw-dlg{position:fixed;inset:0;z-index:200;background:rgba(10,14,20,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.pw-dlg[hidden]{display:none}
+.pw-dlg form{direction:rtl;background:#1a212b;color:#e8edf2;border:1px solid #28323f;border-radius:10px;padding:16px;width:min(340px,100%);display:flex;flex-direction:column;gap:10px;font-size:14px}
+html[data-theme="light"] .pw-dlg form{background:#edf1f5;color:#1b2531;border-color:#cfd7e0}
+.pw-dlg b{font-size:15px}
+.pw-dlg label{display:flex;flex-direction:column;gap:4px;font-size:13px}
+.pw-dlg select{font:inherit;padding:6px 8px;border-radius:6px}
+.pw-dlg .row{display:flex;gap:8px;justify-content:flex-start}
+.pw-dlg button{font:inherit;padding:6px 14px;border-radius:6px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer}
+.pw-dlg button.ok{background:#5b8db5;border-color:#5b8db5;color:#fff}
+@media (max-width:900px){#pwSched .pw-lay{flex-direction:column}#pwSched .pw-side{position:static;flex:none;width:100%;box-sizing:border-box}#pwSched .pw-scroll{width:100%}}
+</style>
+<style id="pwfit">
+/* 9.11.26 (Ben): 3 days per screen by default, arrows + day pills, "כל השבוע" toggle, 1 day on narrow screens */
+#pwSched{container-type:inline-size;container-name:pw}
+#pwSched .gt{position:sticky;inset-inline-start:0;z-index:2;background:var(--pw-panel)}
+#pwSched .pw-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;margin-top:4px}
+#pwSched .pw-seg{display:flex;border:1px solid var(--pw-line);border-radius:8px;overflow:hidden}
+#pwSched .pw-seg button,#pwSched .pw-arw,#pwSched .pw-pills button{font:inherit;color:var(--pw-fg);background:transparent;border:0;cursor:pointer}
+#pwSched .pw-seg button{padding:6px 14px;font-size:13px}
+#pwSched .pw-seg button[aria-pressed="true"]{background:color-mix(in srgb,var(--pw-hot) 32%,var(--pw-panel))}
+#pwSched .pw-arw{width:34px;height:34px;border:1px solid var(--pw-line);border-radius:8px;font-size:16px}
+#pwSched .pw-arw:disabled{opacity:.3;cursor:default}
+#pwSched .pw-pills{display:flex;gap:4px;overflow-x:auto;min-width:0;flex:1}
+#pwSched .pw-pills button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;padding:4px 10px;border-radius:8px;border:1px solid transparent;line-height:1.2}
+#pwSched .pw-pills button b{font-size:13px;font-variant-numeric:tabular-nums}
+#pwSched .pw-pills button span{font-size:11px;color:var(--pw-mut)}
+#pwSched .pw-pills button.on{border-color:var(--pw-line);background:var(--pw-bg)}
+#pwSched .pw-pills button.cl b{color:var(--pw-fix)}
+#pwSched .pw-seg button:focus-visible,#pwSched .pw-arw:focus-visible,#pwSched .pw-pills button:focus-visible{outline:2px solid var(--pw-hot);outline-offset:1px}
+#pwSched .pw-grid{min-width:0;grid-auto-rows:minmax(30px,auto)}
+#pwSched .pw-grid.wk{min-width:1410px;grid-auto-rows:minmax(24px,auto)}
+#pwSched .pw-grid:not(.wk) .pwi{font-size:14px;padding:9px 11px;gap:4px 9px}
+#pwSched .pw-grid:not(.wk) .gb{margin:4px 8px;gap:8px}
+#pwSched .pw-grid:not(.wk) .gh{padding:11px 13px 9px}
+#pwSched .pw-grid:not(.wk) .gh b{font-size:16px}
+#pwSched .pwi small{display:block;font-size:12px;color:var(--pw-mut);font-weight:400;line-height:1.35;margin-top:2px}
+@container pw (max-width:1100px){
+  #pwSched .pw-lay{flex-direction:column;align-items:stretch;gap:10px}
+  #pwSched .pw-side{order:2;position:static;flex:none;width:auto;min-height:0}
+  #pwSched .pw-side .pw-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+}
+</style>
+<script id="pwschedjs">
+(function(){
+const PW_DAYS=[{"id":"d26","d":"26.11","w":"חמישי","h":"נחיתה והתמקמות","cl":0},{"id":"d27","d":"27.11","w":"שישי","h":"מונטנה · פליין סוד","cl":0},{"id":"d28","d":"28.11","w":"שבת","h":"שבאל בלאנק · Eskiador","cl":0},{"id":"d29","d":"29.11","w":"ראשון","h":"אוקסליס · ספא","cl":0},{"id":"d30","d":"30.11","w":"שני","h":"קשמיר · הדרכות","cl":0},{"id":"d01","d":"01.12","w":"שלישי","h":"חנויות ציוד · Skicool","cl":0},{"id":"d02","d":"02.12","w":"רביעי","h":"סקיפסים · ריקו","cl":0},{"id":"d03","d":"03.12","w":"חמישי","h":"גלישת היכרות · ריקו פרונטלי","cl":0},{"id":"d04","d":"04.12","w":"שישי","h":"סגירה","cl":1}];
+const PW_BRK={"d26":[["13:00",60,"א.צ"],["19:00",90,"ערב · שינה מוקדמת"]],"d27":[["08:00",60,"א.ב + מעבר על לו״ז"],["13:00",60,"א.צ"],["18:30",90,"סיכום יום"]],"d28":[["08:00",60,"א.ב + מעבר על לו״ז"],["13:00",60,"א.צ"],["18:30",90,"סיכום יום"]],"d29":[["08:00",60,"א.ב + מעבר על לו״ז"],["13:00",60,"א.צ"],["18:30",90,"סיכום יום"]],"d30":[["08:00",60,"א.ב + מעבר על לו״ז"],["13:00",60,"א.צ"],["18:30",90,"סיכום יום"]],"d01":[["08:00",60,"א.ב + מעבר על לו״ז"],["13:00",60,"א.צ"],["18:30",90,"סיכום יום"]],"d02":[["08:00",60,"א.ב + מעבר על לו״ז"],["13:00",60,"א.צ"],["18:30",90,"סיכום יום"]],"d03":[["08:00",60,"א.ב + מעבר על לו״ז"],["13:00",60,"א.צ"],["18:30",90,"סיכום יום"]],"d04":[["08:00",60,"א.ב + מעבר על לו״ז"],["13:00",60,"א.צ"]]};
+const PW_SEED=[{"id":"s01","d":"d26","t":"05:00","m":90,"n":"טיסה לצרפת","w":"A","k":"f"},{"id":"s02","d":"d26","t":"09:30","m":210,"n":"נחיתה · איסוף לאתר","w":"A","x":"לעדכן את הנהג על הנחיתה"},{"id":"s03","d":"d26","t":"14:00","m":60,"n":"מפתח · סרטון ותמונות לפני פריקה","w":"A"},{"id":"s04","d":"d26","t":"15:00","m":90,"n":"פריקה · סים מקומי + וואטצאפ ביזנס","w":"A","x":"מספר חדש לחמ״ל"},{"id":"s05","d":"d26","t":"16:30","m":90,"n":"קניות לדירה + מתנות לספקים","w":"Y K"},{"id":"s06","d":"d26","t":"16:30","m":90,"n":"ציוד משרדי + מדפסת","w":"B D"},{"id":"s07","d":"d26","t":"18:00","m":60,"n":"ישיבת פתיחה","w":"A","x":"מעבר על הלו״ז, אישור פגישות במייל"},{"id":"s08","d":"d27","t":"09:00","m":120,"n":"מלון Montana (Premier)","w":"D B","k":"s","x":"צ׳ק־אין, דלפק, ריקו נפרד La Grange / Jasper"},{"id":"s09","d":"d27","t":"11:00","m":120,"n":"מלון Montana Plein Sud","w":"D B","k":"s"},{"id":"s10","d":"d27","t":"14:00","m":60,"n":"מלון Montana Soleil","w":"K","k":"s"},{"id":"s11","d":"d27","t":"14:00","m":60,"n":"קביעת פגישות שלא נקבעו","w":"B Y","x":"אוקסליס, ספא, ESF, Sport 2000, Intersport, Skiset"},{"id":"s12","d":"d27","t":"15:00","m":60,"n":"סרטון דרך: Plein Sud","w":"D A"},{"id":"s13","d":"d27","t":"16:00","m":60,"n":"סרטון דרך: Soleil","w":"K A"},{"id":"s14","d":"d27","t":"17:00","m":90,"n":"סבב עיירה","w":"A","x":"סופר, מרפאה, בית מרקחת, מכבסה, תחנות"},{"id":"s15","d":"d28","t":"09:00","m":90,"n":"מלון Le Cheval Blanc","w":"K D","k":"s"},{"id":"s16","d":"d28","t":"10:30","m":90,"n":"Sport 2000 Eskiador · יוהאן","w":"A","k":"f","x":"Step On, ציוד חסר והחלפה"},{"id":"s17","d":"d28","t":"12:00","m":60,"n":"סרטון דרך: Cheval Blanc","w":"K A"},{"id":"s18","d":"d28","t":"14:00","m":90,"n":"ציוד לצוות","w":"A","x":"קנייה או השכרה"},{"id":"s19","d":"d28","t":"15:30","m":90,"n":"כרטיס סזונייר","w":"B"},{"id":"s20","d":"d28","t":"15:30","m":90,"n":"שאטלים ומוניות","w":"Y"},{"id":"s21","d":"d28","t":"17:00","m":90,"n":"אפליקציית האתר + טיולים ברגל","w":"K Y"},{"id":"s22","d":"d28","t":"20:00","m":60,"n":"סבב עיירה בלילה","w":"A"},{"id":"s23","d":"d29","t":"09:00","m":240,"n":"ספקים נוספים + קומישנים","w":"D K","x":"מסעדות, סופרים, אטרקציות"},{"id":"s24","d":"d29","t":"09:00","m":240,"n":"תיקוף שאלות לספקים","w":"B Y"},{"id":"s25","d":"d29","t":"14:00","m":60,"n":"מלון L'Oxalys","w":"D B","k":"s"},{"id":"s26","d":"d29","t":"15:00","m":60,"n":"סרטון דרך: Oxalys","w":"D A"},{"id":"s27","d":"d29","t":"16:00","m":150,"n":"ספא ומרכז ספורט","w":"B Y","k":"s","x":"צמידים, שעות, הזמנה"},{"id":"s28","d":"d29","t":"16:00","m":150,"n":"תיקוף הודעות וואטצאפ","w":"D"},{"id":"s29","d":"d29","t":"16:00","m":150,"n":"טיוטת לו״ז שבועי ללקוחות","w":"K"},{"id":"s30","d":"d30","t":"09:00","m":60,"n":"ברוכים הבאים + עלון ספא","w":"Y"},{"id":"s31","d":"d30","t":"10:00","m":60,"n":"מלון קשמיר · Chloé","w":"A","k":"f"},{"id":"s32","d":"d30","t":"11:00","m":60,"n":"סרטון דרך: Kashmir","w":"B A"},{"id":"s33","d":"d30","t":"12:00","m":60,"n":"צ׳קליסט לקוח שלא הגיע","w":"B"},{"id":"s34","d":"d30","t":"14:00","m":90,"n":"הדרכות ESF · Chloe / Julian","w":"B","k":"s","x":"רמות, שעות ילדים, נקודות מפגש, וואוצ׳רים"},{"id":"s35","d":"d30","t":"15:30","m":180,"n":"עדכון נאום אוטובוס","w":"B"},{"id":"s36","d":"d01","t":"09:00","m":60,"n":"Sport 2000 קשמיר","w":"D","k":"s"},{"id":"s37","d":"d01","t":"10:00","m":60,"n":"Sport 2000 אוקסליס","w":"D","k":"s"},{"id":"s38","d":"d01","t":"11:00","m":120,"n":"Intersport","w":"D K","k":"s"},{"id":"s39","d":"d01","t":"14:00","m":90,"n":"Skicool","w":"B","k":"f"},{"id":"s40","d":"d01","t":"14:00","m":90,"n":"Skiset · וואוצ׳רים","w":"D","k":"s"},{"id":"s41","d":"d01","t":"15:30","m":180,"n":"אטרקציות + דף אירועים","w":"Y K"},{"id":"s42","d":"d02","t":"09:00","m":60,"n":"חברת המעליות · סקיפסים","w":"K B","k":"f","x":"גילאים לחינם, משפחתי, דדליין טעינה וביטול"},{"id":"s43","d":"d02","t":"10:00","m":60,"n":"הדרכה עם סימין / פרנסואה","w":"K"},{"id":"s44","d":"d02","t":"11:00","m":120,"n":"ריקו למלונות + חמ״ל צרפת","w":"A","x":"דדליין רביעי"},{"id":"s45","d":"d02","t":"14:00","m":60,"n":"איסוף סקיפסים לצוות + ביטוח","w":"A"},{"id":"s46","d":"d02","t":"15:00","m":90,"n":"ריקו במייל: חנויות, בית ספר","w":"D B"},{"id":"s47","d":"d02","t":"16:30","m":120,"n":"תנ״ך שבוע חנוכה","w":"A"},{"id":"s48","d":"d03","t":"09:00","m":150,"n":"גלישת היכרות צוות → לה מנואיר","w":"A","x":"מעליות, מסלולים, נקודות מפגש, צילום"},{"id":"s49","d":"d03","t":"11:30","m":90,"n":"מאפייה · סטפן (לה מנואיר)","w":"Y A","k":"s","x":"משלוח למלונות, ריקו מראש, דדליין"},{"id":"s50","d":"d03","t":"14:00","m":60,"n":"מסלול גלישת היכרות ללקוחות","w":"A"},{"id":"s51","d":"d03","t":"15:00","m":90,"n":"ריקו פרונטלי במלונות","w":"B D","x":"אישור במייל חוזר"},{"id":"s52","d":"d03","t":"15:00","m":90,"n":"טעינת סקיפסים ללקוחות","w":"K"},{"id":"s53","d":"d03","t":"16:30","m":120,"n":"שוברים + הדפסות","w":"D","x":"וואוצ׳רים, נאום, מספרי אוטובוס"},{"id":"s54","d":"d03","t":"16:30","m":120,"n":"ריקו מאפייה","w":"Y"},{"id":"s55","d":"d03","t":"16:30","m":120,"n":"לו״ז שבועי סופי · לאישור המשרד","w":"K"},{"id":"s56","d":"d04","t":"09:00","m":90,"n":"סגירת מעטפות","w":"A"},{"id":"s57","d":"d04","t":"10:30","m":90,"n":"סימולציות שיחת אוטובוס","w":"A"},{"id":"s58","d":"d04","t":"12:00","m":60,"n":"פק״ל שדה תעופה","w":"B"},{"id":"s59","d":"d04","t":"12:00","m":60,"n":"ווידוא קבוצת וואטצאפ","w":"D"},{"id":"s60","d":"d04","t":"14:00","m":120,"n":"טופס סיכום שבוע ההכנה","w":"B"},{"id":"s61","d":"d04","t":"14:00","m":120,"n":"לו״ז עבודה קבוע לצוות","w":"Y D K"},{"id":"s62","d":"d04","t":"16:00","m":90,"n":"שיחת סיכום שבוע הכנה","w":"A"},{"id":"s63","d":"d04","t":"17:30","m":90,"n":"הכנות אחרונות","w":"A"},{"id":"u01","d":"","t":"","m":60,"n":"פגישה עם ספק האוטובוסים","w":"B"},{"id":"u02","d":"","t":"","m":60,"n":"פגישה עם פטריק · ארוחות","w":"D"},{"id":"u03","d":"","t":"","m":60,"n":"דרכי הגעה מכל מלון למעליות + שעות","w":"K A"},{"id":"u04","d":"","t":"","m":60,"n":"היכרות עם העיירות הסמוכות","w":"A"},{"id":"u05","d":"","t":"","m":60,"n":"סרטוני דרך משאר המלונות","w":"A"},{"id":"u06","d":"","t":"","m":60,"n":"סרטוני הסבר למקומות חשובים","w":"D A"},{"id":"u07","d":"","t":"","m":60,"n":"וואוצ׳רים למסעדות?","w":"D"},{"id":"u08","d":"","t":"","m":60,"n":"תמונת פרופיל לוואטצאפ ביזנס","w":"D"},{"id":"u09","d":"","t":"","m":60,"n":"מעבר על תחומי אחריות + תיקוף","w":"A"},{"id":"u10","d":"","t":"","m":60,"n":"הכנה לחנוכה · נרות ופעילות ללקוחות","w":"A"}];
+
+const PW_KEY='penguin-pw', NM={B:"בן",Y:"יותם",D:"דורון",K:"קרן",A:"כולם"};
+const E=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cat=t=>/סרטון|סבב עיירה|ספקים נוספים|אפליקציית|שאטלים|אטרקציות|סזונייר|עיירות/.test(t)?'fld'
+ :/Sport 2000|Intersport|Skiset|ציוד לצוות|Eskiador/.test(t)?'eq'
+ :/סקיפס|מעליות|גלישת|סימין/.test(t)?'ski'
+ :/ESF|Skicool|ספא|מאפייה|הדרכות|אוטובוסים|פטריק|מסעדות/.test(t)?'sup'
+ :/מלון|ריקו פרונטלי|ריקו למלונות/.test(t)?'hot':'ops';
+const T0=8*60,T1=21*60,SL=30,NR=(T1-T0)/SL;
+const mins=s=>{const[a,b]=s.split(':').map(Number);return a*60+b;};
+const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const rowOf=m=>2+Math.round((Math.min(Math.max(m,T0),T1)-T0)/SL);
+const can=()=>typeof PG_EDIT!=='undefined'&&PG_EDIT;
+const store=()=>tstore(PW_KEY);
+function items(){ const st=store(); return PW_SEED.map(s=>{const o=st[s.id]||{};return Object.assign({},s,{d:o.d!==undefined?o.d:s.d,t:o.t!==undefined?o.t:s.t,done:!!o.done});}); }
+function patch(id,p){ const st=store(); st[id]=Object.assign({},st[id],p,{at:Date.now()}); tsave(PW_KEY,st); render(); }
+const root=document.createElement('div'); root.id='pwSched'; root.className='fx';
+function card(it,showTime,det){
+  const k=it.k==='f'?' fix':it.k==='s'?' set':'';
+  const tag=it.k==='f'?'<span class="tag f">קבוע</span>':it.k==='s'?'<span class="tag s">ממתין</span>':'';
+  const ppl=(it.w||'').split(' ').filter(Boolean).map(p=>`<i class="p ${p==='A'?'':p}">${NM[p]}</i>`).join('');
+  return `<div class="pwi ${cat(it.n)}${k}${it.done?' done':''}" data-pwid="${it.id}" draggable="${can()}" title="${E(it.n+(it.x?' · '+it.x:''))}">`+
+   `<input type="checkbox" class="pw-ck" data-pwdone="${it.id}" aria-label="בוצע: ${E(it.n)}"${it.done?' checked':''}${can()?'':' disabled'}>`+
+   `<span class="pw-tx">${showTime?`<span class="tm2">${it.t}</span>`:''}${E(it.n)}${tag}${det&&it.x?`<small>${E(it.x)}</small>`:''}</span>${ppl?`<div class="who">${ppl}</div>`:''}`+
+   `<button type="button" class="pw-mv" data-pwmove="${it.id}" aria-label="הזזה: ${E(it.n)}" title="הזזה">⋯</button></div>`;
+}
+let VW={n:3,i:0}; try{const v=JSON.parse(localStorage.getItem('pw-view')||'null'); if(v&&v.n) VW=v;}catch(e){}
+const pwN=()=>{const w=root.getBoundingClientRect().width||innerWidth; return w&&w<640?1:VW.n;};
+function render(){
+  const all=items(), sch=all.filter(i=>i.d), un=all.filter(i=>!i.d), done=all.filter(i=>i.done).length;
+  const n=pwN(); VW.i=Math.max(0,Math.min(VW.i,PW_DAYS.length-n)); const VD=PW_DAYS.slice(VW.i,VW.i+n);
+  try{localStorage.setItem('pw-view',JSON.stringify(VW));}catch(e){}
+  let g=`<div class="gh" style="grid-column:1;grid-row:1;border-inline-start:0"></div>`;
+  VD.forEach((x,i)=>{g+=`<div class="gh${x.cl?' cl':''}" style="grid-column:${i+2};grid-row:1"><em>${x.w} · ${x.d}</em><b>${E(x.h)}</b></div>`;});
+  for(let r=0;r<NR;r++){const m=T0+r*SL,mm=m%60;
+    g+=`<div class="gt" style="grid-row:${r+2}">${mm?'':hhmm(m)}</div>`;
+    VD.forEach((x,c)=>{g+=`<div class="gl${mm?'':' hr'}" data-d="${x.id}" data-t="${hhmm(m)}" style="grid-column:${c+2};grid-row:${r+2}"></div>`;});}
+  VD.forEach((x,c)=>{
+    (PW_BRK[x.id]||[]).forEach(([t,m,n])=>{const s=mins(t);g+=`<div class="gb brk" style="grid-column:${c+2};grid-row:${rowOf(s)}/${Math.max(rowOf(s+m),rowOf(s)+1)}">${E(n)}</div>`;});
+    const day=sch.filter(i=>i.d===x.id).sort((a,b)=>mins(a.t)-mins(b.t)||a.id.localeCompare(b.id));
+    const grp=[]; day.forEach(i=>{const l=grp[grp.length-1]; if(l&&l.t===i.t) l.it.push(i); else grp.push({t:i.t,it:[i]});});
+    grp.forEach((G,j)=>{const s=mins(G.t); let e=Math.max(...G.it.map(i=>Math.max(s,T0)+i.m)); if(j+1<grp.length) e=Math.min(e,mins(grp[j+1].t));
+      const rs=rowOf(s),re=Math.max(rowOf(e),rs+1);
+      g+=`<div class="gb" data-d="${x.id}" data-t="${G.t}" style="grid-column:${c+2};grid-row:${rs}/${re}">${G.it.map((i,q)=>card(i,!q,n<=3)).join('')}</div>`;});
+  });
+  const sx=root.querySelector('.pw-scroll'), keepX=sx?sx.scrollLeft:null;
+  root.innerHTML=`<div class="pw-top"><h3>לו״ז שבוע הכנה</h3><span class="pw-sub">26.11 – 04.12 · שעון צרפת · לקוחות ראשונים 05.12</span><span class="pw-cnt"><b>${done}</b> מתוך ${all.length} בוצעו</span>
+   <div class="pw-key"><span><i class="sw fx"></i>קבוע</span><span><i class="sw pd"></i>ממתין לתשובה</span><i class="sep"></i>
+   <span><i class="sw" style="--c:var(--pw-hot)"></i>מלונות</span><span><i class="sw" style="--c:var(--pw-eq)"></i>ציוד</span><span><i class="sw" style="--c:var(--pw-ski)"></i>סקיפסים וגלישה</span><span><i class="sw" style="--c:var(--pw-sup)"></i>הדרכות וספקים</span><span><i class="sw" style="--c:var(--pw-fld)"></i>שטח ועיירה</span><span><i class="sw" style="--c:var(--pw-ops)"></i>תפעול</span><i class="sep"></i>
+   <span><i class="p B">בן</i><i class="p Y">יותם</i><i class="p D">דורון</i><i class="p K">קרן</i><i class="p">כולם</i></span></div>
+   <div class="pw-nav"><div class="pw-seg" role="group" aria-label="תצוגה"><button type="button" data-pwn="3" aria-pressed="${VW.n===3}">3 ימים</button><button type="button" data-pwn="9" aria-pressed="${VW.n===9}">כל השבוע</button></div>
+   <button type="button" class="pw-arw" data-pwstep="-1" aria-label="ימים קודמים"${VW.i<=0?' disabled':''}>→</button>
+   <div class="pw-pills" role="group" aria-label="ימים">${PW_DAYS.map((x,k)=>`<button type="button" data-pwday="${k}" class="${k>=VW.i&&k<VW.i+n?'on':''}${x.cl?' cl':''}"><b>${x.d}</b><span>${x.w}</span></button>`).join('')}</div>
+   <button type="button" class="pw-arw" data-pwstep="1" aria-label="ימים הבאים"${VW.i+n>=PW_DAYS.length?' disabled':''}>←</button></div>
+   <p class="pw-ro">כדי להזיז ולסמן בוצע, פתחו מהקישור של הצוות.</p></div>
+   <div class="pw-lay"><div class="pw-scroll" tabindex="0" aria-label="לו״ז שבוע הכנה"><div class="pw-grid${n>3?' wk':''}" style="grid-template-columns:50px repeat(${n},minmax(${n>3?150:0}px,1fr))">${g}</div></div>
+   <aside class="pw-side" data-d="" aria-label="לא שובצו"><h4>לא שובצו <span>${un.length}</span></h4><div class="pw-list">${un.map(i=>card(i,false)).join('')||'<p class="pw-empty">הכל שובץ</p>'}</div></aside></div>`;
+  root.classList.toggle('can',can());
+  const nx=root.querySelector('.pw-scroll'); if(nx&&keepX!==null) nx.scrollLeft=keepX;
+}
+window.pwRender=render;
+root.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-pwn],[data-pwstep],[data-pwday]'); if(!t||!root.contains(t)) return; const n=pwN();
+  if(t.dataset.pwn){VW.n=+t.dataset.pwn; if(VW.n>3) VW.i=0;}
+  else if(t.dataset.pwstep){VW.i+=(+t.dataset.pwstep)*n;}
+  else {const k=+t.dataset.pwday; if(k<VW.i||k>=VW.i+n) VW.i=n===1?k:Math.min(k,PW_DAYS.length-n);}
+  render();});
+let pwW=0; new ResizeObserver(()=>{const w=root.getBoundingClientRect().width; if(!w) return; if((w<640)!==(pwW<640)||!pwW){pwW=w; render();} pwW=w;}).observe(root);
+/* keep the block on top of the p2 view (the board re-renders that view) */
+function mount(){ const h=document.getElementById('view-p2'); if(!h||h.contains(root)) return; const vh=h.querySelector('.vhead'); if(vh) vh.after(root); else h.prepend(root); }
+const h2=document.getElementById('view-p2'); if(h2) new MutationObserver(mount).observe(h2,{childList:true});
+new MutationObserver(()=>{ if(root.classList.contains('can')!==can()) render(); }).observe(document.body,{attributes:true,attributeFilter:['class']});
+render(); mount();
+/* done */
+root.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.pwdone; if(!id) return; if(!can()){render();return;} patch(id,{done:e.target.checked});});
+/* drag and drop */
+let dragId=null;
+root.addEventListener('dragstart',e=>{const c=e.target.closest&&e.target.closest('.pwi'); if(!c||!can()){e.preventDefault();return;} dragId=c.dataset.pwid; c.classList.add('drag'); try{e.dataTransfer.setData('text/plain',dragId);e.dataTransfer.effectAllowed='move';}catch(x){}});
+root.addEventListener('dragend',()=>{dragId=null; root.querySelectorAll('.drag,.ov').forEach(x=>x.classList.remove('drag','ov'));});
+const target=e=>{const sd=e.target.closest&&e.target.closest('.pw-side'); if(sd) return sd; return document.elementsFromPoint(e.clientX,e.clientY).find(x=>x.classList&&x.classList.contains('gl')&&root.contains(x))||null;};
+root.addEventListener('dragover',e=>{if(!dragId) return; const t=target(e); if(!t) return; e.preventDefault(); root.querySelectorAll('.ov').forEach(x=>x!==t&&x.classList.remove('ov')); t.classList.add('ov');});
+root.addEventListener('drop',e=>{if(!dragId) return; const t=target(e); if(!t) return; e.preventDefault(); const id=dragId; dragId=null; patch(id,{d:t.dataset.d||'',t:t.dataset.d?t.dataset.t:''});});
+/* move dialog (works on phones too) */
+const dlg=document.createElement('div'); dlg.className='pw-dlg'; dlg.hidden=true;
+const times=[]; for(let m=5*60;m<=21*60;m+=30) times.push(hhmm(m));
+dlg.innerHTML=`<form><b id="pwDlgT"></b><label>יום<select id="pwDlgD"><option value="">לא שובץ</option>${PW_DAYS.map(x=>`<option value="${x.id}">${x.w} ${x.d}</option>`).join('')}</select></label><label>שעה<select id="pwDlgH">${times.map(t=>`<option>${t}</option>`).join('')}</select></label><div class="row"><button type="submit" class="ok">שמירה</button><button type="button" id="pwDlgX">ביטול</button></div></form>`;
+document.body.appendChild(dlg);
+let dlgId=null; const dD=dlg.querySelector('#pwDlgD'), dH=dlg.querySelector('#pwDlgH');
+const syncH=()=>{dH.disabled=!dD.value;}; dD.addEventListener('change',syncH);
+root.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-pwmove]'); if(!b||!can()) return; const it=items().find(i=>i.id===b.dataset.pwmove); if(!it) return;
+  dlgId=it.id; dlg.querySelector('#pwDlgT').textContent=it.n; dD.value=it.d||''; dH.value=it.t||'09:00'; syncH(); dlg.hidden=false; dD.focus();});
+const close=()=>{dlg.hidden=true; dlgId=null;};
+dlg.querySelector('#pwDlgX').onclick=close;
+dlg.addEventListener('click',e=>{if(e.target===dlg) close();});
+dlg.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+dlg.querySelector('form').addEventListener('submit',e=>{e.preventDefault(); if(dlgId) patch(dlgId,{d:dD.value,t:dD.value?dH.value:''}); close();});
+})();
+</script>
+
 </body></html>
