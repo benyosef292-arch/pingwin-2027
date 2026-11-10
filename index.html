@@ -6874,7 +6874,11 @@ html[data-theme="light"] #pwSched{--pw-bg:#e3e8ee;--pw-panel:#edf1f5;--pw-line:#
 #pwSched .gl.hr{border-top:1px solid color-mix(in srgb,var(--pw-line) 70%,transparent)}
 #pwSched .gl.ov{background:color-mix(in srgb,var(--pw-fix) 22%,transparent);border-radius:4px}
 #pwSched .gb{margin:3px 4px;display:flex;flex-direction:column;gap:5px;z-index:1;min-width:0}
-#pwSched .gb.brk{pointer-events:none;justify-content:center;align-items:center;color:var(--pw-mut);font-size:12px;background:var(--pw-band);margin:2px 0;z-index:0}
+#pwSched .gb.brk{pointer-events:none;justify-content:center;align-items:center;color:var(--pw-mut);font-size:12px;background:var(--pw-band);margin:2px 0;z-index:0;gap:0;text-align:center}
+#pwSched .gb.brk .bt{font-size:11px;opacity:.8;font-variant-numeric:tabular-nums}
+#pwSched.can .gb.brk{pointer-events:auto;cursor:pointer}
+#pwSched.can .gb.brk:hover{outline:1px dashed currentColor;outline-offset:-3px}
+#pwSched .gb.brk:focus-visible{outline:2px solid var(--run-blue);outline-offset:-2px}
 #pwSched .pwi{--c:var(--pw-ops);position:relative;flex:1;border-radius:6px;background:color-mix(in srgb,var(--c) var(--pw-tint),var(--pw-panel));border-inline-start:4px solid var(--c);padding:6px 8px;font-size:13px;line-height:1.35;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 7px;align-content:start;color:var(--pw-fg)}
 #pwSched .pwi.hot{--c:var(--pw-hot)}#pwSched .pwi.eq{--c:var(--pw-eq)}#pwSched .pwi.ski{--c:var(--pw-ski)}#pwSched .pwi.sup{--c:var(--pw-sup)}#pwSched .pwi.fld{--c:var(--pw-fld)}
 #pwSched .pwi.fix{outline:2px solid var(--pw-fix);outline-offset:-2px;font-weight:700}
@@ -6968,6 +6972,7 @@ const rowOf=m=>2+Math.round((Math.min(Math.max(m,T0),T1)-T0)/SL);
 const can=()=>typeof PG_EDIT!=='undefined'&&PG_EDIT;
 const store=()=>tstore(PW_KEY);
 function items(){ const st=store(); return PW_SEED.map(s=>{const o=st[s.id]||{};return Object.assign({},s,{d:o.d!==undefined?o.d:s.d,t:o.t!==undefined?o.t:s.t,done:!!o.done});}); }
+function brks(d){ const st=store(); return (PW_BRK[d]||[]).map(([t,m,n],i)=>{const o=st['b:'+d+':'+i]||{};return {k:d+':'+i,t:o.t||t,m:o.m||m,n};}); }
 function patch(id,p){ const st=store(); st[id]=Object.assign({},st[id],p,{at:Date.now()}); tsave(PW_KEY,st); render(); }
 const root=document.createElement('div'); root.id='pwSched'; root.className='fx';
 function card(it,showTime,det){
@@ -6991,7 +6996,7 @@ function render(){
     g+=`<div class="gt" style="grid-row:${r+2}">${mm?'':hhmm(m)}</div>`;
     VD.forEach((x,c)=>{g+=`<div class="gl${mm?'':' hr'}" data-d="${x.id}" data-t="${hhmm(m)}" style="grid-column:${c+2};grid-row:${r+2}"></div>`;});}
   VD.forEach((x,c)=>{
-    (PW_BRK[x.id]||[]).forEach(([t,m,n])=>{const s=mins(t);g+=`<div class="gb brk" style="grid-column:${c+2};grid-row:${rowOf(s)}/${Math.max(rowOf(s+m),rowOf(s)+1)}">${E(n)}</div>`;});
+    brks(x.id).forEach(({k,t,m,n})=>{const s=mins(t);g+=`<div class="gb brk" data-pwbrk="${k}" title="${E(n)} · ${t}"${can()?' role="button" tabindex="0"':''} style="grid-column:${c+2};grid-row:${rowOf(s)}/${Math.max(rowOf(s+m),rowOf(s)+1)}">${E(n)}<span class="bt">${t}</span></div>`;});
     const day=sch.filter(i=>i.d===x.id).sort((a,b)=>mins(a.t)-mins(b.t)||a.id.localeCompare(b.id));
     const grp=[]; day.forEach(i=>{const l=grp[grp.length-1]; if(l&&l.t===i.t) l.it.push(i); else grp.push({t:i.t,it:[i]});});
     grp.forEach((G,j)=>{const s=mins(G.t); let e=Math.max(...G.it.map(i=>Math.max(s,T0)+i.m)); if(j+1<grp.length) e=Math.min(e,mins(grp[j+1].t));
@@ -7048,6 +7053,28 @@ dlg.querySelector('#pwDlgX').onclick=close;
 dlg.addEventListener('click',e=>{if(e.target===dlg) close();});
 dlg.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
 dlg.querySelector('form').addEventListener('submit',e=>{e.preventDefault(); if(dlgId) patch(dlgId,{d:dD.value,t:dD.value?dH.value:''}); close();});
+/* 10.11.26 (Ben): edit meal / day-summary times */
+const bd=document.createElement('div'); bd.className='pw-dlg'; bd.hidden=true;
+const durs=[30,45,60,90,120];
+bd.innerHTML=`<form><b id="pwBrkT"></b><span id="pwBrkD" style="font-size:12.5px;opacity:.75"></span><label>שעה<select id="pwBrkH">${times.map(t=>`<option>${t}</option>`).join('')}</select></label><label>משך<select id="pwBrkM">${durs.map(m=>`<option value="${m}">${m<60?m+' דק׳':m===60?'שעה':m===90?'שעה וחצי':'שעתיים'}</option>`).join('')}</select></label><label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="pwBrkAll">לכל הימים</label><div class="row"><button type="submit" class="ok">שמירה</button><button type="button" id="pwBrkR">שעה מקורית</button><button type="button" id="pwBrkX">ביטול</button></div></form>`;
+document.body.appendChild(bd);
+let bk=null; const bH=bd.querySelector('#pwBrkH'), bM=bd.querySelector('#pwBrkM'), bA=bd.querySelector('#pwBrkAll');
+const sameAll=(n)=>Object.keys(PW_BRK).flatMap(d=>PW_BRK[d].map((b,i)=>b[2]===n?'b:'+d+':'+i:null)).filter(Boolean);
+function openBrk(k){ if(!can()) return; const [d,i]=k.split(':'); const b=brks(d)[+i]; if(!b) return; bk=k;
+  const day=PW_DAYS.find(x=>x.id===d)||{};
+  bd.querySelector('#pwBrkT').textContent=b.n; bd.querySelector('#pwBrkD').textContent=(day.w||'')+' '+(day.d||'');
+  if(![...bH.options].some(o=>o.value===b.t)) bH.add(new Option(b.t,b.t)); bH.value=b.t;
+  if(!durs.includes(b.m)) bM.add(new Option(b.m+' דק׳',b.m)); bM.value=String(b.m); bA.checked=false; bd.hidden=false; bH.focus(); }
+function saveBrk(v){ const [d,i]=bk.split(':'); const n=PW_BRK[d][+i][2]; const keys=bA.checked?sameAll(n):['b:'+bk];
+  const st=store(); keys.forEach(x=>{ st[x]=v?{t:v.t,m:v.m,at:Date.now()}:{at:Date.now()}; }); tsave(PW_KEY,st); render(); }
+const bClose=()=>{bd.hidden=true; bk=null;};
+root.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-pwbrk]'); if(b) openBrk(b.dataset.pwbrk);});
+root.addEventListener('keydown',e=>{const b=e.target.closest&&e.target.closest('[data-pwbrk]'); if(b&&(e.key==='Enter'||e.key===' ')){e.preventDefault(); openBrk(b.dataset.pwbrk);}});
+bd.querySelector('#pwBrkX').onclick=bClose;
+bd.querySelector('#pwBrkR').onclick=()=>{ if(bk) saveBrk(null); bClose(); };
+bd.addEventListener('click',e=>{if(e.target===bd) bClose();});
+bd.addEventListener('keydown',e=>{if(e.key==='Escape') bClose();});
+bd.querySelector('form').addEventListener('submit',e=>{e.preventDefault(); if(bk) saveBrk({t:bH.value,m:+bM.value}); bClose();});
 })();
 </script>
 
