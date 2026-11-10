@@ -3073,6 +3073,11 @@ body:not(.pg-owner) .dlpick.same{display:none!important}
     </section>
     <!-- 5.11.26 (Ben): gondola scene "מוכנים לעלות" removed -->
 
+    <div id="waBox" hidden>
+      <div class="sec-h"><span>קבוצה לכל שבוע</span><h2>קבוצות וואטצאפ ללקוחות</h2></div>
+      <div class="wa-g" id="waGrid"></div>
+    </div>
+
     <div class="sec-h"><span>מי מוביל מה</span><h2>תחומי אחריות</h2></div>
     <div class="rfull" id="rolesFull"></div>
 
@@ -7041,4 +7046,59 @@ dlg.querySelector('form').addEventListener('submit',e=>{e.preventDefault(); if(d
 #wkMsg .wk-msgb{background:var(--m-soft)}
 #wkMsg .wk-btn:not(.wk-pri),#wkSheet .wk-btn:not(.wk-pri):not(.wk-del){color:var(--m-ink)!important}
 </style>
+<style id="wagroups">
+/* 10.11.26 (Ben): client WhatsApp group links per week, read live from the links sheet (team link only) */
+.wa-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.wa-c{border:1px solid var(--hair);border-radius:12px;background:var(--panel);color:var(--m-ink,var(--slate));padding:14px 16px}
+.wa-c h3{margin:0 0 2px;font-size:18px;font-weight:700}
+.wa-c .wa-s{margin:0 0 10px;font-size:12.5px;color:var(--m-muted,var(--muted))}
+.wa-r{display:grid;grid-template-columns:58px minmax(0,1fr) auto auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--hair);font-size:14px}
+.wa-r b{font-weight:600}
+.wa-r .wa-d{font-variant-numeric:tabular-nums;color:var(--m-muted,var(--muted));text-align:start}
+.wa-r.now{background:color-mix(in srgb,var(--h-moss,#4E6B40) 14%,transparent);border-radius:8px;padding-inline:8px;margin-inline:-8px;border-top-color:transparent}
+.wa-r .wa-tag{font-size:11px;font-weight:700;color:var(--h-moss,#4E6B40);margin-inline-start:6px}
+.wa-j,.wa-cp{font:inherit;font-size:13px;font-weight:600;border-radius:6px;min-height:32px;padding:0 12px;display:inline-flex;align-items:center;cursor:pointer;text-decoration:none}
+.wa-j{background:var(--h-moss,#4E6B40);color:var(--h-on,#fff);border:1px solid transparent}
+.wa-cp{background:none;border:1px solid var(--hair);color:var(--m-ink,var(--slate))}
+.wa-none{grid-column:3/5;font-size:12.5px;color:var(--m-muted,var(--muted))}
+.wa-msg{font-size:14px;color:var(--m-muted,var(--muted))}
+.wa-j:focus-visible,.wa-cp:focus-visible{outline:2px solid var(--run-blue);outline-offset:2px}
+@media (pointer:coarse){.wa-j,.wa-cp{min-height:40px}}
+</style>
+<script id="wagroupsjs">
+(function(){
+  const box = document.getElementById('waBox'), grid = document.getElementById('waGrid');
+  if (!box || !window.PENGUIN_API) return;
+  const E = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const SUB = {"וואלטורנס":"שבת עד שבת","לה מנואר":"ראשון עד ראשון"};
+  /* "2.1–9.1.27" or "5.12-12.12" -> [start, end] */
+  function span(d){
+    const p = String(d).split(/[–—-]/).map(x => x.trim().split('.').map(Number)); if (p.length < 2) return null;
+    const [a, b] = p; let y = b[2] ? 2000 + (b[2] % 100) : 2026;
+    const end = new Date(y, (b[1] || a[1]) - 1, b[0]);
+    const sm = a[1] || b[1]; const start = new Date(sm > end.getMonth() + 1 ? y - 1 : y, sm - 1, a[0]);
+    return isNaN(start) || isNaN(end) ? null : [start, end];
+  }
+  function render(sites){
+    const now = new Date(); now.setHours(0,0,0,0);
+    grid.innerHTML = sites.map(st => {
+      let mark = -1;
+      st.weeks.forEach((w,i) => { const r = span(w.d); if (mark < 0 && r && now < r[1]) mark = i; });
+      const rows = st.weeks.map((w,i) => {
+        const r = span(w.d), cur = i === mark, tag = cur ? (r && now >= r[0] ? 'השבוע' : 'הבא') : '';
+        const act = w.link
+          ? `<a class="wa-j" href="${E(w.link)}" target="_blank" rel="noopener">הצטרפות</a><button type="button" class="wa-cp" data-l="${E(w.link)}" aria-label="העתקת הקישור לשבוע ${E(w.n)}">העתקה</button>`
+          : '<span class="wa-none">אין קישור עדיין</span>';
+        return `<div class="wa-r ${cur ? 'now' : ''}"><b>שבוע ${E(w.n)}</b><span class="wa-d"><bdi dir="ltr">${E(w.d)}</bdi>${tag ? `<span class="wa-tag">${tag}</span>` : ''}</span>${act}</div>`;
+      }).join('');
+      return `<div class="wa-c"><h3>${E(st.name)}</h3><p class="wa-s">${E(SUB[st.name] || '')}</p>${rows}</div>`;
+    }).join('');
+  }
+  grid.addEventListener('click', e => { const b = e.target.closest('[data-l]'); if (b) copyText(b.dataset.l, 'הקישור הועתק'); });
+  fetch(window.PENGUIN_API + '?a=wa' + (window.PENGUIN_AUTH ? window.PENGUIN_AUTH() : '') + '&t=' + Date.now()).then(r => r.json()).then(j => {
+    if (j && j.ok && Array.isArray(j.sites)){ box.hidden = false; render(j.sites); }
+    else if (j && j.ok && !j.sites && j.owner){ box.hidden = false; grid.innerHTML = '<p class="wa-msg">הקישורים יופיעו אחרי עדכון ה־Apps Script.</p>'; }
+  }).catch(() => {});
+})();
+</script>
 </body></html>
