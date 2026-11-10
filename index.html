@@ -5404,7 +5404,7 @@ document.querySelectorAll('.mapcard .mp').forEach(el => {
     if (st === 'now') tag = `<em class="now">${x.range ? 'עכשיו' : 'היום'}</em>`;
     else if (st === 'soon'){ const n = Math.round((x.S - today) / 864e5); tag = `<em>${n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'}</em>`; }
     else tag = '<em class="done">✓ עבר</em>';
-    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small><bdi dir="ltr">${when}</bdi>${x.tm ? ' · ' + esc(x.tm) : ''}${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_OWNER) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button>${x.site ? `<button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button>` : ''}</span>` : ''}</div>${tag}</div>`;
+    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small><bdi dir="ltr">${when}</bdi>${x.tm ? ' · ' + esc(x.tm) : ''}${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : ''}</div>${tag}</div>`;
   }
   function renderDay(){
     const ev = on(sel);
