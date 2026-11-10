@@ -7109,10 +7109,16 @@ dlg.querySelector('form').addEventListener('submit',e=>{e.preventDefault(); if(d
     }).join('');
   }
   grid.addEventListener('click', e => { const b = e.target.closest('[data-l]'); if (b) copyText(b.dataset.l, 'הקישור הועתק'); });
+  /* 10.11.26: say why the links are missing instead of hiding the section, for anyone with the team or owner key */
+  let hasKey = false; try { hasKey = !!(localStorage.getItem('penguin-team-key') || localStorage.getItem('penguin-owner-key')); } catch(e){}
+  const note = t => { box.hidden = false; grid.innerHTML = '<p class="wa-msg">' + t + '</p>'; };
   fetch(window.PENGUIN_API + '?a=wa' + (window.PENGUIN_AUTH ? window.PENGUIN_AUTH() : '') + '&t=' + Date.now()).then(r => r.json()).then(j => {
-    if (j && j.ok && Array.isArray(j.sites)){ box.hidden = false; render(j.sites); }
-    else if (j && j.ok && !j.sites && j.owner){ box.hidden = false; grid.innerHTML = '<p class="wa-msg">הקישורים יופיעו אחרי עדכון ה־Apps Script.</p>'; }
-  }).catch(() => {});
+    if (j && j.ok && Array.isArray(j.sites)){ box.hidden = false; render(j.sites); return; }
+    if (!hasKey && !(j && j.owner)) return;
+    if (j && j.ok && !j.sites) note('השרת עוד לא מעודכן: ב־Apps Script צריך Deploy > Manage deployments > עריכה > Version: New version > Deploy.');
+    else if (j && j.error === 'team_only') note('הקישור שנשמר בדפדפן הזה לא מזוהה כקישור הצוות. פתחו שוב את קישור הצוות.');
+    else note('לא הצלחתי לטעון את הקישורים מהגיליון' + (j && j.error ? ' (' + String(j.error).replace(/[<>&]/g, '') + ')' : '') + '.');
+  }).catch(() => { if (hasKey) note('לא הצלחתי לטעון את הקישורים. נסו לרענן.'); });
 })();
 </script>
 </body></html>
