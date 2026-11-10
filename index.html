@@ -57,8 +57,13 @@ body.pg-owner .wk-c{cursor:grab}
 .wk-sb.s1{background:var(--run-green);border-color:var(--run-green)}
 .wk-sb.s2{background:var(--run-red);border-color:var(--run-red)}
 #wkScrim{position:fixed;inset:0;background:rgba(10,20,28,.45);z-index:90}
-#wkSheet{position:fixed;z-index:91;top:0;bottom:0;left:0;width:min(420px,100%);background:var(--panel);border-right:1px solid var(--hair);box-shadow:0 0 40px rgba(0,0,0,.25);padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));overflow-y:auto;display:flex;flex-direction:column;gap:14px;direction:rtl;color:var(--slate)}
-#wkSheet[hidden],#wkScrim[hidden]{display:none}
+#wkSheet,#wkMsg{position:fixed;z-index:91;top:0;bottom:0;left:0;width:min(420px,100%);background:var(--panel);border-right:1px solid var(--hair);box-shadow:0 0 40px rgba(0,0,0,.25);padding:calc(20px + env(safe-area-inset-top,0px)) 20px calc(20px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));overflow-y:auto;display:flex;flex-direction:column;gap:14px;direction:rtl;color:var(--slate)}
+#wkSheet[hidden],#wkMsg[hidden],#wkScrim[hidden]{display:none}
+#wkMsg h3{font-size:20px;margin:0}
+.wk-msgb{white-space:pre-wrap;font-size:15px;line-height:1.6;border:1px solid var(--hair);border-radius:8px;padding:12px 14px;user-select:text}
+.wk-msg{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.wk-mb{font:inherit;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--hair);border-radius:6px;background:none;color:var(--run-blue);padding:3px 8px;min-height:28px}
+@media (pointer:coarse){.wk-mb{min-height:36px}}
 #wkSheet h3{font-size:20px;margin:0}
 .wk-f{display:flex;flex-direction:column;gap:4px}
 .wk-f label{font-size:13px;font-weight:600}
@@ -5996,13 +6001,24 @@ setMode(startMode);
     <select id="wkWho"><option value="">לא נקבע</option><option>בן</option><option>יותם</option><option>דורון</option><option>קרן</option><option>כולם</option></select></div>
   <div class="wk-f"><label for="wkLaneSel">קטגוריה</label>
     <select id="wkLaneSel"><option value="cl">לו״ז עם הלקוחות</option><option value="tech">משימה טכנית</option><option value="wa">הודעת וואטצאפ</option></select></div>
+  <div class="wk-f"><label for="wkNote">מתי (כשאין שעה)</label><input id="wkNote" type="text"></div>
   <div class="wk-f"><label for="wkItems">פירוט (שורה לכל פריט)</label><textarea id="wkItems"></textarea></div>
+  <div class="wk-f"><label for="wkMsgTxt">נוסח הודעת וואטצאפ</label><textarea id="wkMsgTxt" rows="8"></textarea></div>
   <div class="wk-f"><label for="wkKind">סוג</label>
     <select id="wkKind"><option value="task">שוטף</option><option value="recap">ריקו</option><option value="fun">צוות</option></select></div>
   <div class="wk-acts">
     <button class="wk-btn wk-pri" id="wkSave" type="button">שמירה</button>
     <button class="wk-btn" id="wkCancel" type="button">ביטול</button>
     <button class="wk-btn wk-del" id="wkDel" type="button">מחיקה</button>
+  </div>
+</aside>
+<aside id="wkMsg" hidden aria-label="נוסח ההודעה">
+  <h3 id="wkMsgT"></h3>
+  <p id="wkMsgN" class="wk-sub"></p>
+  <div id="wkMsgB" class="wk-msgb" dir="rtl"></div>
+  <div class="wk-acts">
+    <button class="wk-btn wk-pri" id="wkMsgCopy" type="button">העתקה</button>
+    <button class="wk-btn" id="wkMsgClose" type="button">סגירה</button>
   </div>
 </aside>
 <script id="wkjs">
@@ -6039,8 +6055,13 @@ const SEED = [
  {d:6,t:"צ׳ק אין במלונות",lane:"cl"},
  {d:2,t:"סבב ברים / באולינג",lane:"cl"}
 ].map((x,i)=>({id:"s"+i,d:x.d,t:x.t,k:x.k||"task",lane:x.lane||"tech",items:x.items||[],note:x.note||"",from:"",to:"",who:"",o:i}));
+/* 10.11.26 (Ben): fixed WhatsApp messages to clients, in send order */
+const WA_SEED = [{"id": "wa1", "d": 4, "t": "הודעה 1 · רישום לקבוצה", "note": "חמישי", "msg": "שלום לכולם,\nאנחנו בן, דורון, קרן ויותם ואנחנו נהיה הנציגים שלכם בשבוע הקרוב בוואל טורנס! ❄️\nמצורף לינק להצטרפות לקבוצת וואצאפ שקטה, בה תקבלו עדכונים והודעות חשובות במהלך השבוע, חשוב שיהיה נציג אחד מכל קבוצה.\nחשוב מאוד כבר מעכשיו לוודא תוקף דרכונים, מניסיון עבר :)\nבמידה ויש מישהו שלא מגיע לחופשה בבקשה עדכנו אותנו בפרטי.\nלינק להצטרפות לקבוצה\nמצפים ומתרגשים לפגוש אתכם בשדה בשבת הקרובה!\nנתראה 🐧"}, {"id": "wa2", "d": 6, "t": "הודעה 2 · נחיתה", "note": "כשנוחתים", "msg": "שלום לכולם,\nמקווים שהייתה טיסה נעימה ונחיתה רכה!\nמחכים לכם ביציאה מאיסוף מזוודות לרישום, בבקשה לא לעלות לאוטובוסים בלי להירשם אצלינו.\nשימו ❤️ לשילוט על האוטובוסים בעת העלייה!"}, {"id": "wa3", "d": 6, "t": "הודעה 3 · ברוכים הבאים", "note": "באוטובוס, בסוף הנאום", "msg": "היי,\nמצרפים לכם קובץ ״ברוכים הבאים״ שמסכם את כל המידע החשוב והקריטי עבורכם לשבוע הקרוב.\nשם תוכלו למצוא המלצות אישיות שלנו לאתר 🤍\n\nBREAD IN BED\nמי שמעוניין להזמין מאפים טריים עד פתח הדלת בכל בוקר, מצורף תפריט לבחירתכם 🥐🥖\nניתן להזמין כל יום עבור היום למחרת עד 18:00 בערב.\nמוזמנים לפנות אלינו בפרטי לתיאום ההזמנה\n\nהדרכות\nמי שעדיין לא סגר מראש את ההדרכות (סקי או סנאובורד) ומעוניין להזמין עכשיו, ניתן לקבוע שיעורים פרטיים דרכנו ⛷️\n\nציוד\nמי שלא הזמין מראש, ממליצים על ………………….\nעושים הנחה ללקוחות פינגווין, מקצועיים ונחמדים"}, {"id": "wa4", "d": 6, "t": "הודעה 4 · ערב ההגעה", "note": "שבת בערב", "msg": "ערב טוב לכולם!🐧\nאחרי דרך ארוכה סוף סוף אפשר להגיד, ברוכים הבאים לוואלטורנס!!\nכמה דברים חשובים:\n1. מי שלא הספיק להשכיר ציוד חשוב להגיע מחר ישר עם פתיחת החנות (8:30❌❌❌❌)\n2. למי שיש הדרכות לזכור להגיע 15 דקות לפני! המדריכים לא מחכים.. אנחנו נפגוש אתכם שם לפני למי שמסתבך וצריך עזרה :)\n3. מחר גלישת היכרות למי שמעוניין - גלישה קצרה להיכרות עם מרחב הגלישה איתנו☺️\nחשוב לדעת❗️זו גלישה להיכרות האתר והיא לא תחליף להדרכה מכל סוג, היא מיועדת לגולשים מנוסים שגולשים מסלולים אדומים בביטחון. נשמח שתבואו, מי שמגיע נשמח שתעדכנו אותנו :)\n❌❌❌נפגשים בשעה 10:00 בנקודת מפגש bergers ליד הרכבל marmottes 1 משם נעלה על הרכבל ונתחיל סיבוב היכרות שבו נראה לכם מסלולים שווים, מקומות עם נוף מדהים + ברים ומסעדות נחמדות על ההר.\n*הלקוחות שבאים מאוז ייפגשו …"}, {"id": "wa5", "d": 0, "t": "הודעה 5 · הגעה להדרכות", "note": "ראשון בבוקר", "msg": "בוקר טוב לכולם ☀️\n❌❌❌❌❌❌❌❌❌❌❌❌\nמצרפים הסבר הגעה למפגש ההדרכות בגלישה\nמלונות קשמיר ואוקסליס\n1. יציאה מהסקי רום למסלול/שביל גלישה\n2. אחרי שמגיעים למסלול הראשי פונים ישר שמאלה לכיוון הזחל (הנמצא מול רכבל peclet)\n3. עולים על הזחל ומגיעים!\n\nהוראות הגעה למפגש ההדרכות ברגל\nממלונות Kashmir & Oxalys\n• התקדמו ישר לכיוון העיירה ברחוב Grande Rue\n• לאחר שמגיעים לתחנת אוטובוס אחרי התחנת דלק יש לפנות פנייה קלה ימינה לרחוב Rue des Lacs\n• מיד לאחר שפונים ימינה יש כ10 מ׳ בצד השמאלי של הרחוב מעבר להולכי רגל, יש לעלות עליו ובמעלית לרדת קומה לרחוב Rue du Soleil\n• יוצאים וחוצים את הכביש למלון village Montana\nרלוונטי לכלל המלונות החל מכאן:\n• יורדים לקומה 0 למסעדת ג׳ספר, יוצאים שמאלה מהמעלית והולכים ישר לדלת שמובילה ליציאה (כתוב יציאה למסלולי סקי)\n• ממשיכים ישר לדלת שכתוב עליה יציאה"}].map((x,i)=>({id:x.id,d:x.d,t:x.t,k:"task",lane:"wa",items:[],note:x.note,msg:x.msg,from:"",to:"",who:"",o:i}));
+SEED.push(...WA_SEED);
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
-const S = () => { const s = tstore(WK_KEY); return Array.isArray(s.tasks) ? s : fresh(); };
+const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
+  if (!s.waIn){ s.waIn = 1; WA_SEED.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); }
+  return s; };
 const put = s => tsave(WK_KEY, s);
 const E = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const $ = id => document.getElementById(id);
@@ -6060,6 +6081,7 @@ function card(s,x){
       h += `<div class="wk-rr ${st === 2 ? "nocl" : ""}"><button type="button" class="wk-sb s${st}" data-sent="${E(ck)}" aria-label="${E(it)}: ${lbl}" title="${lbl}">${st === 1 ? "✓" : st === 2 ? "✕" : ""}</button><input type="checkbox" class="wk-cf" data-conf="${E(ck)}" ${c ? "checked" : ""} ${st === 2 ? "disabled" : ""} aria-label="${E(it)}: הספק אישר"><span class="nm">${E(it)}</span></div>`; });
     body = `<span class="wk-prog ${need && conf === need ? "full" : ""}">נשלח ${sent}/${need} · אושר ${conf}/${need}</span><div class="wk-x"><div class="wk-rh"><span>נשלח</span><span>אושר</span><span></span></div>${h}</div>`;
   } else if (x.items.length) body = `<div class="wk-items">${x.items.map(E).join(" · ")}</div>`;
+  if (x.msg) body += `<div class="wk-msg"><button type="button" class="wk-mb" data-msgv="${x.id}">נוסח</button><button type="button" class="wk-mb" data-msgc="${x.id}">העתקה</button></div>`;
   const dn = x.k !== "recap" && !!s.checks[x.id];
   const box = x.k === "recap" ? "" : `<span class="wk-x"><input type="checkbox" class="wk-dn" data-done="${x.id}" ${dn ? "checked" : ""} aria-label="${E(x.t)} בוצע"></span>`;
   const cls = x.k === "recap" ? "recap" : x.k === "fun" ? "fun" : "";
@@ -6100,9 +6122,19 @@ grid.addEventListener("click", e => {
   if (b){ const s = S(), k = b.dataset.sent, n = ((s.sent[k] || 0) + 1) % 3;
     if (n) s.sent[k] = n; else delete s.sent[k]; if (n === 2) delete s.conf[k];
     put(s); renderWk(); const nb = grid.querySelector(`[data-sent="${CSS.escape(k)}"]`); if (nb) nb.focus(); return; }
+  const mv = e.target.closest("[data-msgv],[data-msgc]");
+  if (mv){ const x = S().tasks.find(t => t.id === (mv.dataset.msgv || mv.dataset.msgc)); if (!x) return;
+    if (mv.dataset.msgc) copyText(x.msg, "ההודעה הועתקה"); else openMsg(x); return; }
   if (e.target.closest(".wk-x")) return;
   const c = e.target.closest(".wk-c"); if (c && PG_OWNER) openSheet(c.dataset.id);
 });
+/* message reader: full text + copy */
+let msgX = null;
+function openMsg(x){ msgX = x; $("wkMsgT").textContent = x.t; $("wkMsgN").textContent = x.note || ""; $("wkMsgB").textContent = x.msg;
+  $("wkScrim").hidden = false; $("wkMsg").hidden = false; $("wkMsgCopy").focus(); }
+const closeMsg = () => { $("wkMsg").hidden = true; if ($("wkSheet").hidden) $("wkScrim").hidden = true; msgX = null; };
+$("wkMsgCopy").onclick = () => { if (msgX) copyText(msgX.msg, "ההודעה הועתקה"); };
+$("wkMsgClose").onclick = closeMsg;
 grid.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("wk-c") && PG_OWNER){ e.preventDefault(); openSheet(e.target.dataset.id); } });
 let dragId = null;
 grid.addEventListener("dragstart", e => { const c = e.target.closest && e.target.closest(".wk-c"); if (!c || !PG_OWNER) return; dragId = c.dataset.id; c.classList.add("dragging"); try { e.dataTransfer.setData("text/plain", dragId); } catch(_){} });
@@ -6128,18 +6160,20 @@ function openSheet(id){
   $("wkSheetT").textContent = id ? "עריכת משימה" : "משימה חדשה";
   $("wkTitle").value = x.t; $("wkFrom").value = x.from; $("wkTo").value = x.to; $("wkWho").value = x.who;
   $("wkLaneSel").value = x.lane || "tech"; $("wkItems").value = x.items.join("\n"); $("wkKind").value = x.k;
+  $("wkMsgTxt").value = x.msg || ""; $("wkNote").value = x.note || "";
   $("wkDel").hidden = !id; curDay = x.d; markDay();
   $("wkScrim").hidden = false; $("wkSheet").hidden = false; $("wkTitle").focus();
 }
 const closeSheet = () => { $("wkScrim").hidden = true; $("wkSheet").hidden = true; cur = null; };
-$("wkCancel").onclick = closeSheet; $("wkScrim").onclick = closeSheet;
-document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("wkSheet").hidden) closeSheet(); });
+$("wkCancel").onclick = closeSheet; $("wkScrim").onclick = () => { closeSheet(); closeMsg(); };
+document.addEventListener("keydown", e => { if (e.key !== "Escape") return; if (!$("wkMsg").hidden) closeMsg(); else if (!$("wkSheet").hidden) closeSheet(); });
 $("wkSave").onclick = () => {
   const t = $("wkTitle").value.trim(); if (!t){ $("wkTitle").focus(); return; }
   const s = S(); let x = cur && s.tasks.find(q => q.id === cur);
   if (!x){ x = {id:"n" + (s.n++), k:"task", note:"", o:999}; s.tasks.push(x); }
   if (x.d !== curDay) x.o = 999;
   Object.assign(x, {t, d:curDay, from:$("wkFrom").value, to:$("wkTo").value, who:$("wkWho").value, lane:$("wkLaneSel").value, k:$("wkKind").value,
+    msg:$("wkMsgTxt").value.trim(), note:$("wkNote").value.trim(),
     items:$("wkItems").value.split("\n").map(v => v.trim()).filter(Boolean)});
   sorted(s,x.d).forEach((q,i) => q.o = i); put(s); closeSheet(); renderWk();
 };
@@ -6999,4 +7033,11 @@ dlg.querySelector('form').addEventListener('submit',e=>{e.preventDefault(); if(d
 })();
 </script>
 
+<style id="wkmsgfix">
+/* 10.11.26: solid side sheets above the top bar */
+#wkScrim{z-index:190!important}
+#wkSheet,#wkMsg{z-index:191!important;background:rgb(var(--m-veil))!important;color:var(--m-ink)!important}
+#wkMsg .wk-msgb{background:var(--m-soft)}
+#wkMsg .wk-btn:not(.wk-pri),#wkSheet .wk-btn:not(.wk-pri):not(.wk-del){color:var(--m-ink)!important}
+</style>
 </body></html>
