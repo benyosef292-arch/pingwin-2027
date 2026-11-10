@@ -6021,9 +6021,15 @@ setMode(startMode);
   <h3 id="wkMsgT"></h3>
   <p id="wkMsgN" class="wk-sub"></p>
   <div id="wkMsgB" class="wk-msgb" dir="rtl"></div>
-  <div class="wk-acts">
+  <textarea id="wkMsgEd" class="wk-msgb wk-msged" dir="rtl" hidden aria-label="נוסח ההודעה"></textarea>
+  <div class="wk-acts" id="wkMsgView">
     <button class="wk-btn wk-pri" id="wkMsgCopy" type="button">העתקה</button>
+    <button class="wk-btn" id="wkMsgEdit" type="button" hidden>עריכה</button>
     <button class="wk-btn" id="wkMsgClose" type="button">סגירה</button>
+  </div>
+  <div class="wk-acts" id="wkMsgEdActs" hidden>
+    <button class="wk-btn wk-pri" id="wkMsgSave" type="button">שמירה</button>
+    <button class="wk-btn" id="wkMsgCancel" type="button">ביטול</button>
   </div>
 </aside>
 <script id="wkjs">
@@ -6087,7 +6093,7 @@ function card(s,x){
     body = `<span class="wk-prog ${need && conf === need ? "full" : ""}">נשלח ${sent}/${need} · אושר ${conf}/${need}</span><div class="wk-x"><div class="wk-rh"><span>נשלח</span><span>אושר</span><span></span></div>${h}</div>`;
   } else if (x.items.length) body = `<div class="wk-items">${x.items.map(E).join(" · ")}</div>`;
   if (x.lane === "wa" && !x.msg) body += `<span class="wk-time none">אין נוסח עדיין</span>`;
-  if (x.msg) body += `<div class="wk-msg"><button type="button" class="wk-mb" data-msgv="${x.id}">נוסח</button><button type="button" class="wk-mb" data-msgc="${x.id}">העתקה</button></div>`;
+  if (x.msg || (x.lane === "wa" && PG_EDIT)) body += `<div class="wk-msg"><button type="button" class="wk-mb" data-msgv="${x.id}">נוסח</button><button type="button" class="wk-mb" data-msgc="${x.id}">העתקה</button></div>`;
   const dn = x.k !== "recap" && !!s.checks[x.id];
   const box = x.k === "recap" ? "" : `<span class="wk-x"><input type="checkbox" class="wk-dn" data-done="${x.id}" ${dn ? "checked" : ""} aria-label="${E(x.t)} בוצע"></span>`;
   const cls = x.k === "recap" ? "recap" : x.k === "fun" ? "fun" : "";
@@ -6137,9 +6143,15 @@ grid.addEventListener("click", e => {
 /* message reader: full text + copy */
 let msgX = null;
 function openMsg(x){ msgX = x; $("wkMsgT").textContent = x.t; $("wkMsgN").textContent = x.note || ""; $("wkMsgB").textContent = x.msg;
-  $("wkScrim").hidden = false; $("wkMsg").hidden = false; $("wkMsgCopy").focus(); }
+  msgMode(false); $("wkScrim").hidden = false; $("wkMsg").hidden = false; $("wkMsgCopy").focus(); }
 const closeMsg = () => { $("wkMsg").hidden = true; if ($("wkSheet").hidden) $("wkScrim").hidden = true; msgX = null; };
 $("wkMsgCopy").onclick = () => { if (msgX) copyText(msgX.msg, "ההודעה הועתקה"); };
+/* 10.11.26 (Ben): team link and Ben can edit the message text */
+const msgMode = ed => { $("wkMsgB").hidden = ed; $("wkMsgEd").hidden = !ed; $("wkMsgView").hidden = ed; $("wkMsgEdActs").hidden = !ed; $("wkMsgEdit").hidden = !PG_EDIT; };
+$("wkMsgEdit").onclick = () => { if (!msgX || !PG_EDIT) return; $("wkMsgEd").value = msgX.msg || ""; msgMode(true); $("wkMsgEd").focus(); };
+$("wkMsgCancel").onclick = () => msgMode(false);
+$("wkMsgSave").onclick = () => { if (!msgX) return; const s = S(), x = s.tasks.find(t => t.id === msgX.id); if (!x) return;
+  x.msg = $("wkMsgEd").value.replace(/\s+$/, ""); put(s); msgX = x; $("wkMsgB").textContent = x.msg; msgMode(false); renderWk(); toast("ההודעה נשמרה"); };
 $("wkMsgClose").onclick = closeMsg;
 grid.addEventListener("keydown", e => { if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("wk-c") && PG_OWNER){ e.preventDefault(); openSheet(e.target.dataset.id); } });
 let dragId = null;
@@ -7044,6 +7056,8 @@ dlg.querySelector('form').addEventListener('submit',e=>{e.preventDefault(); if(d
 #wkScrim{z-index:190!important}
 #wkSheet,#wkMsg{z-index:191!important;background:rgb(var(--m-veil))!important;color:var(--m-ink)!important}
 #wkMsg .wk-msgb{background:var(--m-soft)}
+#wkMsg .wk-msged{font:inherit;font-size:15px;line-height:1.6;color:inherit;min-height:55vh;resize:vertical;width:100%;box-sizing:border-box}
+#wkMsg .wk-msged[hidden]{display:none}
 #wkMsg .wk-btn:not(.wk-pri),#wkSheet .wk-btn:not(.wk-pri):not(.wk-del){color:var(--m-ink)!important}
 </style>
 <style id="wagroups">
