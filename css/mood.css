@@ -1,0 +1,52 @@
+
+/* ================= Mood 5.11.26 (Ben): two themes, picked with the sun/moon button in the top bar (saved per browser).
+   dark  = "night in the mountains": dark glass over a darkened photo, light ink.
+   light = soft snow: cool off-white glass (never bright white), slate ink.
+   Both share the tokens below; script#moodjs adapts older components at runtime. ================= */
+html[data-theme="dark"]{
+  --m-veil:12,20,28; --m-a1:.55; --m-a2:.72; --m-a3:.82;
+  --m-glass:rgba(22,32,42,.74); --m-side:rgba(14,22,30,.82); --m-side-solid:rgba(14,22,30,.94);
+  --m-fill:rgba(38,50,62,.82); --m-head:rgba(255,255,255,.05); --m-top:rgba(9,14,20,.86);
+  --m-ink:#E8EDF1; --m-muted:#A9B5BF; --m-line:rgba(255,255,255,.12); --m-soft:rgba(255,255,255,.08); --m-ph:#8C99A4;
+  --m-strong:rgba(28,40,52,.95); --m-edge:rgba(255,255,255,.10);
+}
+html[data-theme="light"]{
+  --m-veil:226,233,238; --m-a1:.6; --m-a2:.8; --m-a3:.9;
+  --m-glass:rgba(242,245,247,.86); --m-side:rgba(233,238,242,.88); --m-side-solid:rgba(233,238,242,.96);
+  --m-fill:rgba(234,239,243,.92); --m-head:rgba(28,44,55,.04); --m-top:rgba(28,44,55,.9);
+  --m-ink:#1C2C37; --m-muted:#4A5B67; --m-line:rgba(28,44,55,.13); --m-soft:rgba(28,44,55,.06); --m-ph:#6B7A85;
+  --m-strong:rgba(240,244,247,.97); --m-edge:rgba(255,255,255,.6);
+}
+:root{--panel:var(--m-glass);--glass:var(--m-glass);--glass-strong:var(--m-strong);--glass-edge:var(--m-edge);
+  --hair:var(--m-line);--line:var(--m-line);--tint2:var(--m-soft)}
+:root[data-theme="dark"]{--glass-sh:0 1px 0 rgba(255,255,255,.06) inset,0 10px 30px -14px rgba(0,0,0,.6);--line2:rgba(255,255,255,.18)}
+body:not(.deck-mode){background:rgb(var(--m-veil))!important;color:var(--m-ink)}
+body:not(.deck-mode)::after{background:linear-gradient(180deg,rgba(var(--m-veil),var(--m-a1)),rgba(var(--m-veil),var(--m-a2)) 50%,rgba(var(--m-veil),var(--m-a3))),var(--bg1) center 30%/cover!important}
+.topbar{background:var(--m-top)!important;border-bottom:1px solid rgba(255,255,255,.08)!important}
+#boardTabs.tabs,.sn-bar{background:var(--m-side)!important;border-color:var(--m-line)!important}
+@media (max-width:1023.98px){#boardTabs.tabs{background:var(--m-side-solid)!important}}
+#boardTabs .tab{color:var(--m-muted)!important}
+#boardTabs .tab:hover{background:var(--m-soft)!important;color:var(--m-ink)!important}
+#boardTabs .tab[aria-selected="true"]{color:var(--m-ink)!important}
+#boardTabs .tab .pill{background:var(--m-soft)!important;color:var(--m-ink)!important}
+#boardTabs .tab[data-view]::before{border-color:var(--m-line)!important}
+.sn-open{background:var(--m-fill)!important;color:var(--m-ink)!important;border-color:var(--m-line)!important}
+.cat-head{background:var(--m-head)!important}
+.search input,.toolbar input,.sup-f input,.sup-f select,.wf-in,.inv-add input,.ct-search input,#boardMain input,#boardMain textarea,#boardMain select{
+  background-color:var(--m-fill)!important;color:var(--m-ink)!important;border-color:var(--m-line)!important}
+#boardMain ::placeholder{color:var(--m-ph)!important}
+html[data-theme="dark"] #boardMain input[type=checkbox]{border-color:rgba(255,255,255,.4)!important}
+html[data-theme="light"] #boardMain input[type=checkbox]{border-color:rgba(28,44,55,.45)!important}
+html[data-theme="dark"] #boardMain,html[data-theme="dark"] #boardTabs,html[data-theme="dark"] .sn-bar{color-scheme:dark}
+html[data-theme="dark"] #boardMain select option{background:#1C2833;color:var(--m-ink)}
+html[data-theme="dark"] .gt{color:var(--m-ink)!important;text-shadow:0 1px 8px rgba(0,0,0,.6)!important}
+html[data-theme="light"] .gt{color:var(--m-ink)!important;text-shadow:0 0 6px rgba(var(--m-veil),.95),0 0 2px rgba(var(--m-veil),.95)!important}
+.tm-names span{color:var(--m-ink)!important;background:var(--m-soft)!important}
+html.m-scan *,html.m-scan *::before,html.m-scan *::after{transition:none!important}
+/* blur only on the outer layer: a blurred card inside a blurred card adds nothing and makes scrolling flicker */
+:is(.vhead,.toolbar,.cat,.wk-board,.wk,.season,.ssn,.tm-card,.wcard,.wf-sec,.wf-weeks,.mx,.qs-card,.inv-tools,.inv-grid,.ct-card,.cal,.cal-side,.plan-wrap,.pl-col,.ov-card,.my,.mine,.me-box,.gl) :is(.vhead,.toolbar,.cat,.wk-board,.wk,.season,.ssn,.tm-card,.wcard,.wf-sec,.wf-weeks,.mx,.qs-card,.inv-tools,.inv-grid,.inv-ni,.ct-card,.cal,.cal-side,.plan-wrap,.pl-col,.ov-card,.my,.mine,.me-box,.gl,.cfm-box){-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+/* theme button */
+.th-btn{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;padding:0!important}
+.th-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html[data-theme="dark"] .th-sun{display:none} html[data-theme="light"] .th-moon{display:none}
+@media (prefers-reduced-transparency:reduce){:root{--panel:rgb(var(--m-veil));--glass:rgb(var(--m-veil))}}

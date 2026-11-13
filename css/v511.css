@@ -1,0 +1,24 @@
+
+/* 5.11.26 (Ben): mail button in contacts, owner-only roles editor */
+.ct .ct-l .ml{font-size:13px;font-weight:600;color:var(--m-muted);direction:ltr;unicode-bidi:isolate;word-break:break-all}
+.ct-mail{display:inline-flex;align-items:center;justify-content:center;gap:8px;align-self:flex-start;margin-top:2px;padding:8px 14px;border-radius:10px;
+  font:700 14px var(--fd,inherit);text-decoration:none;background:var(--hv,var(--h-lake));color:var(--h-on)!important;border:0;cursor:pointer}
+.ct-mail svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+.ct-mail:hover{filter:brightness(1.08)}
+.ct-mail:focus-visible{outline:2px solid var(--m-ink);outline-offset:2px}
+.sec-h:has(.rf-edit){position:relative}
+.rf-edit{position:absolute;inset-inline-end:0;bottom:2px;padding:7px 16px;border-radius:10px;border:1px solid var(--m-line);background:var(--m-fill);color:var(--m-ink);font:700 14px var(--fd,inherit);cursor:pointer}
+.rf-edit[aria-pressed="true"]{background:var(--hv,var(--h-lake));color:var(--h-on);border-color:transparent}
+.rfull.editing li.ed{display:grid;grid-template-columns:1fr 110px 34px;gap:6px;align-items:center}
+.rfull.editing li.ed .rf-d{grid-column:1 / 3}
+.rfull.editing li.ed .rf-x{grid-row:1;grid-column:3}
+.rfull.editing input,.rfull.editing select{font:600 14px var(--fd,inherit);padding:7px 10px;border-radius:8px;border:1px solid var(--m-line);min-width:0;width:100%}
+.rfull.editing .rf-d{font-weight:500;font-size:13px}
+.rf-x{width:34px;height:34px;border-radius:8px;border:1px solid var(--m-line);background:transparent;color:var(--m-muted);cursor:pointer;font-size:14px}
+.rf-x:hover{color:var(--m-ink);background:var(--m-soft)}
+.rf-add{margin-top:10px;width:100%;padding:9px;border-radius:10px;border:1px dashed var(--m-line);background:transparent;color:var(--m-ink);font:700 14px var(--fd,inherit);cursor:pointer}
+.rf-add:hover{background:var(--m-soft)}
+.rf-open.ed{background:var(--m-glass)!important;border-color:var(--m-line)!important}
+.rf-open.ed ul{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
+.rf-open.ed li{padding:8px;border-radius:10px;background:var(--m-soft)}
+@media (max-width:640px){.rf-edit{position:static;align-self:flex-start;margin-top:8px}.rfull.editing li.ed{grid-template-columns:1fr 34px}.rfull.editing li.ed .rf-w,.rfull.editing li.ed .rf-d{grid-column:1 / -1}}

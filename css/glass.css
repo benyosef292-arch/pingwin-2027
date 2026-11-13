@@ -1,0 +1,53 @@
+
+/* ================= Glass 5.11.26 (Ben): Apple-style glass. A soft mountain photo sits behind the board;
+   bars, side menu and cards are translucent layers that blur it. Text stays on near-white glass: worst case (dark photo spot) still gives muted/red/blue text >= 4.5:1. ================= */
+:root{
+  --panel:rgba(255,255,255,.78);
+  --glass:rgba(255,255,255,.78);
+  --glass-strong:rgba(255,255,255,.8);
+  --glass-edge:rgba(255,255,255,.75);
+  --glass-line:rgba(28,44,55,.10);
+  --glass-blur:saturate(180%) blur(22px);
+  --glass-sh:0 1px 0 rgba(255,255,255,.7) inset,0 8px 28px -12px rgba(28,44,55,.22);
+  --hair:rgba(28,44,55,.13);
+  --tint2:rgba(28,44,55,.06);
+}
+/* backdrop: the season photo, washed out and soft */
+body:not(.deck-mode){background:#E3EAF0!important}
+body:not(.deck-mode)::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(236,242,247,.66),rgba(236,242,247,.82) 50%,rgba(236,242,247,.9)),var(--bg1) center 30%/cover}
+
+/* top bar: dark glass */
+.topbar{background:rgba(22,36,46,.7)!important;-webkit-backdrop-filter:var(--glass-blur)!important;backdrop-filter:var(--glass-blur)!important;
+  border-bottom:1px solid rgba(255,255,255,.12)!important}
+/* side menu + phone bar: light glass */
+#boardTabs.tabs{background:var(--glass)!important;-webkit-backdrop-filter:var(--glass-blur)!important;backdrop-filter:var(--glass-blur)!important;border-inline-end:1px solid var(--glass-edge)!important}
+#boardTabs .tab[aria-selected="true"]{background:rgba(255,255,255,.9)!important;box-shadow:0 1px 3px rgba(28,44,55,.12)!important}
+#boardTabs .tab:hover{background:rgba(255,255,255,.55)!important}
+.sn-bar{background:var(--glass)!important;-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-bottom:1px solid var(--glass-edge)!important}
+.sn-open{background:rgba(255,255,255,.7)!important;border-color:var(--glass-edge)!important}
+@media (max-width:1023.98px){#boardTabs.tabs{background:rgba(244,247,250,.9)!important}}
+
+/* cards: glass panels with a light rim */
+.vhead,.view .vhead,.toolbar,.cat,.wk-board,.wk,.season,.ssn,.tm-card,.wcard,.wf-sec,.wf-weeks,.mx,
+.qs-card,.sup-card,.inv-tools,.inv-grid,.inv-need .inv-ni,.ct-card,.cal,.cal-side,.plan-wrap,.pl-col,.ov-card,.my,.mine,.me-box{
+  background:var(--glass)!important;-webkit-backdrop-filter:var(--glass-blur)!important;backdrop-filter:var(--glass-blur)!important;
+  border:1px solid var(--glass-edge)!important;box-shadow:var(--glass-sh)!important}
+.cat-head{background:rgba(255,255,255,.5)!important}
+/* floating layers stay readable */
+.cfm-box,.toast,[role="dialog"]>div,[role="menu"],[role="listbox"]{background:var(--glass-strong)!important;-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur)}
+/* inputs: frosted, not white blocks */
+.search input,.toolbar input,.sup-f input,.sup-f select,.wf-in,.inv-add input,.ct-search input{background:rgba(255,255,255,.7)!important;border-color:var(--glass-line)!important}
+
+/* any other white card found at runtime (script#glassjs marks it .gl) */
+.gl{-webkit-backdrop-filter:var(--glass-blur)!important;backdrop-filter:var(--glass-blur)!important;border-color:var(--glass-edge)!important}
+/* team names were white on white (also before the glass) */
+.tm-names span{color:var(--slate)!important;background:var(--tint2)!important}
+.gt{color:var(--slate)!important;text-shadow:0 0 6px rgba(255,255,255,.95),0 0 2px rgba(255,255,255,.95)}
+@media (prefers-reduced-transparency:reduce){
+  :root{--panel:#fff;--glass:#fff;--glass-strong:#fff}
+  body:not(.deck-mode){background:var(--snow)!important}
+  body::after{display:none!important}
+  *{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+}
+@media print{body{background:#fff!important}*{backdrop-filter:none!important;box-shadow:none!important}}

@@ -36,7 +36,9 @@ function styleDump(full) {
   /* custom properties (--x) are skipped: they only matter through the real properties they feed,
      and one of them holds the 2.5 MB background photo */
   const flat = cs => { let o = ''; for (let i = 0; i < cs.length; i++) if (!cs[i].startsWith('--')) o += cs[i] + ':' + cs.getPropertyValue(cs[i]) + ';'; return o; };
-  const where = el => { const p = []; for (let e = el; e && e.nodeType === 1; e = e.parentElement) { let i = 0; for (let s = e; (s = s.previousElementSibling);) i++; p.unshift(e.tagName.toLowerCase() + i); } return p.join('/'); };
+  /* tag path without sibling indexes: moving a <style>/<script> into its own file must not
+     shift every element after it; drawn elements are compared strictly in document order */
+  const where = el => { const p = []; for (let e = el; e && e.nodeType === 1; e = e.parentElement) p.unshift(e.tagName.toLowerCase()); return p.join('/'); };
   const out = [];
   /* only what is drawn now: hidden tabs and slides are recorded when they are open */
   for (const el of document.querySelectorAll('body *')) {

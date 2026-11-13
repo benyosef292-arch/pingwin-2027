@@ -1,0 +1,30 @@
+
+/* 9.11.26 (Ben): 3 days per screen by default, arrows + day pills, "כל השבוע" toggle, 1 day on narrow screens */
+#pwSched{container-type:inline-size;container-name:pw}
+#pwSched .gt{position:sticky;inset-inline-start:0;z-index:2;background:var(--pw-panel)}
+#pwSched .pw-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;width:100%;margin-top:4px}
+#pwSched .pw-seg{display:flex;border:1px solid var(--pw-line);border-radius:8px;overflow:hidden}
+#pwSched .pw-seg button,#pwSched .pw-arw,#pwSched .pw-pills button{font:inherit;color:var(--pw-fg);background:transparent;border:0;cursor:pointer}
+#pwSched .pw-seg button{padding:6px 14px;font-size:13px}
+#pwSched .pw-seg button[aria-pressed="true"]{background:color-mix(in srgb,var(--pw-hot) 32%,var(--pw-panel))}
+#pwSched .pw-arw{width:34px;height:34px;border:1px solid var(--pw-line);border-radius:8px;font-size:16px}
+#pwSched .pw-arw:disabled{opacity:.3;cursor:default}
+#pwSched .pw-pills{display:flex;gap:4px;overflow-x:auto;min-width:0;flex:1}
+#pwSched .pw-pills button{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;padding:4px 10px;border-radius:8px;border:1px solid transparent;line-height:1.2}
+#pwSched .pw-pills button b{font-size:13px;font-variant-numeric:tabular-nums}
+#pwSched .pw-pills button span{font-size:11px;color:var(--pw-mut)}
+#pwSched .pw-pills button.on{border-color:var(--pw-line);background:var(--pw-bg)}
+#pwSched .pw-pills button.cl b{color:var(--pw-fix)}
+#pwSched .pw-seg button:focus-visible,#pwSched .pw-arw:focus-visible,#pwSched .pw-pills button:focus-visible{outline:2px solid var(--pw-hot);outline-offset:1px}
+#pwSched .pw-grid{min-width:0;grid-auto-rows:minmax(15px,auto)}
+#pwSched .pw-grid.wk{min-width:1410px;grid-auto-rows:minmax(12px,auto)}
+#pwSched .pw-grid:not(.wk) .pwi{font-size:14px;padding:9px 11px;gap:4px 9px}
+#pwSched .pw-grid:not(.wk) .gb{margin:4px 8px;gap:8px}
+#pwSched .pw-grid:not(.wk) .gh{padding:11px 13px 9px}
+#pwSched .pw-grid:not(.wk) .gh b{font-size:16px}
+#pwSched .pwi small{display:block;font-size:12px;color:var(--pw-mut);font-weight:400;line-height:1.35;margin-top:2px}
+@container pw (max-width:1100px){
+  #pwSched .pw-lay{flex-direction:column;align-items:stretch;gap:10px}
+  #pwSched .pw-side{order:2;position:static;flex:none;width:auto;min-height:0}
+  #pwSched .pw-side .pw-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px}
+}

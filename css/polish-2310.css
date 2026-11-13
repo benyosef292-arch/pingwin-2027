@@ -1,0 +1,22 @@
+/* ================= polish pass (23.10.26) ================= */
+/* type: balanced headings, no orphans, steady figures for dates and counts */
+h1,h2,h3,.sl h1,.sl h2{text-wrap:balance}
+p,.sl-lead,.td,.hero p,.vhead p{text-wrap:pretty}
+.sl,.wrap,.topbar{font-variant-numeric:tabular-nums lining-nums}
+/* lit photo slides: keep the left third readable, not just the right */
+.sl.photo.lit::before{background:linear-gradient(to left,rgba(255,255,255,.96) 0%,rgba(255,255,255,.9) 36%,rgba(250,252,254,.8) 62%,rgba(244,249,252,.68) 84%,rgba(238,246,251,.58) 100%)}
+/* deep photo slides: same idea, darker */
+.sl.photo.deep::before{background:linear-gradient(to left,rgba(0,18,29,.9) 0%,rgba(0,26,40,.82) 40%,rgba(0,32,50,.66) 68%,rgba(0,38,58,.5) 100%)}
+/* chips sit on photos: make them solid so they never wash out */
+.sl.photo.lit .sl-chip{background:#fff;border-color:var(--line2)}
+.sl.photo.lit .sl-chip.amber,.sl-chip.amber{background:#FFF4DF;border-color:#EBCB8F;color:var(--amber-ink)}
+.sl.photo.deep .sl-chip.amber{background:rgba(224,163,62,.3);border-color:rgba(240,196,120,.7);color:#FBE3B8}
+/* footer line: slightly darker on light slides, room for the logo */
+.sl.photo.lit .sl-foot{color:#3F6273}
+.sl-foot{padding-inline-end:0}
+.sl-foot > span:last-child{min-width:0}
+/* keyboard focus everywhere, one consistent ring */
+.tab:focus-visible,.mode-btn:focus-visible,.icon-btn:focus-visible,.sl-arrow:focus-visible,.dfull:focus-visible,button:focus-visible{outline:3px solid rgba(0,170,235,.55);outline-offset:2px}
+.topbar button:focus-visible{outline-color:#7FD3F7}
+/* interactions: calmer, no bounce */
+.pcard:hover{transform:translateY(-2px)}

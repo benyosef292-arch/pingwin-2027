@@ -1,0 +1,52 @@
+
+/* ================= Side menu 5.11.26: tabs move from the top strip to a menu on the right.
+   Desktop (>=1024px): fixed column beside the content. Smaller: a bar with the current tab opens a drawer. ================= */
+:root{--sbw:0px;--tbh:0px}
+#boardTabs.tabs{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:2px!important;overflow-x:hidden!important;overflow-y:auto!important;
+  -webkit-mask-image:none!important;mask-image:none!important;background:var(--panel)!important;border-bottom:0!important;box-shadow:none!important;
+  padding:12px 10px!important;justify-content:flex-start!important;scrollbar-width:thin}
+#boardTabs .tab{display:flex!important;align-items:center;gap:10px;width:100%;margin:0!important;min-height:42px;padding:8px 12px!important;border:0!important;border-radius:8px!important;
+  font-family:var(--fd);font-size:14.5px;font-weight:500;color:var(--muted);text-align:start;white-space:nowrap;background:transparent!important;box-shadow:none!important;position:relative;
+  transition:background .15s,color .15s}
+#boardTabs .tab .ti{flex:0 0 20px;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#boardTabs .tab .tl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+#boardTabs .tab .pill{margin:0!important;flex:0 0 auto;font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--tint2)!important;color:var(--slate)!important}
+#boardTabs .tab:hover{background:var(--tint2)!important;color:var(--slate)}
+#boardTabs .tab[aria-selected="true"]{background:var(--tint)!important;color:var(--run-blue);font-weight:700}
+#boardTabs .tab[aria-selected="true"]::after{content:"";position:absolute;inset-inline-start:0;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--run-blue)}
+#boardTabs .tab[aria-selected="true"] .pill{background:var(--run-blue)!important;color:#fff!important}
+#boardTabs .tab:focus-visible{outline:2px solid var(--run-blue);outline-offset:-2px}
+/* groups: general · task stages · management · people */
+#boardTabs .tab[data-view="p1"],#boardTabs .tab[data-view="qs"],#boardTabs .tab[data-view="contacts"]{margin-top:13px!important}
+#boardTabs .tab[data-view="p1"]::before,#boardTabs .tab[data-view="qs"]::before,#boardTabs .tab[data-view="contacts"]::before{content:"";position:absolute;top:-8px;inset-inline:12px;border-top:1px solid var(--hair)}
+body.deck-mode .sn-bar,body.film-mode .sn-bar,body.deck-mode #boardTabs.tabs,body.film-mode #boardTabs.tabs{display:none!important}
+
+/* desktop: fixed column on the right */
+@media (min-width:1024px){
+  :root{--sbw:252px}
+  body:not(.deck-mode):not(.film-mode) #boardTabs.tabs{position:fixed!important;top:var(--tbh)!important;bottom:0;inset-inline-start:0;width:var(--sbw);z-index:40!important;border-inline-end:1px solid var(--hair)!important}
+  body:not(.deck-mode):not(.film-mode) #boardMain{max-width:1220px!important;
+    margin-inline-start:max(var(--sbw),calc((100% + var(--sbw) - 1220px) / 2))!important;margin-inline-end:max(0px,calc((100% - var(--sbw) - 1220px) / 2))!important}
+  body:not(.deck-mode):not(.film-mode) .fx,body:not(.deck-mode):not(.film-mode) footer.src,body:not(.deck-mode):not(.film-mode) #view-overview .hero{margin-inline:calc(50% - 50vw + var(--sbw) / 2)!important}
+  .sn-bar,.sn-back{display:none!important}
+}
+
+/* tablet + phone: bar with the current tab, opens a drawer from the right */
+@media (max-width:1023.98px){
+  .sn-bar{position:sticky;top:var(--tbh);z-index:45;background:var(--panel);border-bottom:1px solid var(--hair);padding:6px max(12px,env(safe-area-inset-right,0px)) 6px max(12px,env(safe-area-inset-left,0px))}
+  .sn-open{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:6px 10px;border:1px solid var(--hair);border-radius:8px;background:var(--panel);
+    font-family:var(--fd);font-size:15px;font-weight:700;color:var(--slate);text-align:start;cursor:pointer}
+  .sn-open .ti{flex:0 0 22px;width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+  .sn-open .tl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sn-open .pill{font-size:12px;font-weight:600;padding:1px 8px;border-radius:999px;background:var(--run-blue);color:#fff}
+  .sn-open:focus-visible{outline:2px solid var(--run-blue);outline-offset:2px}
+  #boardTabs.tabs{position:fixed!important;top:0!important;bottom:0;inset-inline-start:0;width:min(300px,84vw);z-index:90!important;
+    padding:max(16px,env(safe-area-inset-top,0px)) 10px 16px!important;border-inline-end:1px solid var(--hair)!important;
+    transform:translateX(100%);visibility:hidden;transition:transform .2s ease,visibility 0s linear .2s;box-shadow:0 0 40px rgba(28,44,55,.25)!important}
+  body.sn-on #boardTabs.tabs{transform:none;visibility:visible;transition:transform .2s ease}
+  #boardTabs .tab{min-height:46px;font-size:15px}
+  .sn-back{position:fixed;inset:0;z-index:89;background:rgba(28,44,55,.45)}
+  body.sn-on{overflow:hidden}
+}
+@media (prefers-reduced-motion:reduce){#boardTabs.tabs,#boardTabs .tab{transition:none!important}}
+@media print{.sn-bar,.sn-back{display:none!important}#boardMain{margin:0 auto!important}}
