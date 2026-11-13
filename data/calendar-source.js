@@ -31,13 +31,20 @@
       events = j.events; calId = j.calId || ''; live = true; note();
     }).catch(() => {});
   }
-  /* Google Calendar's own event colors (colorId -> hex), so the site shows the colors Ben picked in the calendar */
-  const GCOL = { 1:'#7986cb', 2:'#33b679', 3:'#8e24aa', 4:'#e67c73', 5:'#f6bf26', 6:'#f4511e', 7:'#039be5', 8:'#616161', 9:'#3f51b5', 10:'#0b8043', 11:'#d50000' };
-  /* Ben's names for those colors (13.11.26). Graphite (8) is the "white" one. No color = the site's own per-type color. */
-  const GNAME = { 8: 'גלישת צוות', 1: 'ישיבת צוות', 3: 'ישיבת צוות', 2: 'פנאי צוות', 10: 'פנאי צוות', 6: 'פגישת ספקים שנקבעה', 7: 'עבודה והכנת צוות', 11: 'פגישת ספקים שטרם נקבעה' };
+  /* event colors: the shades Ben sees in his Google Calendar (sampled from his screenshot 13.11.26), by Google colorId */
+  const GCOL = { 11: '#c30808', 6: '#dd7835', 4: '#dd7835', 7: '#4b99d2', 9: '#4b99d2', 2: '#489160', 10: '#489160', 1: '#a479b1', 3: '#a479b1', 8: '#ffffff', 5: '#e8c547' };
+  /* Ben's names for his colors, in his order; "white" is assumed to be Graphite (8) */
+  const LEGEND = [[11, 'פגישת ספקים שטרם נקבעה'], [6, 'פגישת ספקים שנקבעה'], [7, 'עבודה והכנת צוות'], [10, 'פנאי צוות'], [3, 'ישיבת צוות'], [8, 'גלישת צוות']];
+  const GNAME = {}; LEGEND.forEach(([c, n]) => { GNAME[c] = n; }); GNAME[4] = GNAME[6]; GNAME[9] = GNAME[7]; GNAME[2] = GNAME[10]; GNAME[1] = GNAME[3];
+  const NONE = '#7d8a96'; /* event with no color in the calendar */
   window.CalSource = {
     color: col => GCOL[col] || '',
     colorName: col => GNAME[col] || 'צבע ביומן',
+    none: NONE,
+    /* the legend: Ben's six colors always, plus "no color" when some event has none */
+    legend: (evs) => LEGEND.map(([c, n]) => [GCOL[c], n]).concat(evs && evs.some(x => x.id && !GCOL[x.col]) ? [[NONE, 'ללא צבע ביומן']] : []),
+    /* text color that reads on a full-color chip */
+    ink: hex => { const v = parseInt(String(hex).slice(1), 16); return ((v >> 16) * .299 + ((v >> 8) & 255) * .587 + (v & 255) * .114) > 170 ? '#13232F' : '#fff'; },
     events: () => events,
     calId: () => calId,
     live: () => live,

@@ -21,7 +21,7 @@
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
   const frTime = t => { const m = String(t || '').match(/\d{1,2}:\d{2}/); return m ? m[0].padStart(5, '0') : ''; }; /* France time only, never converted */
-  const clr = x => CalSource.color(x.col) || TYPES[x.type].c;
+  const clr = x => x.id ? (CalSource.color(x.col) || CalSource.none) : TYPES[x.type].c; /* live events: the calendar's color; seed: per type */
   const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; const raw = String(o.d || ''); o.hid = (raw.match(/(^|\n)(key|pw)=[^\n]*/g) || []).map(l => l.trim()).join('\n'); o.d = raw.replace(/(^|\n)(key|pw)=[^\n]*/g, '').trim(); return o; }; /* hid: machine lines (pw=sNN links a prep task) kept out of view but sent back on edit */
 
   /* only meetings and key days: long periods (season weeks, vacances, prep) are not shown unless added from the site */
@@ -81,7 +81,7 @@
       if (+d === +sel) cls.push('sel');
       const chips = ev.slice(0, 3).map(x => {
         const head = !x.range || +d === +x.S || d.getDay() === 0 || d.getDate() === 1;
-        return `<span class="ce${x.range ? ' rg' : ''}${+d === +x.S ? ' st' : ''}${+d === +x.E ? ' en' : ''}" style="--c:${clr(x)}" title="${esc(x.t)}">${head ? esc(x.t) : '&nbsp;'}</span>`;
+        return `<span class="ce${x.range ? ' rg' : ''}${+d === +x.S ? ' st' : ''}${+d === +x.E ? ' en' : ''}" style="--c:${clr(x)};color:${CalSource.ink(clr(x))}" title="${esc(x.t)}">${head ? esc(x.t) : '&nbsp;'}</span>`;
       }).join('') + (ev.length > 3 ? `<span class="ce more">+${ev.length - 3}</span>` : '');
       const dots = ev.slice(0, 4).map(x => `<i style="background:${clr(x)}"></i>`).join('');
       h += `<button type="button" class="${cls.join(' ')}" data-k="${k}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}${ev.length ? ' · ' + ev.length + ' אירועים' : ''}"><span class="cn">${d.getDate()}</span><span class="chips">${chips}</span><span class="dots">${dots}</span></button>`;
@@ -102,7 +102,7 @@
   /* day view: the selected day on an hour grid, full width (pages/calendar-day.js) */
   function renderDayView(){
     document.getElementById('calTitle').innerHTML = `יום ${DAYS[sel.getDay()]} <bdi dir="ltr">${fmt(sel)}</bdi>`;
-    grid.innerHTML = CalDay.html(on(sel), { clr, esc, acts, isToday: +sel === +today });
+    grid.innerHTML = CalDay.html(on(sel), { clr, esc, canEdit: x => !!(x.id && (x.site || PG_EDIT)), isToday: +sel === +today }); CalDay.settle(grid);
     renderDay(); renderUp();
   }
   function renderDay(){
@@ -124,7 +124,7 @@
       document.getElementById('heroNextD').textContent = fmt(nx.S) + ' · יום ' + DAYS[nx.S.getDay()] + (isT ? '' : ' · ' + (n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'));
     }
   }
-  const legend = () => { document.getElementById('calLegend').innerHTML = (() => { const seen = []; EV.forEach(x => { const c = clr(x); if (!seen.some(q => q[0] === c)) seen.push([c, CalSource.color(x.col) ? CalSource.colorName(x.col) : TYPES[x.type].n]); }); return seen.map(q => `<span><i style="background:${q[0]}"></i>${q[1]}</span>`).join(''); })(); };
+  const legend = () => { const L = EV.some(x => x.id) ? CalSource.legend(EV) : Object.keys(TYPES).filter(t => t !== 'other' && EV.some(x => x.type === t)).map(t => [TYPES[t].c, TYPES[t].n]); document.getElementById('calLegend').innerHTML = L.map(q => `<span><i style="background:${q[0]}${q[0] === '#ffffff' ? ';box-shadow:inset 0 0 0 1px #8a97a3' : ''}"></i>${q[1]}</span>`).join(''); };
   legend();
   grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); view = new Date(sel.getFullYear(), sel.getMonth(), 1); mode = 'day'; render(); });
   document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'day'){ sel = new Date(sel); sel.setDate(sel.getDate() - 1); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
@@ -210,6 +210,7 @@
   };
   document.getElementById('calDay').addEventListener('click', onActs);
   grid.addEventListener('click', e => { if (mode === 'day') onActs(e); });
+  grid.addEventListener('keydown', e => { if (mode === 'day' && e.key === 'Enter' && e.target.closest('[data-edit]')) onActs(e); });
 
   /* live: the team's Google Calendar, read once for every view in data/calendar-source.js */
   const load = () => CalSource.reload();
