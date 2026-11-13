@@ -1,0 +1,7 @@
+/* Schedule tab (view-sched): the view switch, and the short "upcoming" strip on the overview. */
+#calPane[hidden],#pwHost[hidden]{display:none!important}
+#view-sched .vhead-side{display:flex;align-items:center}
+.ov-up{display:grid;gap:10px;max-width:640px}
+.ov-up #ovUp{display:grid;gap:8px}
+.ov-go{justify-self:start;border:0;background:var(--run-blue,#1858C4);color:#fff;border-radius:999px;padding:8px 18px;font:600 13px var(--fd);cursor:pointer}
+.ov-go:hover{background:#134AA6}

@@ -21,7 +21,7 @@
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
   const frTime = t => { const m = String(t || '').match(/\d{1,2}:\d{2}/); return m ? m[0].padStart(5, '0') : ''; }; /* France time only, never converted */
-  const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; return o; };
+  const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; o.d = String(o.d || '').replace(/(^|\n)(key|pw)=[^\n]*/g, '').trim(); return o; };
 
   /* only meetings and key days: long periods (season weeks, vacances, prep) are not shown unless added from the site */
   const keep = x => !x.range || x.site;
@@ -32,7 +32,7 @@
   const on = d => EV.filter(x => x.S <= d && d <= x.E).sort((a, b) => (a.range - b.range) || (a.S - b.S));
   const status = x => x.E < today ? 'past' : x.S <= today ? 'now' : 'soon';
 
-  let mode = 'month'; try { if (localStorage.getItem('penguin-calmode') === 'week') mode = 'week'; } catch(e){}
+  let mode = 'month'; try { const m0 = localStorage.getItem('penguin-calmode'); if (m0 === 'week' || m0 === 'prep') mode = m0; } catch(e){}
   const wkStart = d => { const x = new Date(d); x.setDate(x.getDate() - x.getDay()); return x; };
   function renderWeek(){
     const st = wkStart(sel), en = new Date(st); en.setDate(st.getDate() + 6);
@@ -50,6 +50,11 @@
     renderDay(); renderUp();
   }
   function render(){
+    /* the third view is the prep-week hour grid (pages/prep-week.js) */
+    document.getElementById('calPane').hidden = mode === 'prep';
+    document.getElementById('pwHost').hidden = mode !== 'prep';
+    document.querySelectorAll('[data-cm]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cm === mode)));
+    if (mode === 'prep'){ if (window.pwRender) window.pwRender(); renderUp(); return; }
     grid.classList.toggle('wk', mode === 'week');
     grid.closest('.cal').classList.toggle('is-wk', mode === 'week');
     document.querySelectorAll('[data-cm]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cm === mode)));
@@ -98,6 +103,7 @@
   function renderUp(){
     const list = EV.filter(x => x.E >= today && x.type !== 'season').sort((a, b) => a.S - b.S).slice(0, 6);
     document.getElementById('calUp').innerHTML = list.map(x => item(x, false)).join('') || '<p class="cal-empty">אין אירועים קרובים</p>';
+    document.getElementById('ovUp').innerHTML = list.slice(0, 4).map(x => item(x, false)).join('') || '<p class="cal-empty">אין אירועים קרובים</p>';
     const nx = EV.filter(x => !x.range && x.S >= today && x.type !== 'season').sort((a, b) => a.S - b.S)[0];
     const T = document.getElementById('heroNextT');
     if (T && nx){
@@ -113,6 +119,7 @@
   document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
   document.getElementById('calNext').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() + 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
   document.querySelectorAll('[data-cm]').forEach(b => b.addEventListener('click', () => { mode = b.dataset.cm; try { localStorage.setItem('penguin-calmode', mode); } catch(e){} if (mode === 'month') view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); }));
+  document.getElementById('ovGo').addEventListener('click', () => document.querySelector('.tab[data-view="sched"]').click());
   document.getElementById('calToday').addEventListener('click', () => { view = new Date(today.getFullYear(), today.getMonth(), 1); sel = new Date(today); render(); });
   render();
 

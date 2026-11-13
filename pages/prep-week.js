@@ -80,9 +80,8 @@ root.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[d
   else {const k=+t.dataset.pwday; if(k<VW.i||k>=VW.i+n) VW.i=n===1?k:Math.min(k,PW_DAYS.length-n);}
   render();});
 let pwW=0; new ResizeObserver(()=>{const w=root.getBoundingClientRect().width; if(!w) return; if((w<640)!==(pwW<640)||!pwW){pwW=w; render();} pwW=w;}).observe(root);
-/* keep the block on top of the p2 view (the board re-renders that view) */
-function mount(){ const h=document.getElementById('view-p2'); if(!h||h.contains(root)) return; const vh=h.querySelector('.vhead'); if(vh) vh.after(root); else h.prepend(root); }
-const h2=document.getElementById('view-p2'); if(h2) new MutationObserver(mount).observe(h2,{childList:true});
+/* the hour grid lives in the schedule tab (third view of pages/calendar.js) */
+function mount(){ const h=document.getElementById('pwHost'); if(h&&!h.contains(root)) h.append(root); }
 new MutationObserver(()=>{ if(root.classList.contains('can')!==can()) render(); }).observe(document.body,{attributes:true,attributeFilter:['class']});
 render(); mount();
 CalSource.onChange(()=>{settle(); render();},false);
