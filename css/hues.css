@@ -1,0 +1,53 @@
+
+/* ================= Hues 5.11.26 (Ben): not one color everywhere.
+   Five matte nature hues; each part of the site owns one. Hues color bands, icons, badges and bars; text stays ink. ================= */
+html[data-theme="dark"]{--h-moss:#9CBF88; --h-lake:#8DB4D6; --h-clay:#E0A285; --h-ochre:#E2BF78; --h-heather:#C3A5D0; --h-on:#10181F}
+/* light mode: deeper versions, white text on them */
+html[data-theme="light"]{--h-moss:#4E6B40; --h-lake:#3A6386; --h-clay:#9A5136; --h-ochre:#85621C; --h-heather:#6D4B6B; --h-on:#fff}
+:root{--hv:var(--h-lake)}
+/* each tab's hue */
+body[data-view="overview"],body[data-view="plan"]{--hv:var(--h-lake)}
+body[data-view="p1"],body[data-view="p2"],body[data-view="p3"],body[data-view="wk"]{--hv:var(--h-moss)}
+body[data-view="qs"],body[data-view="sup"]{--hv:var(--h-clay)}
+body[data-view="inv"],body[data-view="sum"]{--hv:var(--h-ochre)}
+body[data-view="contacts"],body[data-view="team"]{--hv:var(--h-heather)}
+#boardTabs .tab[data-view="overview"],#boardTabs .tab[data-view="plan"]{--th:var(--h-lake)}
+#boardTabs .tab[data-view="p1"],#boardTabs .tab[data-view="p2"],#boardTabs .tab[data-view="p3"],#boardTabs .tab[data-view="wk"]{--th:var(--h-moss)}
+#boardTabs .tab[data-view="qs"],#boardTabs .tab[data-view="sup"]{--th:var(--h-clay)}
+#boardTabs .tab[data-view="inv"],#boardTabs .tab[data-view="sum"]{--th:var(--h-ochre)}
+#boardTabs .tab[data-view="contacts"],#boardTabs .tab[data-view="team"]{--th:var(--h-heather)}
+
+/* side menu: icon in the tab's hue, the open tab gets a soft wash of it */
+#boardTabs .tab .ti{color:var(--th)}
+#boardTabs .tab[aria-selected="true"]{color:var(--m-ink)!important;background:color-mix(in srgb,var(--th) 20%,transparent)!important}
+#boardTabs .tab[aria-selected="true"]::after{background:var(--th)!important}
+#boardTabs .tab[aria-selected="true"] .pill{background:var(--th)!important;color:var(--h-on)!important}
+.sn-open .ti{color:var(--hv)}
+.sn-open .pill{background:var(--hv)!important;color:var(--h-on)!important}
+
+/* page header: band, badge and bar in the tab's hue */
+.view .vhead{border-top:3px solid var(--hv)!important}
+.view .vhead h2 .mk{background:var(--hv)!important;color:var(--h-on)!important}
+.view .vhead .bar i{background:var(--hv)!important}
+
+/* task columns and cards rotate through the hues so neighbours differ */
+.cats>.cat:nth-child(5n+1){--hc:var(--h-moss)} .cats>.cat:nth-child(5n+2){--hc:var(--h-lake)} .cats>.cat:nth-child(5n+3){--hc:var(--h-ochre)}
+.cats>.cat:nth-child(5n+4){--hc:var(--h-clay)} .cats>.cat:nth-child(5n){--hc:var(--h-heather)}
+.cats>.cat{border-top:3px solid var(--hc)!important}
+
+.qs-grid>*:nth-child(3n+1),.sup-grid>*:nth-child(3n+1),.tm-grid>*:nth-child(3n+1){--hc:var(--h-clay)}
+.qs-grid>*:nth-child(3n+2),.sup-grid>*:nth-child(3n+2),.tm-grid>*:nth-child(3n+2){--hc:var(--h-lake)}
+.qs-grid>*:nth-child(3n),.sup-grid>*:nth-child(3n),.tm-grid>*:nth-child(3n){--hc:var(--h-moss)}
+.qs-card,.tm-card{border-top:3px solid var(--hc,var(--hv))!important}
+.inv-hc{border-inline-start:4px solid var(--h-ochre)!important}
+.inv-need .inv-ni{border-inline-start-color:var(--h-clay)!important}
+
+/* only the header gets a faint wash of the tab's hue */
+.view .vhead{background:color-mix(in srgb,var(--hv) 8%,var(--m-glass))!important}
+/* small topic labels take a deep version of the card's hue */
+.qs-topic>h4{color:var(--hc,var(--hv))!important}
+/* top bar: a thin line of all five hues, like trail markers */
+.topbar{box-shadow:inset 0 -3px 0 0 transparent!important;border-bottom:0!important;position:sticky}
+.topbar::after{content:"";position:absolute;inset-inline:0;bottom:0;height:3px;
+  background:linear-gradient(90deg,var(--h-moss) 0 20%,var(--h-lake) 20% 40%,var(--h-ochre) 40% 60%,var(--h-clay) 60% 80%,var(--h-heather) 80%);opacity:.9}
+@media (max-width:760px){.topbar{position:relative}}

@@ -1,0 +1,71 @@
+
+/* ================= v3 · design review pass (DESIGN.md): one palette for board + scenes, contrast, color = meaning ================= */
+:root{--muted:#536572;--marker-ink:#A4520A;--glow:#F6C38B;--f-gold:#F6C38B;--f-gold2:#FFFFFF;--f-dim:#9DB1BC}
+
+/* scenes: no gold, no tracked eyebrow with a rule, no single painted word */
+.f-eyebrow{letter-spacing:0!important;font-weight:600!important;font-size:13px!important;color:rgba(255,255,255,.72)!important;text-transform:none}
+.f-eyebrow::before{display:none!important}
+.f-sheet .f-eyebrow,.f-s6-in .f-eyebrow{color:var(--muted)!important}
+.f-hero-txt h1 em,.f-s7-in h2 em,.f-tm-head h2 em,.ssn-head h2 em{color:inherit!important;font-style:normal}
+.f-hero-txt h1 em{opacity:.78}
+.f-cta button.pri,.f-ta-btn{background:#fff!important;border-color:#fff!important;color:var(--slate)!important}
+.f-pr-close{border-inline-start-color:var(--marker)!important}
+.f-cue{letter-spacing:0!important;font-size:12.5px!important}
+.fx #f-s1{height:200vh}.fx #f-s3{height:220vh}
+.fx .hero-badge{border-color:rgba(246,195,139,.5)!important}
+#heroNextK{color:var(--glow)!important;letter-spacing:0!important}
+
+/* "today" is the orange marker everywhere (green only means done) */
+.cal-c.today{background:#FFF3E6!important;border-color:var(--marker)!important;box-shadow:0 0 0 2px rgba(238,132,24,.2)!important}
+.cal-c.today .cn{background:var(--marker-ink)!important;color:#fff!important}
+.ci.now{background:#FFF3E6!important;box-shadow:inset 0 0 0 1px var(--marker)!important}
+.ci em.now{background:var(--marker-ink)!important;color:#fff!important}
+
+/* contrast (WCAG AA 4.5:1) */
+.cal-dow span{color:var(--muted)!important}
+.cal-c.past .cn,.cal-c.out .cn{color:#56666F!important}
+.cal-empty{color:var(--muted)!important}
+.cal-c.out .cn{opacity:.75}
+.ci small,.dlpick,.cnt{color:var(--muted)!important;opacity:1!important}
+.cat-dl i{color:#46555F!important;opacity:1!important}
+.ci.past,.ssn-list li.past{opacity:1!important}
+.ssn-list li.past .d,.ssn-list li.past b,.ssn-list li.past p,.ssn-list li.past .n,.ssn-list li.past .w{color:var(--muted)!important}
+.ssn-list li.past .d{text-decoration:line-through;text-decoration-thickness:1px}
+.ssn-next small,.ssn-list li.next .n,.ssn-list li.next .d,.ssn-today span{color:var(--marker-ink)!important}
+.rf h3 small{color:#fff!important;background:var(--pc)!important}
+.ct-g h3 small{color:var(--slate)!important;background:#E5EBEF!important}
+.tab .pill{color:var(--slate)!important}
+.tab[aria-selected="true"] .pill{color:#fff!important;background:var(--run-blue)!important}
+
+/* people chips: tinted, readable, never a run color */
+.own{color:var(--pc,#475966)!important;font-weight:700!important;background:color-mix(in srgb,var(--pc,#475966) 9%,#fff)!important;border-color:color-mix(in srgb,var(--pc,#475966) 30%,#fff)!important}
+.own[data-who="כולם"]{--pc:#475966}
+.own[data-who="כולם"]::before{display:none}
+.own[data-who="פתוח"]{--pc:#6E4D00}
+.pl-who[data-who="כולם"],.pl-chip[data-who="כולם"]{--pc:#475966!important}
+.pl-who[data-who="פתוח"],.pl-chip[data-who="פתוח"]{--pc:#8A6100!important}
+
+/* deadline is shown once on the group; the owner's per-task picker stays quiet until hovered or changed */
+@media (hover:hover){
+  .dlpick:not(.set){opacity:0!important;transition:opacity .15s}
+  .task:hover .dlpick,.task:focus-within .dlpick{opacity:1!important}
+}
+.dlpick.set select{border-style:solid;border-color:var(--line2);color:var(--slate);background:#fff}
+body:not(.pg-owner) .dlpick.same{display:none!important}
+@media (hover:hover){.dlpick.same{opacity:0!important}.task:hover .dlpick.same,.task:focus-within .dlpick.same{opacity:1!important}}
+
+/* team charter: plain cards, the red-lines card says it in its border */
+.tm-card.red{border-top-color:var(--run-red)!important}
+.tm-quote b{color:var(--slate)!important;font-family:var(--fd)!important}
+
+/* phones: tabs show there is more to scroll, bigger targets */
+@media (max-width:760px){
+  .tabs{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 36px);mask-image:linear-gradient(to left,transparent 0,#000 36px)}
+  .qf-btn,.mode-btn,.me-btn{min-height:38px}
+  .qf-btn{min-width:40px;justify-content:center}
+  .f-hero-txt{bottom:calc(3vh + var(--heroLift,0px) + env(safe-area-inset-bottom,0px))!important}
+  .f-hero-txt h1{font-size:clamp(40px,11vw,56px)!important}
+  .f-hero-txt h1{margin-top:0!important}
+  .f-hero-meta{margin-top:12px!important}
+  .fx .hero-badge{margin-top:12px!important;padding:12px 16px!important}
+}

@@ -1,0 +1,25 @@
+
+/* 2.11.26 UI UX Pro Max pass: less helper text, quiet "everyone" chip, one day per screen on phones, bigger tap targets */
+.rhint,.finfo,.wk-hint,#view-sup .vhead-main p,#view-qs .vhead-main p{display:none!important}
+span.own[data-who="כולם"]{display:none}
+select.own[data-who="כולם"]{background:none!important;border-color:transparent!important;color:var(--muted)!important;font-weight:500}
+.wk-daybar{display:none}
+@media (max-width:700px){
+  .wk-daybar{display:flex;gap:6px;margin:0 0 10px}
+  .wk-daybar button{flex:1;min-height:44px;font:inherit;font-weight:600;border:1px solid var(--hair);border-radius:6px;background:var(--panel);color:var(--slate);cursor:pointer;padding:0}
+  .wk-daybar button.today{box-shadow:inset 0 -3px 0 var(--marker)}
+  .wk-daybar button[aria-pressed="true"]{background:var(--slate);border-color:var(--slate);color:#fff}
+  .wk-daybar button:focus-visible{outline:2px solid var(--run-blue);outline-offset:2px}
+  .wk-board{overflow-x:visible}
+  .wk-grid{min-width:0;grid-template-columns:88px minmax(0,1fr)}
+  .wk-grid[data-show="0"] [data-day]:not([data-day="0"]){display:none}.wk-grid[data-show="1"] [data-day]:not([data-day="1"]){display:none}.wk-grid[data-show="2"] [data-day]:not([data-day="2"]){display:none}.wk-grid[data-show="3"] [data-day]:not([data-day="3"]){display:none}.wk-grid[data-show="4"] [data-day]:not([data-day="4"]){display:none}.wk-grid[data-show="5"] [data-day]:not([data-day="5"]){display:none}.wk-grid[data-show="6"] [data-day]:not([data-day="6"]){display:none}
+  .wk-rh,.wk-rr{grid-template-columns:40px 40px minmax(0,1fr)}
+  .wk-rr{min-height:44px}
+}
+@media (pointer:coarse){
+  .task .box{width:24px;height:24px}
+  .wk-dn,.wk-cf,.qs-done{width:24px;height:24px}
+  .wk-sb{width:30px;height:30px}
+  .wk-row>.wk-x{padding:0}
+  .wk-x{position:relative}
+}

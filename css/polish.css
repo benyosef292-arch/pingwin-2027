@@ -1,0 +1,44 @@
+
+/* ================= Polish 2.11.26 · UI UX Pro Max review (Minimalism & Swiss, dense dashboard).
+   Same colors. Fixes from the audit: clipped tabs, text under 12px, weak checkbox borders,
+   small targets, tall empty footer ================= */
+
+/* tabs: the first tab ("סקירה") was cut off; all 12 now fit from 1440px and scroll safely below that */
+.tabs{justify-content:flex-start!important;padding-inline:12px!important;scroll-padding-inline:12px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs>.tab:first-child{margin-inline-start:auto}
+.tabs>.tab:last-child{margin-inline-end:auto}
+.tab{padding-inline:11px!important;min-height:44px}
+@media (max-width:1440px){
+  .tabs{-webkit-mask-image:linear-gradient(to left,transparent 0,#000 32px);mask-image:linear-gradient(to left,transparent 0,#000 32px)}
+}
+
+/* text floor 12px (chips, counters, labels) */
+.tab .pill,.ce,.own,.ttag,.cat-count,.cat-dl i,.cat-dl span,.pl-chip em,.pl-who span,.wk-rh span,
+.sup-f label span,.sup-id em,.wf-chip span,.tq,#view-team small,.qf-btn kbd,.dlpick span,.qs-head i,
+#view-overview .ci em,#view-overview .hi em,#view-overview .ssn-today span,#view-overview li .n{font-size:12px!important}
+.own{line-height:1.6!important}
+
+/* checkboxes: border 3.5:1 on white (was 2.6:1) */
+.box,.wk-sb{border-color:#7A8B98!important}
+.box{width:20px;height:20px}
+.wk-dn,.wk-cf{width:20px;height:20px}
+/* open questions: same box as task rows (was a faint 1.6:1 border, no tick) */
+.qs-chk span{width:20px!important;height:20px!important;border:1.5px solid #7A8B98!important;border-radius:5px!important;display:grid!important;place-items:center;color:#fff;font-size:13px;font-weight:700;line-height:1}
+.qs-chk input:checked + span{background:var(--run-green)!important;border-color:var(--run-green)!important;box-shadow:none!important}
+.qs-chk input:checked + span::after{content:"✓"}
+.qs-chk input:focus-visible + span{outline:2px solid var(--run-blue);outline-offset:2px}
+@media (pointer:coarse){.qs-chk span{width:24px!important;height:24px!important}}
+.task{cursor:pointer}
+
+/* fields: one height */
+.search input{min-height:40px}
+.dl-sel{min-height:30px;border-radius:6px}
+
+/* footer: one quiet line, no empty band */
+footer.src{min-height:0!important;margin-top:48px!important;padding-top:20px!important}
+footer.src .src-in{padding-bottom:20px!important}
+footer.src b{font-size:16px!important}
+
+/* focus: same ring everywhere */
+:focus-visible{outline:2px solid var(--run-blue)!important;outline-offset:2px}

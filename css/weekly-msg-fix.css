@@ -1,0 +1,8 @@
+
+/* 10.11.26: solid side sheets above the top bar */
+#wkScrim{z-index:190!important}
+#wkSheet,#wkMsg{z-index:191!important;background:rgb(var(--m-veil))!important;color:var(--m-ink)!important}
+#wkMsg .wk-msgb{background:var(--m-soft)}
+#wkMsg .wk-msged{font:inherit;font-size:15px;line-height:1.6;color:inherit;min-height:55vh;resize:vertical;width:100%;box-sizing:border-box}
+#wkMsg .wk-msged[hidden]{display:none}
+#wkMsg .wk-btn:not(.wk-pri),#wkSheet .wk-btn:not(.wk-pri):not(.wk-del){color:var(--m-ink)!important}

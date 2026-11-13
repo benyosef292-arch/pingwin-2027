@@ -1,0 +1,72 @@
+/* ================= phone ================= */
+@media (max-width: 760px){
+  .topbar{flex-wrap:wrap;gap:8px 10px;padding:8px max(12px, env(safe-area-inset-right, 0px)) 8px max(12px, env(safe-area-inset-left, 0px));position:relative}
+  .brand span{display:none}
+  .brand b{font-size:18px}
+  .logo{width:32px;height:32px}
+  .top-right{margin-inline-start:0;width:100%;flex-wrap:wrap;gap:8px;justify-content:space-between}
+  .icon-btn{padding:6px 10px;font-size:12.5px}
+  .ring{width:36px;height:36px}
+  .ring-txt{font-size:11px}
+  .sync b{display:none}
+  .tabs{position:sticky;top:0;padding:6px 10px}
+  .tab{font-size:13.5px;padding:8px 11px}
+  .wrap{padding:14px 12px 70px}
+  .vhead{flex-direction:column;align-items:stretch;gap:14px}
+  .vhead-main,.vhead-side{flex:0 0 auto!important;min-width:0!important}
+  .rhint{display:none}
+  .season-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cfm-box{padding:18px}
+
+  /* deck: one slide at a time, natural height, page scrolls */
+  body.deck-mode{overflow:auto}
+  body.deck-mode .deck-wrap{display:block!important}
+  .deck-wrap{height:auto!important;min-height:calc(100vh - 100px);overflow:visible;padding:12px 10px 84px}
+  .stage{width:100%!important;height:auto!important;transform:none!important;border-radius:16px}
+  .sl{position:relative!important;inset:auto;padding:22px 16px 20px!important;gap:16px!important;min-height:calc(100vh - 210px)}
+  .sl.photo.lit::before{background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.86))!important}
+  .sl.photo.deep::before{background:linear-gradient(180deg,rgba(0,18,29,.92),rgba(0,26,40,.84))!important}
+  .sl-top{flex-wrap:wrap;gap:8px}
+  .sl .sl-h{font-size:29px!important;line-height:1.15!important;max-width:none}
+  .sl .sl-lead{font-size:15px!important;max-width:none!important}
+  .sl-foot{flex-wrap:wrap;font-size:13px;gap:8px}
+  .sl-foot .dfull{margin-inline-start:0!important}
+  .sl-row3,.sl-row4,.sl-row5,.sl-row6,.qgrid,.tl,.mrow,.wksplit,.hotels2{grid-template-columns:minmax(0,1fr)!important;margin-block:4px!important}
+  .sl [style*="grid-template-columns:56%"]{grid-template-columns:minmax(0,1fr)!important;gap:16px!important}
+  .sl [style*="repeat(4,1fr)"]{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .mr{flex-wrap:wrap;gap:2px 8px;padding:9px 12px}
+  .sl-card{padding:14px 16px}
+  .sl-card h3{font-size:18px}
+  .wks2{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .flights{grid-template-columns:minmax(0,1fr)!important}
+  .fl{flex-wrap:wrap}
+  .flights.f5{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .sl-body{overflow-x:auto;min-height:auto}
+  .sl-table{min-width:560px}
+  .tm b{font-size:17px;min-width:56px}
+  .tm{padding:9px 12px;flex-wrap:wrap}
+  .tm-note{font-size:14px}
+  .vbars{margin-block:6px}
+  .vbar{grid-template-columns:minmax(0,1fr);gap:4px}
+  .vbar label{flex-direction:row;gap:8px;align-items:baseline}
+  .vl2{height:64px}
+  .hotels2 .mapcol .mapcard{flex:0 0 auto;height:280px}
+  .alt ul{grid-template-columns:minmax(0,1fr)!important}
+  .hf h3{font-size:15px}
+  .hf p{font-size:12.5px}
+  /* gondola slide: drawing on top, cards in a column */
+  .ascent{display:flex;flex-direction:column;gap:12px;margin-block:4px}
+  .asc-svg{position:relative;height:150px;inset:auto}
+  .asc-alt text{font-size:26px;stroke-width:7px}
+  .asc-card{position:static!important;width:auto!important;padding:14px 16px}
+  .asc-num b{font-size:46px}
+  /* deck controls float at the bottom */
+  .sl-arrow{position:fixed;top:auto;bottom:calc(14px + env(safe-area-inset-bottom, 0px));transform:none;width:42px;height:42px;background:rgba(0,40,60,.82);z-index:30}
+  .sl-arrow.prev{right:max(12px, env(safe-area-inset-right, 0px))}
+  .sl-arrow.next{left:max(12px, env(safe-area-inset-left, 0px))}
+  .deck-bar{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom, 0px));z-index:29;pointer-events:none}
+  .deck-bar > *{pointer-events:auto}
+  .ddots{display:none}
+  .dfull#dFull{display:none}
+  .dcount{background:rgba(0,40,60,.82)}
+}

@@ -1,0 +1,80 @@
+
+/* ================= Face lift 2.11.26 · UI UX Pro Max ("Productivity Tool"):
+   Flat Design + Minimalism, original colors kept, Hebrew Modern type (Noto Sans Hebrew), 150ms motion, no shadows ================= */
+:root{
+  /* colors: the site's own palette (Ben 2.11.26: keep the original colors) */
+  --slate:#1C2C37; --snow:#F1F4F6; --panel:#FFFFFF; --hair:#D3DCE2; --line:#D3DCE2; --line2:#C3CED6;
+  --run-blue:#1858C4; --primary-fill:#1858C4; --tint:#E3ECFA; --tint2:#EEF2F5;
+  --muted:#536572; --marker:#EE8418; --marker-ink:#A4520A;
+  --run-red:#C62A30; --run-green:#1F8A55;
+  --fd:"Noto Sans Hebrew","IBM Plex Sans Hebrew","Assistant",-apple-system,"Arial Hebrew",sans-serif;
+  --fb:"Noto Sans Hebrew","IBM Plex Sans Hebrew","Assistant",-apple-system,"Arial Hebrew",sans-serif;
+  --r:8px;
+}
+body:not(.deck-mode){background:var(--snow)!important}
+body:not(.deck-mode)::before{display:none!important}
+
+/* top bar + tabs */
+.topbar{background:var(--slate)!important}
+.tabs{border-bottom:1px solid var(--hair)!important}
+.tab{transition:color .15s,border-color .15s}
+.tab:hover{color:var(--slate)}
+.tab[aria-selected="true"]{border-bottom-color:var(--run-blue)!important}
+.tab .pill{background:var(--tint2)!important;color:var(--slate)!important}
+.tab[aria-selected="true"] .pill{background:var(--run-blue)!important;color:#fff!important}
+
+/* flat panels: border, 8px radius, no shadow */
+.view .vhead,.view .toolbar,.cat,.wk-board,.wk-pc,.wk-c,.sup-card,.qs-col,.ct-g,.pl-card{box-shadow:none!important}
+.view .vhead,.view .toolbar,.cat,.wk-board,.wk-pc{border-radius:var(--r)!important;border-color:var(--hair)!important}
+.view .vhead{padding-block:20px!important}
+.view .vhead h2{font-weight:700!important;letter-spacing:0!important}
+.view .vhead .bar i{background:var(--primary-fill)!important}
+.view .vhead .ticks{display:none!important}
+.view .vhead:has(.ticks) .bar{display:block!important}
+.cat-head{background:var(--panel)!important}
+.cat .dot{background:var(--run-blue)!important}
+.cat-dl{background:var(--snow)!important}
+.cat-count{background:var(--tint2)!important;color:var(--slate)!important;border-color:transparent!important}
+
+/* task rows */
+.task{transition:background-color .15s}
+.task:hover{background:var(--snow)!important}
+.box{border-color:#94A3B8!important;transition:background-color .15s,border-color .15s}
+.task input:checked + .box{background:var(--run-green)!important;border-color:var(--run-green)!important}
+.switch input:checked + .track{background:var(--run-blue)!important}
+.search input{border-color:var(--hair)!important;border-radius:var(--r)!important}
+.search input:focus{border-color:var(--run-blue)!important;outline:2px solid var(--tint);outline-offset:0}
+.add-btn{color:var(--run-blue)!important}
+
+/* buttons and fields */
+.wk-btn.wk-pri,.btn-pri,button.pri{background:var(--run-blue)!important;border-color:var(--run-blue)!important;color:#fff!important}
+.wk-btn.wk-q{color:var(--run-blue)!important}
+:focus-visible{outline-color:var(--run-blue)!important}
+input,select,textarea{accent-color:var(--run-green)}
+.view select,.view input[type="text"],.view input:not([type]),.view textarea{border-color:var(--hair);border-radius:6px}
+
+/* weekly board */
+#view-wk{--wk-recap:#E7EEFB;--wk-fun:#FCEFE2}
+.wk-colh.today{box-shadow:inset 0 -3px 0 var(--marker)!important}
+.wk-c.isdone{border-color:var(--run-green)!important}
+.wk-sb.s1{background:var(--run-green)!important;border-color:var(--run-green)!important}
+
+/* search dialog keeps its one shadow */
+.qf-it[aria-selected="true"]{background:var(--tint2)!important}
+.qf-it .k{background:var(--run-blue)!important}
+
+/* older token set used by summaries, plan, roles */
+:root{--navy:#1C2C37;--navy2:#24394A;--blue:#1858C4;--ink:#1C2C37;--sh:none}
+.mk{--mk:var(--run-blue)!important}
+.wf-word{background:var(--run-blue)!important;border-color:var(--run-blue)!important}
+.wf-no{display:none!important}
+.wf-t th{background:var(--snow)!important}
+.wf-chip,.wf-sec,.tm-card{box-shadow:none!important}
+.wf-in,.wf-hotel,.wf-rl{background:#fff!important}
+.open-list li,.se,.dlrow,.add-form,.grip{background:var(--snow)!important}
+.grip{color:#64748B!important}
+.sp-note,.rw,.sp-eff.e1{background:var(--tint2)!important;border-color:var(--hair)!important;color:var(--slate)!important}
+.tm-card{border-top-color:var(--primary-fill)!important;border-radius:var(--r)!important;border-color:var(--hair)!important}
+.cfm-row button.go{background:var(--run-blue)!important;border-color:var(--run-blue)!important}
+.cfm-row button{color:var(--slate)!important;border-color:var(--hair)!important}
+@media (prefers-reduced-motion:reduce){.tab,.task,.box{transition:none!important}}
