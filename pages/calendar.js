@@ -40,7 +40,8 @@
   const fmt = d => p2(d.getDate()) + '.' + p2(d.getMonth() + 1);
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
-  const norm = x => { const o = Object.assign({}, x); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; return o; };
+  const frTime = t => { const m = String(t || '').match(/\d{1,2}:\d{2}/); return m ? m[0].padStart(5, '0') : ''; }; /* France time only, never converted */
+  const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; return o; };
 
   /* only meetings and key days: long periods (season weeks, vacances, prep) are not shown unless added from the site */
   const keep = x => !x.range || x.site;
@@ -106,7 +107,7 @@
     if (st === 'now') tag = `<em class="now">${x.range ? 'עכשיו' : 'היום'}</em>`;
     else if (st === 'soon'){ const n = Math.round((x.S - today) / 864e5); tag = `<em>${n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'}</em>`; }
     else tag = '<em class="done">✓ עבר</em>';
-    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small><bdi dir="ltr">${when}</bdi>${x.tm ? ' · ' + esc(x.tm) : ''}${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : ''}</div>${tag}</div>`;
+    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small>${x.tm ? `<bdi dir="ltr" class="ci-tm">${esc(x.tm)}</bdi> · ` : ''}<bdi dir="ltr">${when}</bdi>${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : ''}</div>${tag}</div>`;
   }
   function renderDay(){
     const ev = on(sel);
@@ -167,7 +168,7 @@
     if (editing){
       fm.t.value = x.t; setD('s', x.s); setD('e', x.range ? x.e : ''); if (!fm.type.querySelector(`[value="${x.type}"]`)) fm.type.insertAdjacentHTML('beforeend', `<option value="${x.type}" data-tmp>${TYPES[x.type].n}</option>`); fm.type.value = x.type; fm.d.value = x.d || '';
       const hm = (x.tm || '').match(/(\d{2}):(\d{2})/);
-      if (hm){ fm.th.value = hm[1]; fm.tmi.value = hm[2]; if (!fm.tmi.value) fm.tmi.insertAdjacentHTML('beforeend', `<option>${hm[2]}</option>`), fm.tmi.value = hm[2]; fm.zone.value = /צרפת/.test(x.tm) ? 'Europe/Paris' : 'Asia/Jerusalem'; }
+      if (hm){ fm.th.value = hm[1]; fm.tmi.value = hm[2]; if (!fm.tmi.value) fm.tmi.insertAdjacentHTML('beforeend', `<option>${hm[2]}</option>`), fm.tmi.value = hm[2]; fm.zone.value = 'Europe/Paris'; }
     } else setD('s', key(sel));
     dlg.hidden = false; fm.t.focus();
   }
