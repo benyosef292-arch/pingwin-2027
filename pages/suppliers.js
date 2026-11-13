@@ -70,6 +70,7 @@ function supMail(s){ return (window.MAIL && window.MAIL.sup && window.MAIL.sup[s
 function supEff(s, x){
   const m = supMail(s), o = Object.assign({}, x);
   if (!o.who) o.who = supOwner(s);
+  const sd = typeof SUP_MEET_SEED === 'object' && SUP_MEET_SEED[s.id]; if (sd && !o.st) Object.assign(o, sd);
   if (m && m.out && !o.st) o.st = 'sent';
   if (m && m.turn === 'us' && (!o.st || o.st === 'sent')) o.st = 'ans';
   if (m && m.meet && (!o.st || o.st === 'sent' || o.st === 'ans')) { o.st = 'meet'; if (!o.when) o.when = m.meet; }
