@@ -21,10 +21,9 @@
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
   const frTime = t => { const m = String(t || '').match(/\d{1,2}:\d{2}/); return m ? m[0].padStart(5, '0') : ''; }; /* France time only, never converted */
-  /* Ben's names for his Google Calendar colors (13.11.26): no color = white */
-  const COLNAME = { 1: 'ישיבת צוות', 3: 'ישיבת צוות', 2: 'פנאי צוות', 10: 'פנאי צוות', 6: 'פגישת ספקים שנקבעה', 7: 'עבודה והכנת צוות', 11: 'פגישת ספקים שטרם נקבעה' };
-  const WHITE = '#8d9aa6'; /* light colors get re-tinted dark by components/mood.js, so "white" is a soft grey */
-  const clr = x => x.id ? (CalSource.color(x.col) || WHITE) : TYPES[x.type].c;
+  /* Ben's names for his Google Calendar colors (13.11.26). Graphite (8) is the "white" one: team skiing. No color = old per-type color. */
+  const COLNAME = { 8: 'גלישת צוות', 1: 'ישיבת צוות', 3: 'ישיבת צוות', 2: 'פנאי צוות', 10: 'פנאי צוות', 6: 'פגישת ספקים שנקבעה', 7: 'עבודה והכנת צוות', 11: 'פגישת ספקים שטרם נקבעה' };
+  const clr = x => CalSource.color(x.col) || TYPES[x.type].c;
   const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; o.d = String(o.d || '').replace(/(^|\n)(key|pw)=[^\n]*/g, '').trim(); return o; };
 
   /* only meetings and key days: long periods (season weeks, vacances, prep) are not shown unless added from the site */
@@ -117,7 +116,7 @@
       document.getElementById('heroNextD').textContent = fmt(nx.S) + ' · יום ' + DAYS[nx.S.getDay()] + (isT ? '' : ' · ' + (n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'));
     }
   }
-  const legend = () => { document.getElementById('calLegend').innerHTML = (() => { const seen = []; EV.forEach(x => { const c = clr(x); if (!seen.some(q => q[0] === c)) seen.push([c, !x.id ? TYPES[x.type].n : CalSource.color(x.col) ? (COLNAME[x.col] || 'צבע ביומן') : 'גלישת צוות (לבן)']); }); return seen.map(q => `<span><i style="background:${q[0]}"></i>${q[1]}</span>`).join(''); })(); };
+  const legend = () => { document.getElementById('calLegend').innerHTML = (() => { const seen = []; EV.forEach(x => { const c = clr(x); if (!seen.some(q => q[0] === c)) seen.push([c, CalSource.color(x.col) ? (COLNAME[x.col] || 'צבע ביומן') : TYPES[x.type].n]); }); return seen.map(q => `<span><i style="background:${q[0]}"></i>${q[1]}</span>`).join(''); })(); };
   legend();
   grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (mode === 'month' && sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
   document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
