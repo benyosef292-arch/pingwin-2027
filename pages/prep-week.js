@@ -34,7 +34,7 @@ function card(it,showTime,det){
   const k=it.k==='f'?' fix':it.k==='s'?' set':'';
   const tag=it.k==='f'?'<span class="tag f">קבוע</span>':it.k==='s'?'<span class="tag s">ממתין</span>':'';
   const ppl=(it.w||'').split(' ').filter(Boolean).map(p=>`<i class="p ${p==='A'?'':p}">${NM[p]}</i>`).join('');
-  return `<div class="pwi ${cat(it.n)}${k}${it.done?' done':''}"${CalSource.color(it.col)?` style="--c:${CalSource.color(it.col)}"`:''} data-pwid="${it.id}" draggable="${can()}" title="${E(it.n+(it.x?' · '+it.x:''))}">`+
+  return `<div class="pwi ${cat(it.n)}${k}${it.done?' done':''}"${it.col!==undefined?` style="--c:${CalSource.color(it.col)||'#9aa7b3'}"`:''} data-pwid="${it.id}" draggable="${can()}" title="${E(it.n+(it.x?' · '+it.x:''))}">`+
    `<input type="checkbox" class="pw-ck" data-pwdone="${it.id}" aria-label="בוצע: ${E(it.n)}"${it.done?' checked':''}${can()?'':' disabled'}>`+
    `<span class="pw-tx">${showTime?`<span class="tm2">${it.t}</span>`:''}${E(it.n)}${tag}${det&&it.x?`<small>${E(it.x)}</small>`:''}</span>${ppl?`<div class="who">${ppl}</div>`:''}`+
    `<button type="button" class="pw-mv" data-pwmove="${it.id}" aria-label="הזזה: ${E(it.n)}" title="הזזה">⋯</button></div>`;
