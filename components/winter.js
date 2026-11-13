@@ -164,7 +164,7 @@
   document.body.appendChild(qf);
   const qin = qf.querySelector('input'), qlist = qf.querySelector('.qf-list');
   let res = [], sel = 0, lastFocus = null;
-  const TABS = [['overview', 'סקירה'], ['p1', 'לפני היציאה'], ['sched', 'לו״ז'], ['p2', 'שבוע ההכנה באתר'], ['p3', 'ציוד מהארץ'], ['wk', 'עבודה שוטפת'], ['plan', 'תוכנית עבודה'], ['qs', 'שאלות פתוחות'], ['inv', 'מחסן'], ['sum', 'סיכומים שבועיים'], ['contacts', 'אנשי קשר'], ['team', 'הצוות שלנו']];
+  const TABS = [['overview', 'סקירה'], ['p1', 'לפני היציאה'], ['sched', 'לו״ז'], ['p2', 'שבוע ההכנה באתר'], ['p3', 'ציוד מהארץ'], ['wk', 'עבודה שוטפת'], ['qs', 'שאלות פתוחות'], ['inv', 'מחסן'], ['sum', 'סיכומים שבועיים'], ['contacts', 'אנשי קשר'], ['team', 'הצוות שלנו']];
   const hl = (s, q) => { const i = s.toLowerCase().indexOf(q); return i < 0 ? E(s) : E(s.slice(0, i)) + '<mark>' + E(s.slice(i, i + q.length)) + '</mark>' + E(s.slice(i + q.length)); };
   function contacts(){
     return [...document.querySelectorAll('#ctBody .ct')].map(c => ({ name: (c.querySelector('b, h4, .ct-n')?.textContent || c.textContent).trim().split('\n')[0], text: c.textContent.replace(/\s+/g, ' ').trim(), el: c }));

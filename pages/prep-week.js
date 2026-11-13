@@ -15,9 +15,9 @@ const rowOf=m=>2+Math.round((Math.min(Math.max(m,T0),T1)-T0)/SL);
 const can=()=>typeof PG_EDIT!=='undefined'&&PG_EDIT;
 const store=()=>tstore(PW_KEY);
 /* day and time come from the team calendar (events tagged pw=sNN); a move made on the site still wins */
-function calOver(){ const m={}; CalSource.events().forEach(e=>{const g=(e.d||'').match(/(?:^|\n)pw=(s\d+)/),t=CalSource.frTime(e.tm),em=CalSource.frTime(e.em); if(g&&t) m[g[1]]={id:e.id,d:dayOf(e.s),t:t,m:em&&mins(em)>mins(t)?mins(em)-mins(t):0};}); return m; }
+function calOver(){ const m={}; CalSource.events().forEach(e=>{const g=(e.d||'').match(/(?:^|\n)pw=(s\d+)/),t=CalSource.frTime(e.tm),em=CalSource.frTime(e.em); if(g&&t) m[g[1]]={col:e.col,id:e.id,d:dayOf(e.s),t:t,m:em&&mins(em)>mins(t)?mins(em)-mins(t):0};}); return m; }
 const dayOf=k=>{const x=PW_DAYS.find(d=>d.d===k.slice(8,10)+'.'+k.slice(5,7)); return x?x.id:'';};
-function items(){ const st=store(), co=calOver(); return PW_SEED.map(s=>{const o=st[s.id]||{}, c=co[s.id]&&co[s.id].d?co[s.id]:s; return Object.assign({},s,{d:o.d!==undefined?o.d:c.d,t:o.t!==undefined?o.t:c.t,m:c.m||s.m,done:!!o.done});}); }
+function items(){ const st=store(), co=calOver(); return PW_SEED.map(s=>{const o=st[s.id]||{}, c=co[s.id]&&co[s.id].d?co[s.id]:s; return Object.assign({},s,{d:o.d!==undefined?o.d:c.d,t:o.t!==undefined?o.t:c.t,m:c.m||s.m,col:c.col,done:!!o.done});}); }
 function brks(d){ const st=store(); return (PW_BRK[d]||[]).map(([t,m,n],i)=>{const o=st['b:'+d+':'+i]||{};return {k:d+':'+i,t:o.t||t,m:o.m||m,n};}); }
 function patch(id,p){ const st=store(); st[id]=Object.assign({},st[id],p,{at:Date.now()}); tsave(PW_KEY,st); render(); if(p.d&&p.t) toCal(id,p); }
 /* a move also goes to the team calendar (same length, note kept); if that fails the move stays on the site only */
@@ -34,7 +34,7 @@ function card(it,showTime,det){
   const k=it.k==='f'?' fix':it.k==='s'?' set':'';
   const tag=it.k==='f'?'<span class="tag f">קבוע</span>':it.k==='s'?'<span class="tag s">ממתין</span>':'';
   const ppl=(it.w||'').split(' ').filter(Boolean).map(p=>`<i class="p ${p==='A'?'':p}">${NM[p]}</i>`).join('');
-  return `<div class="pwi ${cat(it.n)}${k}${it.done?' done':''}" data-pwid="${it.id}" draggable="${can()}" title="${E(it.n+(it.x?' · '+it.x:''))}">`+
+  return `<div class="pwi ${cat(it.n)}${k}${it.done?' done':''}"${CalSource.color(it.col)?` style="--c:${CalSource.color(it.col)}"`:''} data-pwid="${it.id}" draggable="${can()}" title="${E(it.n+(it.x?' · '+it.x:''))}">`+
    `<input type="checkbox" class="pw-ck" data-pwdone="${it.id}" aria-label="בוצע: ${E(it.n)}"${it.done?' checked':''}${can()?'':' disabled'}>`+
    `<span class="pw-tx">${showTime?`<span class="tm2">${it.t}</span>`:''}${E(it.n)}${tag}${det&&it.x?`<small>${E(it.x)}</small>`:''}</span>${ppl?`<div class="who">${ppl}</div>`:''}`+
    `<button type="button" class="pw-mv" data-pwmove="${it.id}" aria-label="הזזה: ${E(it.n)}" title="הזזה">⋯</button></div>`;

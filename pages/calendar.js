@@ -21,6 +21,8 @@
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
   const frTime = t => { const m = String(t || '').match(/\d{1,2}:\d{2}/); return m ? m[0].padStart(5, '0') : ''; }; /* France time only, never converted */
+  const COLNAME = { 7: 'משימות הכנה', 10: 'א.ב / א.צ', 11: 'פגישות ספקים ומלונות' };
+  const clr = x => CalSource.color(x.col) || TYPES[x.type].c;
   const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; o.d = String(o.d || '').replace(/(^|\n)(key|pw)=[^\n]*/g, '').trim(); return o; };
 
   /* only meetings and key days: long periods (season weeks, vacances, prep) are not shown unless added from the site */
@@ -43,7 +45,7 @@
       const ev = on(d), k = key(d), cls = ['cal-c'];
       if (+d === +today) cls.push('today'); else if (d < today) cls.push('past');
       if (+d === +sel) cls.push('sel');
-      const items = ev.map(x => `<span class="we${x.range ? ' rg' : ''}" style="--c:${TYPES[x.type].c}"><b>${esc(x.t)}</b>${x.tm ? `<small>${esc(x.tm)}</small>` : ''}${x.range ? `<small><bdi dir="ltr">${fmt(x.S)}–${fmt(x.E)}</bdi></small>` : (x.d ? `<small>${esc(x.d)}</small>` : '')}</span>`).join('');
+      const items = ev.map(x => `<span class="we${x.range ? ' rg' : ''}" style="--c:${clr(x)}"><b>${esc(x.t)}</b>${x.tm ? `<small>${esc(x.tm)}</small>` : ''}${x.range ? `<small><bdi dir="ltr">${fmt(x.S)}–${fmt(x.E)}</bdi></small>` : (x.d ? `<small>${esc(x.d)}</small>` : '')}</span>`).join('');
       h += `<button type="button" class="${cls.join(' ')}" data-k="${k}" aria-label="יום ${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}${ev.length ? ', ' + ev.length + ' אירועים' : ''}"><span class="cn"><i>${DAYS[d.getDay()]}</i>${d.getDate()}.${d.getMonth() + 1}</span><span class="chips">${items || '<span class="we-none">אין אירועים</span>'}</span></button>`;
     }
     grid.innerHTML = h;
@@ -77,9 +79,9 @@
       if (+d === +sel) cls.push('sel');
       const chips = ev.slice(0, 3).map(x => {
         const head = !x.range || +d === +x.S || d.getDay() === 0 || d.getDate() === 1;
-        return `<span class="ce${x.range ? ' rg' : ''}${+d === +x.S ? ' st' : ''}${+d === +x.E ? ' en' : ''}" style="--c:${TYPES[x.type].c}" title="${esc(x.t)}">${head ? esc(x.t) : '&nbsp;'}</span>`;
+        return `<span class="ce${x.range ? ' rg' : ''}${+d === +x.S ? ' st' : ''}${+d === +x.E ? ' en' : ''}" style="--c:${clr(x)}" title="${esc(x.t)}">${head ? esc(x.t) : '&nbsp;'}</span>`;
       }).join('') + (ev.length > 3 ? `<span class="ce more">+${ev.length - 3}</span>` : '');
-      const dots = ev.slice(0, 4).map(x => `<i style="background:${TYPES[x.type].c}"></i>`).join('');
+      const dots = ev.slice(0, 4).map(x => `<i style="background:${clr(x)}"></i>`).join('');
       h += `<button type="button" class="${cls.join(' ')}" data-k="${k}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}${ev.length ? ' · ' + ev.length + ' אירועים' : ''}"><span class="cn">${d.getDate()}</span><span class="chips">${chips}</span><span class="dots">${dots}</span></button>`;
     }
     grid.innerHTML = h;
@@ -92,7 +94,7 @@
     if (st === 'now') tag = `<em class="now">${x.range ? 'עכשיו' : 'היום'}</em>`;
     else if (st === 'soon'){ const n = Math.round((x.S - today) / 864e5); tag = `<em>${n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'}</em>`; }
     else tag = '<em class="done">✓ עבר</em>';
-    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small>${x.tm ? `<bdi dir="ltr" class="ci-tm">${esc(x.tm)}</bdi> · ` : ''}<bdi dir="ltr">${when}</bdi>${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : ''}</div>${tag}</div>`;
+    return `<div class="ci ${st}" style="--c:${clr(x)}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small>${x.tm ? `<bdi dir="ltr" class="ci-tm">${esc(x.tm)}</bdi> · ` : ''}<bdi dir="ltr">${when}</bdi>${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : ''}</div>${tag}</div>`;
   }
   function renderDay(){
     const ev = on(sel);
@@ -113,7 +115,7 @@
       document.getElementById('heroNextD').textContent = fmt(nx.S) + ' · יום ' + DAYS[nx.S.getDay()] + (isT ? '' : ' · ' + (n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'));
     }
   }
-  const legend = () => { document.getElementById('calLegend').innerHTML = Object.keys(TYPES).filter(t => t !== 'other' && EV.some(x => x.type === t)).map(t => `<span><i style="background:${TYPES[t].c}"></i>${TYPES[t].n}</span>`).join(''); };
+  const legend = () => { document.getElementById('calLegend').innerHTML = (() => { const seen = []; EV.forEach(x => { const c = clr(x); if (!seen.some(q => q[0] === c)) seen.push([c, CalSource.color(x.col) ? (COLNAME[x.col] || 'צבע ביומן') : TYPES[x.type].n]); }); return seen.map(q => `<span><i style="background:${q[0]}"></i>${q[1]}</span>`).join(''); })(); };
   legend();
   grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (mode === 'month' && sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
   document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
