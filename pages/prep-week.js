@@ -15,11 +15,20 @@ const rowOf=m=>2+Math.round((Math.min(Math.max(m,T0),T1)-T0)/SL);
 const can=()=>typeof PG_EDIT!=='undefined'&&PG_EDIT;
 const store=()=>tstore(PW_KEY);
 /* day and time come from the team calendar (events tagged pw=sNN); a move made on the site still wins */
-function calOver(){ const m={}; CalSource.events().forEach(e=>{const g=(e.d||'').match(/(?:^|\n)pw=(s\d+)/),t=CalSource.frTime(e.tm); if(g&&t) m[g[1]]={d:dayOf(e.s),t:t};}); return m; }
+function calOver(){ const m={}; CalSource.events().forEach(e=>{const g=(e.d||'').match(/(?:^|\n)pw=(s\d+)/),t=CalSource.frTime(e.tm),em=CalSource.frTime(e.em); if(g&&t) m[g[1]]={id:e.id,d:dayOf(e.s),t:t,m:em&&mins(em)>mins(t)?mins(em)-mins(t):0};}); return m; }
 const dayOf=k=>{const x=PW_DAYS.find(d=>d.d===k.slice(8,10)+'.'+k.slice(5,7)); return x?x.id:'';};
-function items(){ const st=store(), co=calOver(); return PW_SEED.map(s=>{const o=st[s.id]||{}, c=co[s.id]&&co[s.id].d?co[s.id]:s; return Object.assign({},s,{d:o.d!==undefined?o.d:c.d,t:o.t!==undefined?o.t:c.t,done:!!o.done});}); }
+function items(){ const st=store(), co=calOver(); return PW_SEED.map(s=>{const o=st[s.id]||{}, c=co[s.id]&&co[s.id].d?co[s.id]:s; return Object.assign({},s,{d:o.d!==undefined?o.d:c.d,t:o.t!==undefined?o.t:c.t,m:c.m||s.m,done:!!o.done});}); }
 function brks(d){ const st=store(); return (PW_BRK[d]||[]).map(([t,m,n],i)=>{const o=st['b:'+d+':'+i]||{};return {k:d+':'+i,t:o.t||t,m:o.m||m,n};}); }
-function patch(id,p){ const st=store(); st[id]=Object.assign({},st[id],p,{at:Date.now()}); tsave(PW_KEY,st); render(); }
+function patch(id,p){ const st=store(); st[id]=Object.assign({},st[id],p,{at:Date.now()}); tsave(PW_KEY,st); render(); if(p.d&&p.t) toCal(id,p); }
+/* a move also goes to the team calendar (same length, note kept); if that fails the move stays on the site only */
+const pend={};
+function toCal(id,p){ const c=calOver()[id], day=PW_DAYS.find(x=>x.id===p.d); if(!c||!c.id||!day||!window.PENGUIN_API) return;
+  let tk='',key=''; try{tk=localStorage.getItem('penguin-team-key')||''; key=localStorage.getItem('penguin-owner-key')||'';}catch(e){}
+  const dt='2026-'+day.d.slice(3,5)+'-'+day.d.slice(0,2);
+  fetch(window.PENGUIN_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a:'moveEvent',id:c.id,s:dt,tm:p.t,tk,key})})
+   .then(r=>r.json()).then(j=>{ if(j&&j.ok){ pend[id]=true; CalSource.reload(); } }).catch(()=>{}); }
+/* once the calendar shows the new time, the site-side copy of the move is dropped */
+function settle(){ const st=store(), co=calOver(); let ch=false; Object.keys(pend).forEach(id=>{const o=st[id],c=co[id]; if(c&&o&&c.d===o.d&&c.t===o.t){delete o.d; delete o.t; delete pend[id]; ch=true;}}); if(ch) tsave(PW_KEY,st); }
 const root=document.createElement('div'); root.id='pwSched'; root.className='fx';
 function card(it,showTime,det){
   const k=it.k==='f'?' fix':it.k==='s'?' set':'';
@@ -76,7 +85,7 @@ function mount(){ const h=document.getElementById('view-p2'); if(!h||h.contains(
 const h2=document.getElementById('view-p2'); if(h2) new MutationObserver(mount).observe(h2,{childList:true});
 new MutationObserver(()=>{ if(root.classList.contains('can')!==can()) render(); }).observe(document.body,{attributes:true,attributeFilter:['class']});
 render(); mount();
-CalSource.onChange(()=>render(),false);
+CalSource.onChange(()=>{settle(); render();},false);
 /* done */
 root.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.pwdone; if(!id) return; if(!can()){render();return;} patch(id,{done:e.target.checked});});
 /* drag and drop */

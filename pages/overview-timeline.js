@@ -6,12 +6,12 @@
   const dOf = s => { const [d, m, y] = s.split('.').map(Number); return Math.round((new Date(2000 + y, m - 1, d) - T0) / 864e5); };
   const pct = d => (d / SPAN * 100).toFixed(2) + '%';
   const DOW = ['יום א׳','יום ב׳','יום ג׳','יום ד׳','יום ה׳','יום ו׳','שבת'];
-  /* stops come from the team calendar (data/calendar-source.js): events marked key=... in their note, or the built-in seed until then */
+  /* stops come from the team calendar (data/calendar-source.js): events with key=title|subtitle in their note (subtitle optional), or the built-in seed until then */
   const fmtD = k => k.slice(8, 10) + '.' + k.slice(5, 7) + '.' + k.slice(2, 4);
   function marksFrom(evs){
     const keyed = evs.filter(x => /(^|\n)key=/.test(x.d || ''));
     const list = keyed.length
-      ? keyed.map(x => { const m = x.d.match(/key=([^\n]*)/), lab = m[1].trim(); return [fmtD(x.s), lab && lab !== '1' ? lab : x.t, x.d.replace(/\n?key=[^\n]*/, '').trim()]; })
+      ? keyed.map(x => { const q = x.d.match(/key=([^\n]*)/)[1].split('|'), lab = q[0].trim(); return [fmtD(x.s), lab && lab !== '1' ? lab : x.t, (q[1] || x.d.replace(/\n?key=[^\n]*/, '')).trim()]; })
       : CalSource.seed.filter(x => x.mk).map(x => [fmtD(x.s), x.mk[0], x.mk[1]]);
     return list.sort((p, q) => dOf(p[0]) - dOf(q[0]));
   }
