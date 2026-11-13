@@ -222,3 +222,4 @@ footer.src span{color:#CFE1EC;font-size:13.5px}
 .rf-open{grid-column:1 / -1;font-size:14px;color:#5E7382;background:#FFF7E8;border:1px solid #F2DDB0;border-radius:14px;padding:12px 16px}
 .rf-open b{color:#8A5A00}
 @media (max-width:760px){.rfull{grid-template-columns:1fr}.rf{padding:16px}}
+.ci .ci-tm{font-weight:700;color:var(--ink,inherit)}
