@@ -15,6 +15,8 @@ const rowOf=m=>2+Math.round((Math.min(Math.max(m,T0),T1)-T0)/SL);
 const can=()=>typeof PG_EDIT!=='undefined'&&PG_EDIT;
 const store=()=>tstore(PW_KEY);
 /* day and time come from the team calendar (events tagged pw=sNN); a move made on the site still wins */
+/* legend: the calendar's own colors when the calendar has them, else the site's categories */
+function keyColors(all){ const seen=[]; all.forEach(it=>{const c=CalSource.color(it.col); if(c&&!seen.some(q=>q[0]===c)) seen.push([c,CalSource.colorName(it.col)]);}); return seen.length?seen.map(q=>`<span><i class="sw" style="--c:${q[0]}"></i>${q[1]}</span>`).join(''):`<span><i class="sw" style="--c:var(--pw-hot)"></i>מלונות</span><span><i class="sw" style="--c:var(--pw-eq)"></i>ציוד</span><span><i class="sw" style="--c:var(--pw-ski)"></i>סקיפסים וגלישה</span><span><i class="sw" style="--c:var(--pw-sup)"></i>הדרכות וספקים</span><span><i class="sw" style="--c:var(--pw-fld)"></i>שטח ועיירה</span><span><i class="sw" style="--c:var(--pw-ops)"></i>תפעול</span>`; }
 function calOver(){ const m={}; CalSource.events().forEach(e=>{const g=(e.d||'').match(/(?:^|\n)pw=(s\d+)/),t=CalSource.frTime(e.tm),em=CalSource.frTime(e.em); if(g&&t) m[g[1]]={col:e.col,id:e.id,d:dayOf(e.s),t:t,m:em&&mins(em)>mins(t)?mins(em)-mins(t):0};}); return m; }
 const dayOf=k=>{const x=PW_DAYS.find(d=>d.d===k.slice(8,10)+'.'+k.slice(5,7)); return x?x.id:'';};
 function items(){ const st=store(), co=calOver(); return PW_SEED.map(s=>{const o=st[s.id]||{}, c=co[s.id]&&co[s.id].d?co[s.id]:s; return Object.assign({},s,{d:o.d!==undefined?o.d:c.d,t:o.t!==undefined?o.t:c.t,m:c.m||s.m,col:c.col,done:!!o.done});}); }
@@ -61,7 +63,7 @@ function render(){
   const sx=root.querySelector('.pw-scroll'), keepX=sx?sx.scrollLeft:null;
   root.innerHTML=`<div class="pw-top"><h3>לו״ז שבוע הכנה</h3><span class="pw-sub">26.11 – 04.12 · שעון צרפת · לקוחות ראשונים 05.12</span><span class="pw-cnt"><b>${done}</b> מתוך ${all.length} בוצעו</span>
    <div class="pw-key"><span><i class="sw fx"></i>קבוע</span><span><i class="sw pd"></i>ממתין לתשובה</span><i class="sep"></i>
-   <span><i class="sw" style="--c:var(--pw-hot)"></i>מלונות</span><span><i class="sw" style="--c:var(--pw-eq)"></i>ציוד</span><span><i class="sw" style="--c:var(--pw-ski)"></i>סקיפסים וגלישה</span><span><i class="sw" style="--c:var(--pw-sup)"></i>הדרכות וספקים</span><span><i class="sw" style="--c:var(--pw-fld)"></i>שטח ועיירה</span><span><i class="sw" style="--c:var(--pw-ops)"></i>תפעול</span><i class="sep"></i>
+   ${keyColors(all)}<i class="sep"></i>
    <span><i class="p B">בן</i><i class="p Y">יותם</i><i class="p D">דורון</i><i class="p K">קרן</i><i class="p">כולם</i></span></div>
    <div class="pw-nav"><div class="pw-seg" role="group" aria-label="תצוגה"><button type="button" data-pwn="3" aria-pressed="${VW.n===3}">3 ימים</button><button type="button" data-pwn="9" aria-pressed="${VW.n===9}">כל השבוע</button></div>
    <button type="button" class="pw-arw" data-pwstep="-1" aria-label="ימים קודמים"${VW.i<=0?' disabled':''}>→</button>

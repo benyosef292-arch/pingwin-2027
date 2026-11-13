@@ -21,10 +21,8 @@
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
   const frTime = t => { const m = String(t || '').match(/\d{1,2}:\d{2}/); return m ? m[0].padStart(5, '0') : ''; }; /* France time only, never converted */
-  /* Ben's names for his Google Calendar colors (13.11.26). Graphite (8) is the "white" one: team skiing. No color = old per-type color. */
-  const COLNAME = { 8: 'גלישת צוות', 1: 'ישיבת צוות', 3: 'ישיבת צוות', 2: 'פנאי צוות', 10: 'פנאי צוות', 6: 'פגישת ספקים שנקבעה', 7: 'עבודה והכנת צוות', 11: 'פגישת ספקים שטרם נקבעה' };
   const clr = x => CalSource.color(x.col) || TYPES[x.type].c;
-  const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; o.d = String(o.d || '').replace(/(^|\n)(key|pw)=[^\n]*/g, '').trim(); return o; };
+  const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; const raw = String(o.d || ''); o.hid = (raw.match(/(^|\n)(key|pw)=[^\n]*/g) || []).map(l => l.trim()).join('\n'); o.d = raw.replace(/(^|\n)(key|pw)=[^\n]*/g, '').trim(); return o; }; /* hid: machine lines (pw=sNN links a prep task) kept out of view but sent back on edit */
 
   /* only meetings and key days: long periods (season weeks, vacances, prep) are not shown unless added from the site */
   const keep = x => !x.range || x.site;
@@ -116,7 +114,7 @@
       document.getElementById('heroNextD').textContent = fmt(nx.S) + ' · יום ' + DAYS[nx.S.getDay()] + (isT ? '' : ' · ' + (n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'));
     }
   }
-  const legend = () => { document.getElementById('calLegend').innerHTML = (() => { const seen = []; EV.forEach(x => { const c = clr(x); if (!seen.some(q => q[0] === c)) seen.push([c, CalSource.color(x.col) ? (COLNAME[x.col] || 'צבע ביומן') : TYPES[x.type].n]); }); return seen.map(q => `<span><i style="background:${q[0]}"></i>${q[1]}</span>`).join(''); })(); };
+  const legend = () => { document.getElementById('calLegend').innerHTML = (() => { const seen = []; EV.forEach(x => { const c = clr(x); if (!seen.some(q => q[0] === c)) seen.push([c, CalSource.color(x.col) ? CalSource.colorName(x.col) : TYPES[x.type].n]); }); return seen.map(q => `<span><i style="background:${q[0]}"></i>${q[1]}</span>`).join(''); })(); };
   legend();
   grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (mode === 'month' && sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
   document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
@@ -173,7 +171,7 @@
     if (e0 === 'bad') return bad('תאריך הסיום לא תקין.', fm.ed);
     if (e0 && e0 < s0) return bad('תאריך הסיום לפני תאריך ההתחלה.', fm.ed);
     if (!th !== !tmi) return bad('בחרו שעה ודקות.', th ? fm.tmi : fm.th);
-    const ev = { t: fm.t.value.trim(), s: s0, e: e0 === s0 ? '' : e0, tm: th ? th + ':' + tmi : '', zone: fm.zone.value, type: fm.type.value, d: fm.d.value.trim() };
+    const ev = { t: fm.t.value.trim(), s: s0, e: e0 === s0 ? '' : e0, tm: th ? th + ':' + tmi : '', zone: fm.zone.value, type: fm.type.value, d: [fm.d.value.trim(), editing && editing.hid].filter(Boolean).join('\n') };
     if (ev.tm && ev.e) return bad('שעה אפשר רק לאירוע של יום אחד.', fm.th);
     const btn = fm.querySelector('.pri'); btn.disabled = true; msg.textContent = editing ? 'שומר…' : 'מוסיף…'; msg.className = 'cadd-msg';
     const was = editing;
@@ -183,7 +181,7 @@
         if (!j || !j.ok){ msg.textContent = ERR[j && j.error] || (was ? 'לא נשמר. בדקו את החיבור ונסו שוב.' : 'לא נוסף. בדקו את החיבור ונסו שוב.'); msg.className = 'cadd-msg err'; return; }
         const tmTxt = ev.tm ? ev.tm + (ev.zone === 'Europe/Paris' ? ' צרפת' : '') : '';
         if (was) EV = EV.filter(v => v !== was);
-        EV.push(norm({ id: j.id || (was && was.id), t: ev.t, s: ev.s, e: ev.tm ? ev.s : (ev.e || ev.s), type: ev.type, d: ev.d, tm: tmTxt, site: was ? was.site : true }));
+        EV.push(norm({ id: j.id || (was && was.id), t: ev.t, s: ev.s, e: ev.tm ? ev.s : (ev.e || ev.s), type: ev.type, d: ev.d, tm: tmTxt, site: was ? was.site : true, col: was ? was.col : '' }));
         sel = parse(ev.s); view = new Date(sel.getFullYear(), sel.getMonth(), 1);
         closeAdd(); render(); setTimeout(load, 1500);
       }).catch(() => { btn.disabled = false; msg.textContent = 'לא נוסף. בדקו את החיבור ונסו שוב.'; msg.className = 'cadd-msg err'; });
