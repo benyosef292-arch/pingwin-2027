@@ -21,7 +21,8 @@
   const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const guess = t => /טיס|חזרה לארץ/.test(t) ? 'flight' : /ספק|מעליות|אוטובוס|הדרכ|חנות|ציוד/.test(t) ? 'supplier' : /ישיב|פגיש|צוות/.test(t) ? 'team' : /לקוחות|חנוכה/.test(t) ? 'clients' : 'other';
   const frTime = t => { const m = String(t || '').match(/\d{1,2}:\d{2}/); return m ? m[0].padStart(5, '0') : ''; }; /* France time only, never converted */
-  const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; o.d = String(o.d || '').replace(/(^|\n)(key|pw)=[^\n]*/g, '').trim(); return o; };
+  const clr = x => CalSource.color(x.col) || TYPES[x.type].c;
+  const norm = x => { const o = Object.assign({}, x); o.tm = frTime(o.tm); o.e = o.e || o.s; o.type = TYPES[o.type] ? o.type : guess(o.t || ''); o.S = parse(o.s); o.E = parse(o.e); o.range = o.e !== o.s; const raw = String(o.d || ''); o.hid = (raw.match(/(^|\n)(key|pw)=[^\n]*/g) || []).map(l => l.trim()).join('\n'); o.d = raw.replace(/(^|\n)(key|pw)=[^\n]*/g, '').trim(); return o; }; /* hid: machine lines (pw=sNN links a prep task) kept out of view but sent back on edit */
 
   /* only meetings and key days: long periods (season weeks, vacances, prep) are not shown unless added from the site */
   const keep = x => !x.range || x.site;
@@ -32,7 +33,7 @@
   const on = d => EV.filter(x => x.S <= d && d <= x.E).sort((a, b) => (a.range - b.range) || (a.S - b.S));
   const status = x => x.E < today ? 'past' : x.S <= today ? 'now' : 'soon';
 
-  let mode = 'month'; try { const m0 = localStorage.getItem('penguin-calmode'); if (m0 === 'week' || m0 === 'prep') mode = m0; } catch(e){}
+  let mode = 'month'; try { const m0 = localStorage.getItem('penguin-calmode'); if (m0 === 'week' || m0 === 'day' || m0 === 'prep') mode = m0; } catch(e){}
   const wkStart = d => { const x = new Date(d); x.setDate(x.getDate() - x.getDay()); return x; };
   function renderWeek(){
     const st = wkStart(sel), en = new Date(st); en.setDate(st.getDate() + 6);
@@ -43,7 +44,7 @@
       const ev = on(d), k = key(d), cls = ['cal-c'];
       if (+d === +today) cls.push('today'); else if (d < today) cls.push('past');
       if (+d === +sel) cls.push('sel');
-      const items = ev.map(x => `<span class="we${x.range ? ' rg' : ''}" style="--c:${TYPES[x.type].c}"><b>${esc(x.t)}</b>${x.tm ? `<small>${esc(x.tm)}</small>` : ''}${x.range ? `<small><bdi dir="ltr">${fmt(x.S)}–${fmt(x.E)}</bdi></small>` : (x.d ? `<small>${esc(x.d)}</small>` : '')}</span>`).join('');
+      const items = ev.map(x => `<span class="we${x.range ? ' rg' : ''}" style="--c:${clr(x)}"><b>${esc(x.t)}</b>${x.tm ? `<small>${esc(x.tm)}</small>` : ''}${x.range ? `<small><bdi dir="ltr">${fmt(x.S)}–${fmt(x.E)}</bdi></small>` : (x.d ? `<small>${esc(x.d)}</small>` : '')}</span>`).join('');
       h += `<button type="button" class="${cls.join(' ')}" data-k="${k}" aria-label="יום ${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}${ev.length ? ', ' + ev.length + ' אירועים' : ''}"><span class="cn"><i>${DAYS[d.getDay()]}</i>${d.getDate()}.${d.getMonth() + 1}</span><span class="chips">${items || '<span class="we-none">אין אירועים</span>'}</span></button>`;
     }
     grid.innerHTML = h;
@@ -55,11 +56,14 @@
     document.getElementById('pwHost').hidden = mode !== 'prep';
     document.querySelectorAll('[data-cm]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cm === mode)));
     if (mode === 'prep'){ if (window.pwRender) window.pwRender(); renderUp(); return; }
+    const dy = mode === 'day';
+    grid.classList.toggle('dy', dy); grid.closest('.cal').classList.toggle('is-dy', dy); grid.closest('.cal-wrap').classList.toggle('is-dy', dy);
+    if (dy) return renderDayView();
     grid.classList.toggle('wk', mode === 'week');
     grid.closest('.cal').classList.toggle('is-wk', mode === 'week');
     document.querySelectorAll('[data-cm]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cm === mode)));
-    document.getElementById('calPrev').setAttribute('aria-label', mode === 'week' ? 'השבוע הקודם' : 'החודש הקודם');
-    document.getElementById('calNext').setAttribute('aria-label', mode === 'week' ? 'השבוע הבא' : 'החודש הבא');
+    document.getElementById('calPrev').setAttribute('aria-label', mode === 'day' ? 'היום הקודם' : mode === 'week' ? 'השבוע הקודם' : 'החודש הקודם');
+    document.getElementById('calNext').setAttribute('aria-label', mode === 'day' ? 'היום הבא' : mode === 'week' ? 'השבוע הבא' : 'החודש הבא');
     if (mode === 'week') return renderWeek();
     document.getElementById('calTitle').textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
     const first = new Date(view.getFullYear(), view.getMonth(), 1);
@@ -77,14 +81,15 @@
       if (+d === +sel) cls.push('sel');
       const chips = ev.slice(0, 3).map(x => {
         const head = !x.range || +d === +x.S || d.getDay() === 0 || d.getDate() === 1;
-        return `<span class="ce${x.range ? ' rg' : ''}${+d === +x.S ? ' st' : ''}${+d === +x.E ? ' en' : ''}" style="--c:${TYPES[x.type].c}" title="${esc(x.t)}">${head ? esc(x.t) : '&nbsp;'}</span>`;
+        return `<span class="ce${x.range ? ' rg' : ''}${+d === +x.S ? ' st' : ''}${+d === +x.E ? ' en' : ''}" style="--c:${clr(x)}" title="${esc(x.t)}">${head ? esc(x.t) : '&nbsp;'}</span>`;
       }).join('') + (ev.length > 3 ? `<span class="ce more">+${ev.length - 3}</span>` : '');
-      const dots = ev.slice(0, 4).map(x => `<i style="background:${TYPES[x.type].c}"></i>`).join('');
+      const dots = ev.slice(0, 4).map(x => `<i style="background:${clr(x)}"></i>`).join('');
       h += `<button type="button" class="${cls.join(' ')}" data-k="${k}" aria-label="${d.getDate()} ${MONTHS[d.getMonth()]}${ev.length ? ' · ' + ev.length + ' אירועים' : ''}"><span class="cn">${d.getDate()}</span><span class="chips">${chips}</span><span class="dots">${dots}</span></button>`;
     }
     grid.innerHTML = h;
     renderDay(); renderUp();
   }
+  const acts = x => x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : '';
   function item(x, big){
     const st = status(x);
     const when = x.range ? fmt(x.S) + '–' + fmt(x.E) : fmt(x.S) + ' · יום ' + DAYS[x.S.getDay()];
@@ -92,7 +97,13 @@
     if (st === 'now') tag = `<em class="now">${x.range ? 'עכשיו' : 'היום'}</em>`;
     else if (st === 'soon'){ const n = Math.round((x.S - today) / 864e5); tag = `<em>${n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'}</em>`; }
     else tag = '<em class="done">✓ עבר</em>';
-    return `<div class="ci ${st}" style="--c:${TYPES[x.type].c}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small>${x.tm ? `<bdi dir="ltr" class="ci-tm">${esc(x.tm)}</bdi> · ` : ''}<bdi dir="ltr">${when}</bdi>${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : ''}</div>${tag}</div>`;
+    return `<div class="ci ${st}" style="--c:${clr(x)}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small>${x.tm ? `<bdi dir="ltr" class="ci-tm">${esc(x.tm)}</bdi> · ` : ''}<bdi dir="ltr">${when}</bdi>${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big ? acts(x) : ''}</div>${tag}</div>`;
+  }
+  /* day view: the selected day on an hour grid, full width (pages/calendar-day.js) */
+  function renderDayView(){
+    document.getElementById('calTitle').innerHTML = `יום ${DAYS[sel.getDay()]} <bdi dir="ltr">${fmt(sel)}</bdi>`;
+    grid.innerHTML = CalDay.html(on(sel), { clr, esc, acts, isToday: +sel === +today });
+    renderDay(); renderUp();
   }
   function renderDay(){
     const ev = on(sel);
@@ -113,11 +124,11 @@
       document.getElementById('heroNextD').textContent = fmt(nx.S) + ' · יום ' + DAYS[nx.S.getDay()] + (isT ? '' : ' · ' + (n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'));
     }
   }
-  const legend = () => { document.getElementById('calLegend').innerHTML = Object.keys(TYPES).filter(t => t !== 'other' && EV.some(x => x.type === t)).map(t => `<span><i style="background:${TYPES[t].c}"></i>${TYPES[t].n}</span>`).join(''); };
+  const legend = () => { document.getElementById('calLegend').innerHTML = (() => { const seen = []; EV.forEach(x => { const c = clr(x); if (!seen.some(q => q[0] === c)) seen.push([c, CalSource.color(x.col) ? CalSource.colorName(x.col) : TYPES[x.type].n]); }); return seen.map(q => `<span><i style="background:${q[0]}"></i>${q[1]}</span>`).join(''); })(); };
   legend();
-  grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (mode === 'month' && sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
-  document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
-  document.getElementById('calNext').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() + 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
+  grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); view = new Date(sel.getFullYear(), sel.getMonth(), 1); mode = 'day'; render(); });
+  document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'day'){ sel = new Date(sel); sel.setDate(sel.getDate() - 1); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
+  document.getElementById('calNext').addEventListener('click', () => { if (mode === 'day'){ sel = new Date(sel); sel.setDate(sel.getDate() + 1); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() + 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
   document.querySelectorAll('[data-cm]').forEach(b => b.addEventListener('click', () => { mode = b.dataset.cm; try { localStorage.setItem('penguin-calmode', mode); } catch(e){} if (mode === 'month') view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); }));
   document.getElementById('ovGo').addEventListener('click', () => document.querySelector('.tab[data-view="sched"]').click());
   document.getElementById('calToday').addEventListener('click', () => { view = new Date(today.getFullYear(), today.getMonth(), 1); sel = new Date(today); render(); });
@@ -170,7 +181,7 @@
     if (e0 === 'bad') return bad('תאריך הסיום לא תקין.', fm.ed);
     if (e0 && e0 < s0) return bad('תאריך הסיום לפני תאריך ההתחלה.', fm.ed);
     if (!th !== !tmi) return bad('בחרו שעה ודקות.', th ? fm.tmi : fm.th);
-    const ev = { t: fm.t.value.trim(), s: s0, e: e0 === s0 ? '' : e0, tm: th ? th + ':' + tmi : '', zone: fm.zone.value, type: fm.type.value, d: fm.d.value.trim() };
+    const ev = { t: fm.t.value.trim(), s: s0, e: e0 === s0 ? '' : e0, tm: th ? th + ':' + tmi : '', zone: fm.zone.value, type: fm.type.value, d: [fm.d.value.trim(), editing && editing.hid].filter(Boolean).join('\n') };
     if (ev.tm && ev.e) return bad('שעה אפשר רק לאירוע של יום אחד.', fm.th);
     const btn = fm.querySelector('.pri'); btn.disabled = true; msg.textContent = editing ? 'שומר…' : 'מוסיף…'; msg.className = 'cadd-msg';
     const was = editing;
@@ -180,7 +191,7 @@
         if (!j || !j.ok){ msg.textContent = ERR[j && j.error] || (was ? 'לא נשמר. בדקו את החיבור ונסו שוב.' : 'לא נוסף. בדקו את החיבור ונסו שוב.'); msg.className = 'cadd-msg err'; return; }
         const tmTxt = ev.tm ? ev.tm + (ev.zone === 'Europe/Paris' ? ' צרפת' : '') : '';
         if (was) EV = EV.filter(v => v !== was);
-        EV.push(norm({ id: j.id || (was && was.id), t: ev.t, s: ev.s, e: ev.tm ? ev.s : (ev.e || ev.s), type: ev.type, d: ev.d, tm: tmTxt, site: was ? was.site : true }));
+        EV.push(norm({ id: j.id || (was && was.id), t: ev.t, s: ev.s, e: ev.tm ? ev.s : (ev.e || ev.s), type: ev.type, d: ev.d, tm: tmTxt, site: was ? was.site : true, col: was ? was.col : '' }));
         sel = parse(ev.s); view = new Date(sel.getFullYear(), sel.getMonth(), 1);
         closeAdd(); render(); setTimeout(load, 1500);
       }).catch(() => { btn.disabled = false; msg.textContent = 'לא נוסף. בדקו את החיבור ונסו שוב.'; msg.className = 'cadd-msg err'; });
@@ -188,7 +199,7 @@
   dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-x]')) closeAdd(); });
   dlg.addEventListener('keydown', e => { if (e.key === 'Escape'){ e.stopPropagation(); closeAdd(); } });
   document.getElementById('calAdd').addEventListener('click', () => openAdd());
-  document.getElementById('calDay').addEventListener('click', e => {
+  const onActs = e => {
     const ed = e.target.closest('[data-edit]');
     if (ed){ const x = EV.find(v => v.id === ed.dataset.edit); if (x) openAdd(x); return; }
     const b = e.target.closest('[data-del]'); if (!b) return;
@@ -196,7 +207,9 @@
     const go2 = () => fetch(window.PENGUIN_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ a: 'delEvent', id: x.id }, creds())) })
       .then(r => r.json()).then(j => { if (j && j.ok){ EV = EV.filter(v => v !== x); render(); setTimeout(load, 1500); } else alert(ERR[j && j.error] || 'לא נמחק. נסו שוב.'); }).catch(() => alert('לא נמחק. בדקו את החיבור ונסו שוב.'));
     (typeof askConfirm === 'function' ? askConfirm(`למחוק את "${x.t}" מהלו״ז של הצוות?`) : Promise.resolve(confirm(`למחוק את "${x.t}"?`))).then(ok => { if (ok) go2(); });
-  });
+  };
+  document.getElementById('calDay').addEventListener('click', onActs);
+  grid.addEventListener('click', e => { if (mode === 'day') onActs(e); });
 
   /* live: the team's Google Calendar, read once for every view in data/calendar-source.js */
   const load = () => CalSource.reload();
