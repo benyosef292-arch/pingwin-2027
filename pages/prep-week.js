@@ -14,7 +14,10 @@ const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart
 const rowOf=m=>2+Math.round((Math.min(Math.max(m,T0),T1)-T0)/SL);
 const can=()=>typeof PG_EDIT!=='undefined'&&PG_EDIT;
 const store=()=>tstore(PW_KEY);
-function items(){ const st=store(); return PW_SEED.map(s=>{const o=st[s.id]||{};return Object.assign({},s,{d:o.d!==undefined?o.d:s.d,t:o.t!==undefined?o.t:s.t,done:!!o.done});}); }
+/* day and time come from the team calendar (events tagged pw=sNN); a move made on the site still wins */
+function calOver(){ const m={}; CalSource.events().forEach(e=>{const g=(e.d||'').match(/(?:^|\n)pw=(s\d+)/),t=CalSource.frTime(e.tm); if(g&&t) m[g[1]]={d:dayOf(e.s),t:t};}); return m; }
+const dayOf=k=>{const x=PW_DAYS.find(d=>d.d===k.slice(8,10)+'.'+k.slice(5,7)); return x?x.id:'';};
+function items(){ const st=store(), co=calOver(); return PW_SEED.map(s=>{const o=st[s.id]||{}, c=co[s.id]&&co[s.id].d?co[s.id]:s; return Object.assign({},s,{d:o.d!==undefined?o.d:c.d,t:o.t!==undefined?o.t:c.t,done:!!o.done});}); }
 function brks(d){ const st=store(); return (PW_BRK[d]||[]).map(([t,m,n],i)=>{const o=st['b:'+d+':'+i]||{};return {k:d+':'+i,t:o.t||t,m:o.m||m,n};}); }
 function patch(id,p){ const st=store(); st[id]=Object.assign({},st[id],p,{at:Date.now()}); tsave(PW_KEY,st); render(); }
 const root=document.createElement('div'); root.id='pwSched'; root.className='fx';
@@ -73,6 +76,7 @@ function mount(){ const h=document.getElementById('view-p2'); if(!h||h.contains(
 const h2=document.getElementById('view-p2'); if(h2) new MutationObserver(mount).observe(h2,{childList:true});
 new MutationObserver(()=>{ if(root.classList.contains('can')!==can()) render(); }).observe(document.body,{attributes:true,attributeFilter:['class']});
 render(); mount();
+CalSource.onChange(()=>render(),false);
 /* done */
 root.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.pwdone; if(!id) return; if(!can()){render();return;} patch(id,{done:e.target.checked});});
 /* drag and drop */
