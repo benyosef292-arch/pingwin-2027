@@ -33,7 +33,7 @@
   const on = d => EV.filter(x => x.S <= d && d <= x.E).sort((a, b) => (a.range - b.range) || (a.S - b.S));
   const status = x => x.E < today ? 'past' : x.S <= today ? 'now' : 'soon';
 
-  let mode = 'month'; try { const m0 = localStorage.getItem('penguin-calmode'); if (m0 === 'week' || m0 === 'prep') mode = m0; } catch(e){}
+  let mode = 'month'; try { const m0 = localStorage.getItem('penguin-calmode'); if (m0 === 'week' || m0 === 'day' || m0 === 'prep') mode = m0; } catch(e){}
   const wkStart = d => { const x = new Date(d); x.setDate(x.getDate() - x.getDay()); return x; };
   function renderWeek(){
     const st = wkStart(sel), en = new Date(st); en.setDate(st.getDate() + 6);
@@ -56,11 +56,14 @@
     document.getElementById('pwHost').hidden = mode !== 'prep';
     document.querySelectorAll('[data-cm]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cm === mode)));
     if (mode === 'prep'){ if (window.pwRender) window.pwRender(); renderUp(); return; }
+    const dy = mode === 'day';
+    grid.classList.toggle('dy', dy); grid.closest('.cal').classList.toggle('is-dy', dy); grid.closest('.cal-wrap').classList.toggle('is-dy', dy);
+    if (dy) return renderDayView();
     grid.classList.toggle('wk', mode === 'week');
     grid.closest('.cal').classList.toggle('is-wk', mode === 'week');
     document.querySelectorAll('[data-cm]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cm === mode)));
-    document.getElementById('calPrev').setAttribute('aria-label', mode === 'week' ? 'השבוע הקודם' : 'החודש הקודם');
-    document.getElementById('calNext').setAttribute('aria-label', mode === 'week' ? 'השבוע הבא' : 'החודש הבא');
+    document.getElementById('calPrev').setAttribute('aria-label', mode === 'day' ? 'היום הקודם' : mode === 'week' ? 'השבוע הקודם' : 'החודש הקודם');
+    document.getElementById('calNext').setAttribute('aria-label', mode === 'day' ? 'היום הבא' : mode === 'week' ? 'השבוע הבא' : 'החודש הבא');
     if (mode === 'week') return renderWeek();
     document.getElementById('calTitle').textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
     const first = new Date(view.getFullYear(), view.getMonth(), 1);
@@ -86,6 +89,7 @@
     grid.innerHTML = h;
     renderDay(); renderUp();
   }
+  const acts = x => x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : '';
   function item(x, big){
     const st = status(x);
     const when = x.range ? fmt(x.S) + '–' + fmt(x.E) : fmt(x.S) + ' · יום ' + DAYS[x.S.getDay()];
@@ -93,7 +97,13 @@
     if (st === 'now') tag = `<em class="now">${x.range ? 'עכשיו' : 'היום'}</em>`;
     else if (st === 'soon'){ const n = Math.round((x.S - today) / 864e5); tag = `<em>${n === 1 ? 'מחר' : 'בעוד ' + n + ' ימים'}</em>`; }
     else tag = '<em class="done">✓ עבר</em>';
-    return `<div class="ci ${st}" style="--c:${clr(x)}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small>${x.tm ? `<bdi dir="ltr" class="ci-tm">${esc(x.tm)}</bdi> · ` : ''}<bdi dir="ltr">${when}</bdi>${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big && x.id && (x.site || PG_EDIT) ? `<span class="ci-acts"><button type="button" class="ci-ed" data-edit="${esc(x.id)}">עריכה</button><button type="button" class="ci-del" data-del="${esc(x.id)}">מחיקה</button></span>` : ''}</div>${tag}</div>`;
+    return `<div class="ci ${st}" style="--c:${clr(x)}"><span class="cbar"></span><div><b>${esc(x.t)}</b><small>${x.tm ? `<bdi dir="ltr" class="ci-tm">${esc(x.tm)}</bdi> · ` : ''}<bdi dir="ltr">${when}</bdi>${big && x.d ? ' · ' + esc(x.d) : ''}</small>${big ? acts(x) : ''}</div>${tag}</div>`;
+  }
+  /* day view: the selected day on an hour grid, full width (pages/calendar-day.js) */
+  function renderDayView(){
+    document.getElementById('calTitle').innerHTML = `יום ${DAYS[sel.getDay()]} <bdi dir="ltr">${fmt(sel)}</bdi>`;
+    grid.innerHTML = CalDay.html(on(sel), { clr, esc, acts, isToday: +sel === +today });
+    renderDay(); renderUp();
   }
   function renderDay(){
     const ev = on(sel);
@@ -116,9 +126,9 @@
   }
   const legend = () => { document.getElementById('calLegend').innerHTML = (() => { const seen = []; EV.forEach(x => { const c = clr(x); if (!seen.some(q => q[0] === c)) seen.push([c, CalSource.color(x.col) ? CalSource.colorName(x.col) : TYPES[x.type].n]); }); return seen.map(q => `<span><i style="background:${q[0]}"></i>${q[1]}</span>`).join(''); })(); };
   legend();
-  grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); if (mode === 'month' && sel.getMonth() !== view.getMonth()) view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); });
-  document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
-  document.getElementById('calNext').addEventListener('click', () => { if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() + 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
+  grid.addEventListener('click', e => { const c = e.target.closest('.cal-c'); if (!c) return; sel = parse(c.dataset.k); view = new Date(sel.getFullYear(), sel.getMonth(), 1); mode = 'day'; render(); });
+  document.getElementById('calPrev').addEventListener('click', () => { if (mode === 'day'){ sel = new Date(sel); sel.setDate(sel.getDate() - 1); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() - 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); });
+  document.getElementById('calNext').addEventListener('click', () => { if (mode === 'day'){ sel = new Date(sel); sel.setDate(sel.getDate() + 1); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else if (mode === 'week'){ sel = new Date(sel); sel.setDate(sel.getDate() + 7); view = new Date(sel.getFullYear(), sel.getMonth(), 1); } else view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); });
   document.querySelectorAll('[data-cm]').forEach(b => b.addEventListener('click', () => { mode = b.dataset.cm; try { localStorage.setItem('penguin-calmode', mode); } catch(e){} if (mode === 'month') view = new Date(sel.getFullYear(), sel.getMonth(), 1); render(); }));
   document.getElementById('ovGo').addEventListener('click', () => document.querySelector('.tab[data-view="sched"]').click());
   document.getElementById('calToday').addEventListener('click', () => { view = new Date(today.getFullYear(), today.getMonth(), 1); sel = new Date(today); render(); });
@@ -189,7 +199,7 @@
   dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-x]')) closeAdd(); });
   dlg.addEventListener('keydown', e => { if (e.key === 'Escape'){ e.stopPropagation(); closeAdd(); } });
   document.getElementById('calAdd').addEventListener('click', () => openAdd());
-  document.getElementById('calDay').addEventListener('click', e => {
+  const onActs = e => {
     const ed = e.target.closest('[data-edit]');
     if (ed){ const x = EV.find(v => v.id === ed.dataset.edit); if (x) openAdd(x); return; }
     const b = e.target.closest('[data-del]'); if (!b) return;
@@ -197,7 +207,9 @@
     const go2 = () => fetch(window.PENGUIN_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(Object.assign({ a: 'delEvent', id: x.id }, creds())) })
       .then(r => r.json()).then(j => { if (j && j.ok){ EV = EV.filter(v => v !== x); render(); setTimeout(load, 1500); } else alert(ERR[j && j.error] || 'לא נמחק. נסו שוב.'); }).catch(() => alert('לא נמחק. בדקו את החיבור ונסו שוב.'));
     (typeof askConfirm === 'function' ? askConfirm(`למחוק את "${x.t}" מהלו״ז של הצוות?`) : Promise.resolve(confirm(`למחוק את "${x.t}"?`))).then(ok => { if (ok) go2(); });
-  });
+  };
+  document.getElementById('calDay').addEventListener('click', onActs);
+  grid.addEventListener('click', e => { if (mode === 'day') onActs(e); });
 
   /* live: the team's Google Calendar, read once for every view in data/calendar-source.js */
   const load = () => CalSource.reload();

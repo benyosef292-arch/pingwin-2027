@@ -1,0 +1,26 @@
+/* Day view of the schedule tab (pages/calendar-day.js): hour grid, full width. Site is RTL: hours sit on the right, so physical right/left are used here. */
+.cal-wrap.is-dy{grid-template-columns:1fr}
+.cal-wrap.is-dy .cal-side,.cal.is-dy .cal-dow{display:none}
+.cal-grid.dy{display:block}
+.dv{display:grid;gap:12px}
+.dv-all{display:flex;flex-wrap:wrap;gap:8px}
+.dv-chip{display:inline-grid;gap:2px;padding:7px 12px;border-radius:10px;background:color-mix(in srgb,var(--c) 22%,transparent);border-inline-start:4px solid var(--c);font-size:13px}
+.dv-chip small{font-size:12px;opacity:.8}
+.dv-body{position:relative;margin-inline-start:0}
+.dv-h{position:absolute;inset-inline:0;height:0;border-top:1px solid color-mix(in srgb,currentColor 14%,transparent)}
+.dv-h span{position:absolute;right:0;top:-9px;width:48px;font-size:12px;font-weight:600;opacity:.65;direction:ltr;text-align:left;background:inherit}
+.dv-cols{position:absolute;top:0;bottom:0;left:0;right:58px}
+.dv-ev{position:absolute;right:calc(var(--l) * 100% / var(--n));width:calc(100% / var(--n) - 4px);box-sizing:border-box;overflow:hidden;border-radius:8px;padding:5px 10px;background:color-mix(in srgb,var(--c) 26%,var(--dv-bg,#1c2733));border-inline-start:4px solid var(--c);display:flex;flex-direction:column;gap:1px;font-size:13px;line-height:1.3}
+.dv-ev b{font-weight:700}
+.dv-ev small{font-size:12px;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dv-ev.sh{flex-direction:row;align-items:center;gap:8px;padding-block:2px}
+.dv-ev.sh small{display:none}
+.dv-tm{font-size:12px;font-weight:700;opacity:.85}
+.dv-ev .ci-acts,.dv-chip .ci-acts{margin-top:2px}
+.dv-ev.sh .ci-acts{display:none}
+.dv-now{position:absolute;right:58px;left:0;height:0;border-top:2px solid #e8552f;z-index:2}
+.dv-now span{position:absolute;right:-56px;top:-9px;font-size:11px;font-weight:800;color:#e8552f;direction:ltr}
+.dv-empty{margin:0}
+.dv-note{font-size:12px;opacity:.6;margin:0}
+html[data-theme="light"] .dv-ev{--dv-bg:#fff}
+@media (max-width:760px){.dv-cols{right:46px}.dv-h span{width:40px}.dv-now{right:46px}.dv-now span{right:-44px}.dv-ev{padding:4px 7px}}
