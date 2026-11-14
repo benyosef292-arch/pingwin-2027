@@ -4,7 +4,7 @@
 const WK_KEY = "penguin-weekly";
 const DAYS = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
 const WHO = {"בן":"#6941C6","יותם":"#0E7490","דורון":"#8B5A2B","קרן":"#B42370","כולם":"#475966"};
-const LANES = [{id:"cl",n:"לו״ז עם הלקוחות"},{id:"tech",n:"משימות טכניות"},{id:"wa",n:"הודעות וואטצאפ"}];
+const LANES = [{id:"cl",n:"לו״ז עם הלקוחות"},{id:"tech",n:"משימות טכניות"},{id:"wa",n:"הודעות וואטצאפ · וואלטורנס"},{id:"walm",n:"הודעות וואטצאפ · לה מנואר"}];
 const SEED = [
  {d:0,t:"סגירת קופה קטנה"},
  {d:0,t:"דוח סיכום הגעה ועזיבה"},
@@ -32,14 +32,16 @@ const SEED = [
  {d:6,t:"צ׳ק אין במלונות",lane:"cl"},
  {d:2,t:"סבב ברים / באולינג",lane:"cl"}
 ].map((x,i)=>({id:"s"+i,d:x.d,t:x.t,k:x.k||"task",lane:x.lane||"tech",items:x.items||[],note:x.note||"",from:"",to:"",who:"",o:i}));
-SEED.push(...WA_SEED);
+SEED.push(...WA_SEED, ...WA_SEED_LM);
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
-  if (!s.waIn){ s.waIn = 1; WA_SEED.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); }
+  const addIn = (flag, seed) => { if (s[flag]) return; s[flag] = 1; seed.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); };
+  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); /* 14.11.26: La Manoir messages join boards saved before them */
   return s; };
 const put = s => tsave(WK_KEY, s);
 const E = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const $ = id => document.getElementById(id);
+const isWa = x => x.lane === "wa" || x.lane === "walm";
 const sorted = (s,d,l) => s.tasks.filter(x => x.d === d && (l == null || (x.lane || "tech") === l)).sort((a,b) => {
   if (a.from && b.from) return a.from.localeCompare(b.from) || a.o - b.o;
   if (a.from) return -1; if (b.from) return 1; return a.o - b.o; });
@@ -56,8 +58,8 @@ function card(s,x){
       h += `<div class="wk-rr ${st === 2 ? "nocl" : ""}"><button type="button" class="wk-sb s${st}" data-sent="${E(ck)}" aria-label="${E(it)}: ${lbl}" title="${lbl}">${st === 1 ? "✓" : st === 2 ? "✕" : ""}</button><input type="checkbox" class="wk-cf" data-conf="${E(ck)}" ${c ? "checked" : ""} ${st === 2 ? "disabled" : ""} aria-label="${E(it)}: הספק אישר"><span class="nm">${E(it)}</span></div>`; });
     body = `<span class="wk-prog ${need && conf === need ? "full" : ""}">נשלח ${sent}/${need} · אושר ${conf}/${need}</span><div class="wk-x"><div class="wk-rh"><span>נשלח</span><span>אושר</span><span></span></div>${h}</div>`;
   } else if (x.items.length) body = `<div class="wk-items">${x.items.map(E).join(" · ")}</div>`;
-  if (x.lane === "wa" && !x.msg) body += `<span class="wk-time none">אין נוסח עדיין</span>`;
-  if (x.msg || (x.lane === "wa" && PG_EDIT)) body += `<div class="wk-msg"><button type="button" class="wk-mb" data-msgv="${x.id}">נוסח</button><button type="button" class="wk-mb" data-msgc="${x.id}">העתקה</button></div>`;
+  if (isWa(x) && !x.msg) body += `<span class="wk-time none">אין נוסח עדיין</span>`;
+  if (x.msg || (isWa(x) && PG_EDIT)) body += `<div class="wk-msg"><button type="button" class="wk-mb" data-msgv="${x.id}">נוסח</button><button type="button" class="wk-mb" data-msgc="${x.id}">העתקה</button></div>`;
   const dn = x.k !== "recap" && !!s.checks[x.id];
   const box = x.k === "recap" ? "" : `<span class="wk-x"><input type="checkbox" class="wk-dn" data-done="${x.id}" ${dn ? "checked" : ""} aria-label="${E(x.t)} בוצע"></span>`;
   const cls = x.k === "recap" ? "recap" : x.k === "fun" ? "fun" : "";
