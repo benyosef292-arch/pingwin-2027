@@ -26,7 +26,7 @@
   const note = () => subs.forEach(fn => { try { fn(events, calId); } catch(e){} });
   function reload(){
     if (!window.PENGUIN_API) return;
-    fetch(window.PENGUIN_API + '?a=cal&t=' + Date.now()).then(r => r.json()).then(j => {
+    fetch(window.PENGUIN_API + '?a=cal&t=' + Date.now() + (window.PENGUIN_AUTH ? window.PENGUIN_AUTH() : '')).then(r => r.json()).then(j => {
       if (!j || !j.ok || !Array.isArray(j.events) || !j.events.length) return;
       events = j.events; calId = j.calId || ''; live = true; note();
     }).catch(() => {});
