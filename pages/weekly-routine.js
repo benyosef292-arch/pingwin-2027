@@ -14,7 +14,7 @@ const SEED = [
  {d:1,t:"ריקו מאפייה",k:"recap",items:["מאפייה"]},
  {d:1,t:"ריקו ארוחות",k:"recap",items:["ארוחות"]},
  {d:1,t:"ריקו ציוד",k:"recap",items:["ספורט 2000 אסקיאדור","סקי סט","קשמיר ציוד","אוקסליס ציוד"]},
- {d:1,t:"הטענת סקיפסים"},
+ {d:1,t:"הטענת סקיפסים",items:["לברר סקי פסים צוותים"]},
  {d:1,t:"רשימות אוטובוס והעברת פרטי אוטובוסים לספק"},
  {d:2,t:"יום כיף לצוות",k:"fun"},
  {d:3,t:"וידוא ריקו"},
@@ -39,6 +39,8 @@ const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},c
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
   const addIn = (flag, seed) => { if (s[flag]) return; s[flag] = 1; seed.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); };
   addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); /* 14.11.26: La Manoir messages join boards saved before them */
+  if (!s.skiIn){ s.skiIn = 1; const k = s.tasks.find(t => t.id === "s8"), it = "לברר סקי פסים צוותים"; /* 18.11.26 (Ben) */
+    if (k && !(k.items || []).includes(it)) k.items = [...(k.items || []), it]; }
   return s; };
 const put = s => tsave(WK_KEY, s);
 const E = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
