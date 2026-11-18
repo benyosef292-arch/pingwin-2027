@@ -32,11 +32,13 @@ const SEED = [
  {d:6,t:"צ׳ק אין במלונות",lane:"cl"},
  {d:2,t:"סבב ברים / באולינג",lane:"cl"}
 ].map((x,i)=>({id:"s"+i,d:x.d,t:x.t,k:x.k||"task",lane:x.lane||"tech",items:x.items||[],note:x.note||"",from:"",to:"",who:"",o:i}));
-SEED.push(...WA_SEED, ...WA_SEED_LM);
+/* 18.11.26 (Ben): Thursday task, own id so saved boards pick it up too. */
+const EXTRA_SEED = [{id:"vid1",d:4,t:"סרטון דירה בחמ״ל וואלטו",k:"task",lane:"tech",items:[],note:"",from:"",to:"",who:"",o:SEED.length}];
+SEED.push(...EXTRA_SEED, ...WA_SEED, ...WA_SEED_LM);
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
   const addIn = (flag, seed) => { if (s[flag]) return; s[flag] = 1; seed.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); };
-  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); /* 14.11.26: La Manoir messages join boards saved before them */
+  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); /* 14.11.26: La Manoir messages join boards saved before them */
   return s; };
 const put = s => tsave(WK_KEY, s);
 const E = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
