@@ -36,8 +36,9 @@ const SEED = [
 const EXTRA_SEED = [{id:"vid1",d:4,t:"סרטון דירה בחמ״ל וואלטו",k:"task",lane:"tech",items:[],note:"",from:"",to:"",who:"",o:SEED.length}];
 /* 28.11.26 (Ben, Kashmir meeting): Kashmir rooming-list points, Monday. */
 const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאירנה",k:"task",lane:"tech",items:["טלפון ומייל לכל אורח","ימי הולדת בהערות"],note:"עד רביעי",from:"",to:"",who:"",o:SEED.length + 1}];
-/* 28.11.26 (Ben, Cheval Blanc meeting): baby cots must be asked for ahead, Thursday before arrival. */
-const CHEV_SEED = [{id:"chev1",d:4,t:"מיטות תינוק · שבל בלאן",k:"task",lane:"tech",items:["לברר מי צריך","לעדכן את הקבלה"],note:"מראש",from:"",to:"",who:"",o:SEED.length + 2}];
+/* 28.11.26 (Ben, Cheval Blanc meeting): rooming list by Tuesday (Monday card); baby cots asked ahead (Thursday). */
+const CHEV_SEED = [{id:"chev2",d:1,t:"ריקו שבל בלאן",k:"task",lane:"tech",items:[],note:"עד שלישי",from:"",to:"",who:"",o:SEED.length + 2},
+  {id:"chev1",d:4,t:"מיטות תינוק · שבל בלאן",k:"task",lane:"tech",items:["לברר מי צריך","לעדכן את הקבלה"],note:"מראש",from:"",to:"",who:"",o:SEED.length + 3}];
 SEED.push(...EXTRA_SEED, ...KASH_SEED, ...CHEV_SEED, ...WA_SEED, ...WA_SEED_LM);
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
