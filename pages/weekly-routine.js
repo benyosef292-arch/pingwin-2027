@@ -38,7 +38,9 @@ const EXTRA_SEED = [{id:"vid1",d:4,t:"סרטון דירה בחמ״ל וואלט�
 const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאירנה",k:"task",lane:"tech",items:["טלפון ומייל לכל אורח","ימי הולדת בהערות"],note:"עד רביעי",from:"",to:"",who:"",o:SEED.length + 1}];
 /* 28.11.26 (Ben, Plein Sud meeting): Plein Sud rooming list, Monday. */
 const PSUD_SEED = [{id:"psud1",d:1,t:"ריקו פליין סוד · ללוקאס",k:"task",lane:"tech",items:["חיבור מיטות למי שביקש","מיטה / כיסא תינוק למי שביקש"],note:"עד שלישי",from:"",to:"",who:"",o:SEED.length + 2}];
-SEED.push(...EXTRA_SEED, ...KASH_SEED, ...PSUD_SEED, ...WA_SEED, ...WA_SEED_LM);
+/* 28.11.26 (Ben, Montana meeting): Montana lists, one per hotel, Monday. */
+const MONT_SEED = [{id:"mont1",d:1,t:"רשימות מונטנה · לכל מלון בנפרד",k:"task",lane:"tech",items:["מונטנה","פליין סוד","שבאל בלאן","תינוקות: לולים, כמה שיותר מוקדם"],note:"עד חמישי",from:"",to:"",who:"",o:SEED.length + 3}];
+SEED.push(...EXTRA_SEED, ...KASH_SEED, ...PSUD_SEED, ...MONT_SEED, ...WA_SEED, ...WA_SEED_LM);
 /* adds a Kashmir line to a saved message once, at the same place as in the seed */
 const KASH_AT = {wa1:"\nמצפים ומתרגשים", wa9:"\n\nבנוסף, מזכירים שוב."};
 const kashLine = (t, id) => { const L = WA_KASH[id]; if (!t || !L || (t.msg || "").includes(L)) return;
@@ -50,7 +52,7 @@ const psudLine = (t, id) => { const L = WA_PSUD[id], K = WA_KASH[id]; if (!t || 
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
   const addIn = (flag, seed) => { if (s[flag]) return; s[flag] = 1; seed.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); };
-  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); addIn("kashIn", KASH_SEED); addIn("psudIn", PSUD_SEED);
+  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); addIn("kashIn", KASH_SEED); addIn("psudIn", PSUD_SEED); addIn("montIn", MONT_SEED);
   if (!s.kashWa){ s.kashWa = 1; Object.keys(WA_KASH).forEach(id => kashLine(s.tasks.find(t => t.id === id), id)); }
   if (!s.psudWa){ s.psudWa = 1; Object.keys(WA_PSUD).forEach(id => psudLine(s.tasks.find(t => t.id === id), id)); } /* 14.11.26: La Manoir messages join boards saved before them */
   if (!s.skiIn){ s.skiIn = 1; const k = s.tasks.find(t => t.id === "s8"), it = "לברר סקי פס משפחתי"; /* 18.11.26 (Ben) */
