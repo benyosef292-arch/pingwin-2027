@@ -35,7 +35,7 @@ const SEED = [
 /* 18.11.26 (Ben): Thursday task, own id so saved boards pick it up too. */
 const EXTRA_SEED = [{id:"vid1",d:4,t:"סרטון דירה בחמ״ל וואלטו",k:"task",lane:"tech",items:[],note:"",from:"",to:"",who:"",o:SEED.length}];
 /* 28.11.26 (Ben, Kashmir meeting): Kashmir rooming-list points, Monday. */
-const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאירנה",k:"task",lane:"tech",items:["טלפון ומייל לכל אורח","ימי הולדת בהערות"],note:"עד רביעי",from:"",to:"",who:"",o:SEED.length + 1}];
+const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאילונה",k:"task",lane:"tech",items:["טלפון ומייל לכל אורח","ימי הולדת בהערות"],note:"עד רביעי",from:"",to:"",who:"",o:SEED.length + 1}];
 /* 28.11.26 (Ben, Kashmir shop meeting): Excel to the shop by email, Monday, due Tuesday; upgrades asked ahead. */
 const KSP_SEED = [{id:"ksp1",d:1,t:"ריקו ציוד קשמיר · במייל לדומיניק",k:"task",lane:"tech",items:["לשלוח אקסל (לא צריך וואוצ׳ר)","לברר מראש מי רוצה שדרוג ולציין בריקו"],note:"עד שלישי · skishop.kashmir@montagnettes.com · ציוד לשדרוג עלול להיגמר בהגעה",from:"",to:"",who:"",o:SEED.length + 3}];
 SEED.push(...EXTRA_SEED, ...KASH_SEED, ...KSP_SEED, ...WA_SEED, ...WA_SEED_LM);
