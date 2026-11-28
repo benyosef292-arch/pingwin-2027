@@ -39,16 +39,10 @@ const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאירנה",k:"ta
 /* 28.11.26 (Ben, Cheval Blanc meeting): baby cots must be asked for ahead, Thursday before arrival. */
 const CHEV_SEED = [{id:"chev1",d:4,t:"מיטות תינוק · שבל בלאן",k:"task",lane:"tech",items:["לברר מי צריך","לעדכן את הקבלה"],note:"מראש",from:"",to:"",who:"",o:SEED.length + 2}];
 SEED.push(...EXTRA_SEED, ...KASH_SEED, ...CHEV_SEED, ...WA_SEED, ...WA_SEED_LM);
-/* adds a Kashmir line to a saved message once, at the same place as in the seed */
-const KASH_AT = {wa1:"\nמצפים ומתרגשים", wa9:"\n\nבנוסף, מזכירים שוב."};
-const kashLine = (t, id) => { const L = WA_KASH[id]; if (!t || !L || (t.msg || "").includes(L)) return;
-  const at = KASH_AT[id], m = t.msg || "";
-  t.msg = at && m.includes(at) ? m.replace(at, "\n" + L + at) : (m ? m + "\n\n" : "") + L; };
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
   const addIn = (flag, seed) => { if (s[flag]) return; s[flag] = 1; seed.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); };
-  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); addIn("kashIn", KASH_SEED); addIn("chevIn", CHEV_SEED);
-  if (!s.kashWa){ s.kashWa = 1; Object.keys(WA_KASH).forEach(id => kashLine(s.tasks.find(t => t.id === id), id)); } /* 14.11.26: La Manoir messages join boards saved before them */
+  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); addIn("kashIn", KASH_SEED); addIn("chevIn", CHEV_SEED); /* 14.11.26: La Manoir messages join boards saved before them */
   if (!s.skiIn){ s.skiIn = 1; const k = s.tasks.find(t => t.id === "s8"), it = "לברר סקי פס משפחתי"; /* 18.11.26 (Ben) */
     if (k && !(k.items || []).includes(it)) k.items = [...(k.items || []), it]; }
   return s; };
