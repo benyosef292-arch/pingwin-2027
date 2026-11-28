@@ -35,7 +35,7 @@ const SEED = [
 /* 18.11.26 (Ben): Thursday task, own id so saved boards pick it up too. */
 const EXTRA_SEED = [{id:"vid1",d:4,t:"סרטון דירה בחמ״ל וואלטו",k:"task",lane:"tech",items:[],note:"",from:"",to:"",who:"",o:SEED.length}];
 /* 28.11.26 (Ben, Kashmir meeting): Kashmir rooming-list points, Monday. */
-const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאירנה",k:"task",lane:"tech",items:["טלפון ומייל לכל אורח","ימי הולדת בהערות"],note:"עד רביעי",from:"",to:"",who:"",o:SEED.length + 1}];
+const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאילונה",k:"task",lane:"tech",items:["טלפון ומייל לכל אורח","ימי הולדת בהערות"],note:"עד רביעי",from:"",to:"",who:"",o:SEED.length + 1}];
 SEED.push(...EXTRA_SEED, ...KASH_SEED, ...WA_SEED, ...WA_SEED_LM);
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
