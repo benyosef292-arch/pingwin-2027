@@ -1,5 +1,6 @@
 /* Deck: hotel drawer on the map slide. */
 /* 28.11.26 (Ben): Kashmir facts from the hotel meeting (rules, team notes). */
+/* 28.11.26 (Ben): Oxalys ski shop (Sport 2000) facts from the shop meeting. */
 /* ================= DECK: hotel drawer on the map slide ================= */
 (function(){
   const feat = document.querySelector('#stage .hotel-feat');
@@ -48,6 +49,8 @@
       board: 'לינה בלבד. אפשר להזמין מהארץ באגט וקרואסון וארוחת ערב במסעדה מקומית (5–10 דק׳ הליכה).',
       local: 'מס עירוני כ־3.5 € לאדם ללילה · פיקדון 650 € · ניקיון יומי והחלפת מגבות בתשלום',
       note: 'בדירות 45 מ״ר הנישה בלי חלון ואין מעלית (קומה אחת במדרגות). WiFi למשתמש אחד.',
+      shop: 'Sport 2000 במתחם: פתוח מ־8:30, בשישי ושבת עד 24:00 · להגיע עם הוואוצ׳ר, מודפס או בטלפון · ביטוח ציוד 2 € ליום (בפציעה במהלך השבוע אין החזר) · קסדה 29 € · 20% הנחה על השכרה לאורחי הדירות',
+      team: 'ריקו לחנות במייל עד שישי, skishop.oxalys@montagnettes.com: שם, סוג ציוד, מגפיים או לא, יום הגעה ומספר ימים',
       url: 'https://www.pingwin.co.il/Oxalys+Residence.html?siteID=1402' }
   };
 
@@ -79,6 +82,7 @@
       <div class="hdr-row"><b>לתשלום במקום</b><span>${esc2(h.local)}</span></div>
       <div class="hdr-row note"><b>לשים לב</b><span>${esc2(h.note)}</span></div>
       ${h.rules ? `<div class="hdr-row"><b>כללי המלון</b><span>${esc2(h.rules)}</span></div>` : ''}
+      ${h.shop ? `<div class="hdr-row"><b>חנות ציוד</b><span>${esc2(h.shop)}</span></div>` : ''}
       ${h.team ? `<div class="hdr-row"><b>לצוות</b><span>${esc2(h.team)}</span></div>` : ''}
       <div class="hdr-src">בכל החבילות: טיסה לליון או גרנובל, העברות, נציג, 7 לילות וסקי פס · <a href="${h.url}" target="_blank" rel="noopener">מקור: אתר פינגווין</a></div>`;
   }
