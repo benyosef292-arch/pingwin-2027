@@ -51,8 +51,7 @@ const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return 
   const addIn = (flag, seed) => { if (s[flag]) return; s[flag] = 1; seed.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); };
   addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); addIn("kashIn", KASH_SEED); addIn("oxaIn", OXA_SEED); addIn("eskIn", ESK_SEED);
   if (!s.kashWa){ s.kashWa = 1; Object.keys(WA_KASH).forEach(id => kashLine(s.tasks.find(t => t.id === id), id)); }
-  if (!s.oxaWa){ s.oxaWa = 1; Object.keys(WA_OXA).forEach(id => kashLine(s.tasks.find(t => t.id === id), id, WA_OXA)); }
-  if (!s.eskWa){ s.eskWa = 1; Object.keys(WA_ESK).forEach(id => kashLine(s.tasks.find(t => t.id === id), id, WA_ESK)); } /* 14.11.26: La Manoir messages join boards saved before them */
+  if (!s.oxaWa){ s.oxaWa = 1; Object.keys(WA_OXA).forEach(id => kashLine(s.tasks.find(t => t.id === id), id, WA_OXA)); } /* 14.11.26: La Manoir messages join boards saved before them */
   if (!s.skiIn){ s.skiIn = 1; const k = s.tasks.find(t => t.id === "s8"), it = "לברר סקי פס משפחתי"; /* 18.11.26 (Ben) */
     if (k && !(k.items || []).includes(it)) k.items = [...(k.items || []), it]; }
   return s; };
