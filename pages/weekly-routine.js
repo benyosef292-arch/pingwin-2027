@@ -44,15 +44,11 @@ const KASH_AT = {wa1:"\nמצפים ומתרגשים", wa9:"\n\nבנוסף, מז�
 const kashLine = (t, id) => { const L = WA_KASH[id]; if (!t || !L || (t.msg || "").includes(L)) return;
   const at = KASH_AT[id], m = t.msg || "";
   t.msg = at && m.includes(at) ? m.replace(at, "\n" + L + at) : (m ? m + "\n\n" : "") + L; };
-/* adds a Plein Sud line once, right after the Kashmir line (as in the seed) */
-const psudLine = (t, id) => { const L = WA_PSUD[id], K = WA_KASH[id]; if (!t || !L || (t.msg || "").includes(L)) return;
-  const m = t.msg || ""; t.msg = K && m.includes(K) ? m.replace(K, K + "\n" + L) : (m ? m + "\n\n" : "") + L; };
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
   const addIn = (flag, seed) => { if (s[flag]) return; s[flag] = 1; seed.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); };
   addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); addIn("kashIn", KASH_SEED); addIn("psudIn", PSUD_SEED);
-  if (!s.kashWa){ s.kashWa = 1; Object.keys(WA_KASH).forEach(id => kashLine(s.tasks.find(t => t.id === id), id)); }
-  if (!s.psudWa){ s.psudWa = 1; Object.keys(WA_PSUD).forEach(id => psudLine(s.tasks.find(t => t.id === id), id)); } /* 14.11.26: La Manoir messages join boards saved before them */
+  if (!s.kashWa){ s.kashWa = 1; Object.keys(WA_KASH).forEach(id => kashLine(s.tasks.find(t => t.id === id), id)); } /* 14.11.26: La Manoir messages join boards saved before them */
   if (!s.skiIn){ s.skiIn = 1; const k = s.tasks.find(t => t.id === "s8"), it = "לברר סקי פס משפחתי"; /* 18.11.26 (Ben) */
     if (k && !(k.items || []).includes(it)) k.items = [...(k.items || []), it]; }
   return s; };
