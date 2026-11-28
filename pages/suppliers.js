@@ -12,9 +12,9 @@ const SUPS = [
     { id: "sp-oxalys", area: 8, n: "Sport 2000 · Oxalys", t: "shop", hi: "Dominique", m: c => /חנות אוקסליס/.test(c.r) },
     { id: "skiset", area: 8, n: "Skiset", t: "shop", late: 1, hi: "Christophe", m: c => /SKISET/i.test(c.r) }]],
   ["מלונות", [
-    { id: "h-kashmir", area: 5, n: "Kashmir", t: "hotel", hi: "", m: c => /^Kashmir/i.test(c.n) },
+    { id: "h-kashmir", area: 5, n: "Kashmir", t: "hotel", hi: "Irena", m: c => /^Kashmir/i.test(c.n) },
     { id: "h-oxalys", area: 6, n: "Oxalys", t: "hotel", hi: "", m: c => /Oxalys Residence/i.test(c.n) },
-    { id: "h-pleinsud", area: 2, n: "Plein Sud", t: "hotel", hi: "Mallory", m: c => /Plein Sud/i.test(c.n) },
+    { id: "h-pleinsud", area: 2, n: "Plein Sud", t: "hotel", hi: "Lucas", m: c => /Plein Sud/i.test(c.n) },
     { id: "h-montana", area: 4, n: "Montana", t: "hotel", hi: "Lucie", m: c => /Residence Montana/i.test(c.n) },
     { id: "h-cheval", area: 3, n: "Cheval Blanc", t: "hotel", hi: "", m: c => /Cheval Blanc/i.test(c.n) }]],
   ["סקיפסים", [{ id: "lifts", area: 1, n: "סקיפסים · סימין / פרנסואה", t: "lift", hi: "", m: c => /סימין|פרנסואה|Simin|Fran[cç]ois/i.test(c.n + ' ' + c.r) }]],
