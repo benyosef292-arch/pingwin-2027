@@ -36,8 +36,8 @@ const SEED = [
 const EXTRA_SEED = [{id:"vid1",d:4,t:"סרטון דירה בחמ״ל וואלטו",k:"task",lane:"tech",items:[],note:"",from:"",to:"",who:"",o:SEED.length}];
 /* 28.11.26 (Ben, Kashmir meeting): Kashmir rooming-list points, Monday. */
 const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאירנה",k:"task",lane:"tech",items:["טלפון ומייל לכל אורח","ימי הולדת בהערות"],note:"עד רביעי",from:"",to:"",who:"",o:SEED.length + 1}];
-/* 28.11.26 (Ben, Kashmir shop meeting): Excel to the shop, upgrades asked ahead. */
-const KSP_SEED = [{id:"ksp1",d:4,t:"ריקו ציוד קשמיר · לדומיניק",k:"task",lane:"tech",items:["לשלוח אקסל (לא צריך וואוצ׳ר)","לברר מראש מי רוצה שדרוג ולציין בריקו"],note:"ציוד לשדרוג עלול להיגמר בהגעה",from:"",to:"",who:"",o:SEED.length + 3}];
+/* 28.11.26 (Ben, Kashmir shop meeting): Excel to the shop by email, Monday, due Tuesday; upgrades asked ahead. */
+const KSP_SEED = [{id:"ksp1",d:1,t:"ריקו ציוד קשמיר · במייל לדומיניק",k:"task",lane:"tech",items:["לשלוח אקסל (לא צריך וואוצ׳ר)","לברר מראש מי רוצה שדרוג ולציין בריקו"],note:"עד שלישי · skishop.kashmir@montagnettes.com · ציוד לשדרוג עלול להיגמר בהגעה",from:"",to:"",who:"",o:SEED.length + 3}];
 SEED.push(...EXTRA_SEED, ...KASH_SEED, ...KSP_SEED, ...WA_SEED, ...WA_SEED_LM);
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
