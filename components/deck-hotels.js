@@ -1,6 +1,7 @@
 /* Deck: hotel drawer on the map slide. */
 /* 28.11.26 (Ben): Kashmir facts from the hotel meeting (rules, team notes). */
 /* 28.11.26 (Ben): Oxalys ski shop (Sport 2000) facts from the shop meeting. */
+/* 28.11.26 (Ben): Eskiador (Sport 2000) shop facts for the Village Montana hotels 1–3. */
 /* ================= DECK: hotel drawer on the map slide ================= */
 (function(){
   const feat = document.querySelector('#stage .hotel-feat');
@@ -53,6 +54,9 @@
       team: 'ריקו לחנות במייל עד שישי, skishop.oxalys@montagnettes.com: שם, סוג ציוד, מגפיים או לא, יום הגעה ומספר ימים',
       url: 'https://www.pingwin.co.il/Oxalys+Residence.html?siteID=1402' }
   };
+  /* Eskiador serves Plein Sud, Cheval Blanc and Montana Soleil: same shop line on all three. */
+  const ESK_SHOP = 'Sport 2000 Eskiador: פתוח 8:30–19:30 · להביא וואוצ׳ר פיזי (מודפס) · 35% הנחה למי שמשכיר בחנות ואומר שהגיע עם פינגווין · שדרוג ציוד 20 € לשבוע · קסדה 25 € לשבוע · ביטוח ציוד 2.20 € ליום: בפציעה החנות מחזירה את הכסף על הציוד';
+  [1, 2, 3].forEach(n => { H[n].shop = H[n].shop ? H[n].shop + ' · ' + ESK_SHOP : ESK_SHOP; });
 
   /* drawer */
   feat.style.position = 'relative';

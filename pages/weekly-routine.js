@@ -38,7 +38,9 @@ const EXTRA_SEED = [{id:"vid1",d:4,t:"סרטון דירה בחמ״ל וואלט�
 const KASH_SEED = [{id:"kash1",d:1,t:"ריקו קשמיר · לאירנה",k:"task",lane:"tech",items:["טלפון ומייל לכל אורח","ימי הולדת בהערות"],note:"עד רביעי",from:"",to:"",who:"",o:SEED.length + 1}];
 /* 28.11.26 (Ben, Oxalys shop meeting): rental list to the shop by email, before Friday. */
 const OXA_SEED = [{id:"oxa1",d:4,t:"ריקו ציוד אוקסליס · במייל",k:"task",lane:"tech",items:["שם","סוג ציוד","מגפיים או לא","יום הגעה ומספר ימים"],note:"עד שישי · skishop.oxalys@montagnettes.com",from:"",to:"",who:"",o:SEED.length + 2}];
-SEED.push(...EXTRA_SEED, ...KASH_SEED, ...OXA_SEED, ...WA_SEED, ...WA_SEED_LM);
+/* 28.11.26 (Ben, Eskiador meeting): detailed rooming Excel to the shop by Tuesday. */
+const ESK_SEED = [{id:"esk1",d:1,t:"ריקו אסקיאדור · אקסל מפורט",k:"task",lane:"tech",items:["אקסל מפורט לכל אורח","לשלוח במייל"],note:"עד שלישי · valthorens@eskiador.com",from:"",to:"",who:"",o:SEED.length + 3}];
+SEED.push(...EXTRA_SEED, ...KASH_SEED, ...OXA_SEED, ...ESK_SEED, ...WA_SEED, ...WA_SEED_LM);
 /* adds a Kashmir line to a saved message once, at the same place as in the seed */
 const KASH_AT = {wa1:"\nמצפים ומתרגשים", wa9:"\n\nבנוסף, מזכירים שוב.", wa4:"\n2. למי שיש הדרכות", wa10:"\n❌❌❌\n\nבנוסף"};
 const kashLine = (t, id, src = WA_KASH) => { const L = src[id]; if (!t || !L || (t.msg || "").includes(L)) return;
@@ -47,9 +49,10 @@ const kashLine = (t, id, src = WA_KASH) => { const L = src[id]; if (!t || !L || 
 const fresh = () => ({tasks:JSON.parse(JSON.stringify(SEED)),checks:{},sent:{},conf:{},n:SEED.length,v:1});
 const S = () => { const s = tstore(WK_KEY); if (!Array.isArray(s.tasks)) return fresh();
   const addIn = (flag, seed) => { if (s[flag]) return; s[flag] = 1; seed.forEach(w => { if (!s.tasks.some(t => t.id === w.id)) s.tasks.push(JSON.parse(JSON.stringify(w))); }); };
-  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); addIn("kashIn", KASH_SEED); addIn("oxaIn", OXA_SEED);
+  addIn("waIn", WA_SEED); addIn("waLmIn", WA_SEED_LM); addIn("vidIn", EXTRA_SEED); addIn("kashIn", KASH_SEED); addIn("oxaIn", OXA_SEED); addIn("eskIn", ESK_SEED);
   if (!s.kashWa){ s.kashWa = 1; Object.keys(WA_KASH).forEach(id => kashLine(s.tasks.find(t => t.id === id), id)); }
-  if (!s.oxaWa){ s.oxaWa = 1; Object.keys(WA_OXA).forEach(id => kashLine(s.tasks.find(t => t.id === id), id, WA_OXA)); } /* 14.11.26: La Manoir messages join boards saved before them */
+  if (!s.oxaWa){ s.oxaWa = 1; Object.keys(WA_OXA).forEach(id => kashLine(s.tasks.find(t => t.id === id), id, WA_OXA)); }
+  if (!s.eskWa){ s.eskWa = 1; Object.keys(WA_ESK).forEach(id => kashLine(s.tasks.find(t => t.id === id), id, WA_ESK)); } /* 14.11.26: La Manoir messages join boards saved before them */
   if (!s.skiIn){ s.skiIn = 1; const k = s.tasks.find(t => t.id === "s8"), it = "לברר סקי פס משפחתי"; /* 18.11.26 (Ben) */
     if (k && !(k.items || []).includes(it)) k.items = [...(k.items || []), it]; }
   return s; };
